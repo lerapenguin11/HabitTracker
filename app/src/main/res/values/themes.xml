@@ -27,5 +27,55 @@
         <item name="colorOnSurfaceInverse">@color/md_theme_light_inverseOnSurface</item>
         <item name="colorSurfaceInverse">@color/md_theme_light_inverseSurface</item>
         <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
+        <item name="android:statusBarColor">@color/md_theme_light_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+    <style name="ToolbarTitleText" parent="TextAppearance.Material3.ActionBar.Title">
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+    </style>
+
+    <style name="TextMotivationalStyle">
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/roboto_thin</item>
+        <item name="android:textColor">@color/md_theme_light_onTertiaryContainer</item>
+    </style>
+
+    <style name="TextNoHabitsStyle">
+        <item name="android:textSize">17sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@color/md_theme_light_onSurfaceVariant</item>
+    </style>
+
+    <style name="TextTitleCardHabits">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="TextDescCardHabits">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">#000000</item>
+    </style>
+
+    <style name="Widget.App.Chip" parent="Widget.Material3.Chip.Assist">
+        <item name="android:textAppearance">@style/BodyMedium</item>
+        <item name="android:background">@color/md_theme_light_background</item>
+        <item name="chipStrokeWidth">0.5dp</item>
+        <item name="chipStartPadding">8dp</item>
+        <item name="chipEndPadding">2dp</item>
+        <item name="chipCornerRadius">5dp</item>
+        <item name="textStartPadding">5dp</item>
+        <item name="chipIconSize">14dp</item>
+        <item name="chipStrokeColor">@color/md_theme_light_surfaceTint</item>
+        <item name="checkedIconVisible">true</item>
+    </style>
+
+    <style name="BodyMedium">
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">#000000</item>
     </style>
 </resources>
