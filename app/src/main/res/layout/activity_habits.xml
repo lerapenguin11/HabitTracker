@@ -74,5 +74,4 @@
          app:layout_constraintBottom_toBottomOf="parent"
          app:layout_constraintTop_toBottomOf="@+id/include"
          tools:listitem="@layout/item_habits" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

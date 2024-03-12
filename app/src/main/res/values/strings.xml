@@ -2,4 +2,12 @@
     <string name="app_name">Habit Tracker</string>
     <string name="text_motivational">21 день - период времени, после которого новая привычка закрепиться в сознании и становится полностью осознанной</string>
     <string name="text_no_habits">Пока нет привычек</string>
+    <string name="text_name_habit">Название привычки</string>
+    <string name="text_desc_habit">Описание привычки</string>
+    <string name="text_priority">Приоритет</string>
+    <string name="text_type_habit">Тип привычки</string>
+    <string name="text_number_executions">Количество выполнений</string>
+    <string name="text_frequency">Периодичность</string>
+    <string name="text_color_card">Цвет карточки</string>
+    <string name="text_save">Сохранить</string>
 </resources>
