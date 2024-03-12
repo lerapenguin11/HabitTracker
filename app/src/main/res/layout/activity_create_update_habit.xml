@@ -182,15 +182,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:hint="@string/text_color_card"
-                app:endIconDrawable="@drawable/ic_card">
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_card"
+                app:endIconTint="#F1F6EB"
+                android:hint="@string/text_color_card">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ti_et_color_card"
                     style="@style/TextInputEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="none" />
+                    android:inputType="none" >
+
+                </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
