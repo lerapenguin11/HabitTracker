@@ -98,4 +98,10 @@
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textColor">@color/cardview_light_background</item>
     </style>
+
+    <style name="TextStyleArray">
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">@color/md_theme_dark_surfaceVariant</item>
+    </style>
 </resources>

@@ -138,6 +138,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ti_et_type_habit"
                         style="@style/TextInputEditText"
+                        android:focusable="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -148,7 +149,6 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="20dp"
                 android:hint="@string/text_number_executions"
                 app:helperText="* Пр: 1 раз в день"
@@ -172,6 +172,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/ti_et_frequency"
                     style="@style/TextInputEditText"
+                    android:focusable="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="none" />
@@ -205,6 +206,7 @@
                 android:layout_marginBottom="20dp"
                 android:text="@string/text_save"
                 android:enabled="false"
+                android:focusable="false"
                 android:textAppearance="@style/TextButton"
                 app:cornerRadius="4dp" />
         </LinearLayout>

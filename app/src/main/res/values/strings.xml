@@ -10,4 +10,8 @@
     <string name="text_frequency">Периодичность</string>
     <string name="text_color_card">Цвет карточки</string>
     <string name="text_save">Сохранить</string>
+    <string name="text_choose_type_habit">Выберите тип привычки</string>
+    <string name="text_choose_period_habit">Выберите период выполнения привычки</string>
+    <string name="text_close">Закрыть</string>
+    <string name="text_gone">Готово</string>
 </resources>
