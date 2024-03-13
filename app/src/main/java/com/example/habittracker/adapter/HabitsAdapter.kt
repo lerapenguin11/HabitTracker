@@ -20,9 +20,9 @@ class HabitsAdapter : ListAdapter<Habits, HabitViewHolder>(HabitItemDiffCallback
         val habit = getItem(position)
         holder.titleHabit.text = habit.title
         holder.descHabit.text = habit.description
-        holder.type.text = habit.type.name
-        holder.priority.text = habit.priorityHabit.name
-        holder.frequency.text = "${habit.numberExecutions} ${checkingNumberExclusion(habit.numberExecutions)} | ${habit.period}"
+        holder.type.text = habit.type.type
+        holder.priority.text = habit.priorityHabit.priority
+        holder.frequency.text = "${habit.numberExecutions} ${checkingNumberExclusion(habit.numberExecutions)} | ${habit.period.period}"
     }
 
     private fun checkingNumberExclusion(numberExecutions: String): String{

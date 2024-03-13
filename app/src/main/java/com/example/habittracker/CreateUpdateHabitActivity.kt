@@ -159,7 +159,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     private fun getHabit() : Habits{
         return Habits(
             id = shopID,
-            title = binding.tvTitle.text.toString(),
+            title = binding.tiEtNameHabit.text.toString(),
             description = binding.tiEtDescHabit.text.toString(),
             type = getHabitType()!!,
             priorityHabit = getPriorityHabit()!!,
