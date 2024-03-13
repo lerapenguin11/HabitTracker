@@ -7,9 +7,11 @@
     app:cardBackgroundColor="#F1F6EB"
     app:strokeWidth="0dp"
     app:cardElevation="0dp"
+    android:clickable="true"
     android:layout_marginTop="12dp"
     app:cardCornerRadius="10dp"
-    android:id="@+id/habit_card">
+    android:id="@+id/habit_card"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"

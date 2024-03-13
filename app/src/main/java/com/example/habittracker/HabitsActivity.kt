@@ -1,6 +1,5 @@
 package com.example.habittracker
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +14,7 @@ import com.example.habittracker.databinding.ActivityHabitsBinding
 class HabitsActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityHabitsBinding
-    private var habitList : ArrayList<Habits> = arrayListOf()
+    private var habitList : MutableList<Habits> = arrayListOf()
     private val adapter = HabitsAdapter()
     private var startForResult: ActivityResultLauncher<Intent>? = null
 
@@ -23,7 +22,6 @@ class HabitsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHabitsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         isVisibleText()
         resultHabits()
         addHabitClickListener()
@@ -41,18 +39,29 @@ class HabitsActivity : AppCompatActivity() {
                         setHabitRecyclerView(habitList)
                     }
                     KEY_EDIT -> {
+                        val intent = result.data
+                        val habit = intent?.getParcelableExtra<Habits>(UPDATE_HABIT)
+                        if (habit != null) {
+                            habitList[habit.id] = habit
+                        }
+                        isVisibleText()
+                        setHabitRecyclerView(habitList)
                     }
                 }
             }
     }
 
-    private fun setHabitRecyclerView(habitList: ArrayList<Habits>) {
+    private fun setHabitRecyclerView(habitList: MutableList<Habits>) {
         adapter.submitList(habitList)
         binding.rvHabits.adapter = adapter
+        adapter.onHabitListClickListener = {habit ->
+            updateHabit(habit)
+        }
     }
 
-    private fun modifyHabit(habit : Habits) {
-
+    private fun updateHabit(habit : Habits) {
+        val intent = newIntentEditItem(this, habit)
+        startForResult?.launch(intent)
     }
 
     private fun isVisibleText() {
@@ -82,6 +91,7 @@ class HabitsActivity : AppCompatActivity() {
         private const val NEW_HABIT = "new_habit"
         private const val UPDATE_HABIT = "update_habit"
         private const val RESULT_HABIT = "result_habit"
+        private const val EXTRA_HABIT_ITEM = "extra_habit_item"
 
         private const val KEY_ADD = 1
         private const val KEY_EDIT = 2
@@ -93,10 +103,10 @@ class HabitsActivity : AppCompatActivity() {
             return intent
         }
 
-        fun newIntentEditItem(context: Context, habitId : Int) : Intent{
+        fun newIntentEditItem(context: Context, habit : Habits) : Intent{
             val intent = Intent(context, CreateUpdateHabitActivity::class.java)
             intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
-            intent.putExtra(EXTRA_HABIT_ITEM_ID, habitId)
+            intent.putExtra(EXTRA_HABIT_ITEM, habit)
             return intent
         }
     }

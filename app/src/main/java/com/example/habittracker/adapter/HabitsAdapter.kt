@@ -9,6 +9,8 @@ import com.example.habittracker.R
 
 class HabitsAdapter : ListAdapter<Habits, HabitViewHolder>(HabitItemDiffCallback())
 {
+    var onHabitListClickListener : ((Habits) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_habits, parent, false)
@@ -23,6 +25,9 @@ class HabitsAdapter : ListAdapter<Habits, HabitViewHolder>(HabitItemDiffCallback
         holder.type.text = habit.type.type
         holder.priority.text = habit.priorityHabit.priority
         holder.frequency.text = "${habit.numberExecutions} ${checkingNumberExclusion(habit.numberExecutions)} | ${habit.period.period}"
+        holder.itemView.setOnClickListener {
+            onHabitListClickListener?.invoke(habit)
+        }
     }
 
     private fun checkingNumberExclusion(numberExecutions: String): String{

@@ -1,6 +1,5 @@
 package com.example.habittracker
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
@@ -16,9 +15,12 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityCreateUpdateHabitBinding
     private var screenMode = MODE_UNKNOWN
-    private var shopID = Habits.UNDEFINED_ID
+    private var habitID = Habits.UNDEFINED_ID
     private var itemArrayExecutions : String? = null
     private var itemArrayPriority : String? = null
+    private var habit : Habits? = null
+    private var checkedTypeNumber = -1
+    private var checkedPeriodNumber = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +44,9 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     }
 
     private fun intentUpdateHabit() {
-
+        val habit = getHabit()
+        setResult(2, Intent().putExtra(UPDATE_HABIT, habit))
+        finish()
     }
 
     private fun intentAddHabit() {
@@ -87,7 +91,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private fun setArrayNumberExecutions() {
         val items = mutableListOf<String>()
-        for (i in 1 until 10){ items.add("$i") }
+        for (i in 1 until 11){ items.add("$i") }
         val adapter = ArrayAdapter(this, R.layout.item_priority, items)
         binding.tvArrayExecutions.threshold = 1
         binding.tvArrayExecutions.setAdapter(adapter)
@@ -107,25 +111,6 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         }
     }
 
-    private fun openPeriodExecutionHabitDialog() {
-        val singleItems = arrayOf(
-            PeriodExecutionHabit.REGULAR.period, PeriodExecutionHabit.ONE_TIME.period)
-        val checkedItem = 0
-        MaterialAlertDialogBuilder(this)
-            .setTitle(resources.getString(R.string.text_choose_period_habit))
-            .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
-                binding.tiEtFrequency.text?.clear()
-                dialog.cancel()
-            }
-            .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
-                dialog.cancel()
-            }
-            .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
-                binding.tiEtFrequency.setText(singleItems[which])
-            }
-            .show()
-    }
-
     private fun parseParams(){
         if (!intent.hasExtra(EXTRA_SCREEN_MODE)){
             throw RuntimeException("Param screen mode is absent")
@@ -139,13 +124,13 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             if (!intent.hasExtra(EXTRA_HABIT_ITEM_ID)) {
                 throw RuntimeException("Param habit id is absent")
             }
-            shopID = intent.getIntExtra(EXTRA_HABIT_ITEM_ID, Habits.UNDEFINED_ID)
+            habitID = intent.getIntExtra(EXTRA_HABIT_ITEM_ID, Habits.UNDEFINED_ID)
         }
         if(screenMode == MODE_EDIT){
-            if (!intent.hasExtra(EXTRA_HABIT_ITEM_ID)){
+            if (!intent.hasExtra(EXTRA_HABIT_ITEM)){
                 throw RuntimeException("Param habit id is absent")
             }
-            shopID = intent.getIntExtra(EXTRA_HABIT_ITEM_ID, Habits.UNDEFINED_ID)
+            habit = intent.getParcelableExtra<Habits>(EXTRA_HABIT_ITEM)
         }
     }
 
@@ -158,7 +143,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private fun getHabit() : Habits{
         return Habits(
-            id = shopID,
+            id = getHabitId(),
             title = binding.tiEtNameHabit.text.toString(),
             description = binding.tiEtDescHabit.text.toString(),
             type = getHabitType()!!,
@@ -167,6 +152,14 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             period = getHabitPeriod()!!,
             color = 0
         )
+    }
+
+    private fun getHabitId(): Int {
+        if (habit?.id == null){
+            return habitID
+        } else{
+            return habit?.id!!
+        }
     }
 
     private fun getPriorityHabit() : PriorityHabit?{
@@ -196,7 +189,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private fun openTypeHabitDialog(){
         val singleItems = arrayOf(TypeHabits.HARMFUL.type, TypeHabits.USEFUL.type)
-        val checkedItem = 0
+        val checkedItem = intArrayOf(checkedTypeNumber)
         MaterialAlertDialogBuilder(this)
             .setTitle(resources.getString(R.string.text_choose_type_habit))
             .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
@@ -206,12 +199,32 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
                 dialog.cancel()
             }
-            .setSingleChoiceItems(singleItems, checkedItem) { dialog, which ->
+            .setSingleChoiceItems(singleItems, checkedItem[0]) { dialog, which ->
+                checkedItem[0] = which
                 binding.tiEtTypeHabit.setText(singleItems[which])
             }
             .show()
     }
 
+    private fun openPeriodExecutionHabitDialog() {
+        val singleItems = arrayOf(
+            PeriodExecutionHabit.REGULAR.period, PeriodExecutionHabit.ONE_TIME.period)
+        val checkedItem = intArrayOf(checkedPeriodNumber)
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.text_choose_period_habit))
+            .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
+                binding.tiEtFrequency.text?.clear()
+                dialog.cancel()
+            }
+            .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
+                dialog.cancel()
+            }
+            .setSingleChoiceItems(singleItems, checkedItem[0]) { dialog, which ->
+                checkedItem[0] = which
+                binding.tiEtFrequency.setText(singleItems[which])
+            }
+            .show()
+    }
 
     private fun launchAddMode() {
         binding.tvTitle.text = "Создать привычку"
@@ -219,6 +232,29 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private fun launchEditMode() {
         binding.tvTitle.text = "Редактировать привычку"
+        setDataHabit()
+    }
+
+    private fun setDataHabit() {
+        if (habit != null){
+            binding.btSaveHabit.isEnabled = true
+            binding.tiEtNameHabit.setText(habit?.title)
+            binding.tiEtDescHabit.setText(habit?.description)
+            binding.tvArrayPriority.setText(habit?.priorityHabit?.priority)
+            binding.tvArrayExecutions.setText(habit?.numberExecutions)
+            binding.tiEtTypeHabit.setText(habit?.type?.type)
+            binding.tiEtFrequency.setText(habit?.period?.period)
+            when(habit?.period?.period){
+                PeriodExecutionHabit.REGULAR.period -> checkedPeriodNumber = 0
+                PeriodExecutionHabit.ONE_TIME.period -> checkedPeriodNumber = 1
+            }
+            when(habit?.type?.type){
+                TypeHabits.HARMFUL.type -> checkedTypeNumber = 0
+                TypeHabits.USEFUL.type -> checkedTypeNumber = 1
+            }
+            itemArrayPriority = habit?.priorityHabit?.priority
+            itemArrayExecutions = habit?.numberExecutions
+        }
     }
 
     companion object{
@@ -228,9 +264,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         private const val MODE_ADD = "mode_add"
         private const val MODE_UNKNOWN = ""
         private const val NEW_HABIT = "new_habit"
+        private const val EXTRA_HABIT_ITEM = "extra_habit_item"
         private const val UPDATE_HABIT = "update_habit"
-        private const val RESULT_HABIT = "result_habit"
-
-
     }
 }
