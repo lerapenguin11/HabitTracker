@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
@@ -35,9 +36,11 @@ class ColorPicker(
         return cardList
     }
 
-    fun createColorCard(){
+    fun createColorCard(rgb: TextView, hsv: TextView) {
         val listColor = arrayListOf<Int>()
         val cardList = createColorPalette()
+        rgb.setText(getTextColorRgb())
+        hsv.setText(getTextColorHsv())
         for (positionCard in 0 until cardList.size){
             val card = cardList[positionCard]
             card.cardElevation = 5F
@@ -63,6 +66,8 @@ class ColorPicker(
 
             card.setOnClickListener {
                 cardSelectionHandler(cardList, card, listColor, positionCard)
+                rgb.setText(getTextColorRgb())
+                hsv.setText(getTextColorHsv())
             }
         }
     }
@@ -71,12 +76,8 @@ class ColorPicker(
         cardList: MutableList<MaterialCardView>,
         card1: MaterialCardView,
         listColor: ArrayList<Int>,
-        j: Int
+        positionCard: Int
     ) {
-        for (i in cardList){
-
-        }
-
         for(i in 0 until  cardList.size){
             val card = cardList[i]
             card1.strokeWidth = 2
@@ -85,10 +86,39 @@ class ColorPicker(
             card.elevation = 5F
             card.strokeWidth = 0
         }
-        selectedColor = listColor.get(j)
+        selectedColor = listColor.get(positionCard)
     }
 
     fun getColorCard(): Int {
         return selectedColor
     }
+
+    private fun hexToRGB(hex: Int): IntArray {
+        val r = hex and 0xFF0000 shr 16
+        val g = hex and 0xFF00 shr 8
+        val b = hex and 0xFF
+        return intArrayOf(r, g, b)
+    }
+
+    private fun hexToHSV(hex: Int): FloatArray {
+        val hsv = FloatArray(3)
+        Color.colorToHSV(hex, hsv)
+        return hsv
+    }
+
+    private fun getTextColorHsv() : String {
+        val red = hexToHSV(getColorCard()).get(0)
+        val green = hexToHSV(getColorCard()).get(1)
+        val blue = hexToHSV(getColorCard()).get(2)
+
+        return "HSV - (${red}, ${green}, ${blue})"
+    }
+
+    private fun getTextColorRgb() : String{
+        val red = hexToRGB(getColorCard()).get(0)
+        val green = hexToRGB(getColorCard()).get(1)
+        val blue = hexToRGB(getColorCard()).get(2)
+        return "RGB - (${red}, ${green}, ${blue})"
+    }
+
 }

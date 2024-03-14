@@ -2,8 +2,6 @@ package com.example.habittracker
 
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,13 +9,9 @@ import android.view.LayoutInflater
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.marginLeft
-import androidx.core.view.marginRight
 import com.example.habittracker.databinding.ActivityCreateUpdateHabitBinding
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
@@ -56,13 +50,13 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private fun intentUpdateHabit() {
         val habit = getHabit()
-        setResult(2, Intent().putExtra(UPDATE_HABIT, habit))
+        setResult(CODE_EDIT, Intent().putExtra(UPDATE_HABIT, habit))
         finish()
     }
 
     private fun intentAddHabit() {
         val newHabit = getHabit()
-        setResult(1, Intent().putExtra(NEW_HABIT, newHabit))
+        setResult(CODE_ADD, Intent().putExtra(NEW_HABIT, newHabit))
         finish()
     }
 
@@ -71,7 +65,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btSaveHabit.isEnabled = fieldCheck() }
+                binding.btSaveHabit.isEnabled = textFieldCheck() }
 
             override fun afterTextChanged(s: Editable?) {}
         }
@@ -84,7 +78,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         binding.tilFrequency.editText?.addTextChangedListener(textChangedListenerAdd)
     }
 
-    private fun fieldCheck(): Boolean {
+    private fun textFieldCheck(): Boolean {
         return (binding.tilNameHabit.editText?.length() != 0 &&
                 binding.tilDescHabit.editText?.length() != 0 &&
                 binding.tilPriority.editText?.length() != 0 &&
@@ -201,9 +195,16 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private fun openColorPickerDialog() {
         val viewDialog = LayoutInflater.from(this).inflate(R.layout.color_picker_layout, null)
+        val rgb : TextView = viewDialog.findViewById(R.id.tv_rgb)
+        val hsv : TextView = viewDialog.findViewById(R.id.tv_hsv)
         val colorLayout = viewDialog.findViewById<LinearLayout>(R.id.color_layout)
-        val colorPicker = ColorPicker(widthBtn = 185, heightBtn = 185, margin = 50, context = this, colorLayout = colorLayout)
-        colorPicker.createColorCard()
+        val colorPicker = ColorPicker(
+            widthBtn = 185,
+            heightBtn = 185,
+            margin = 50,
+            context = this,
+            colorLayout = colorLayout)
+        colorPicker.createColorCard(rgb, hsv)
 
         MaterialAlertDialogBuilder(this)
             .setTitle(resources.getString(R.string.text_choose_color))
@@ -259,11 +260,11 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     }
 
     private fun launchAddMode() {
-        binding.tvTitle.text = "Создать привычку"
+        binding.tvTitle.setText(R.string.text_create_habit)
     }
 
     private fun launchEditMode() {
-        binding.tvTitle.text = "Редактировать привычку"
+        binding.tvTitle.setText(R.string.text_update_habit)
         setDataHabit()
     }
 
@@ -298,5 +299,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         private const val NEW_HABIT = "new_habit"
         private const val EXTRA_HABIT_ITEM = "extra_habit_item"
         private const val UPDATE_HABIT = "update_habit"
+        private const val CODE_ADD = 1
+        private const val CODE_EDIT = 2
     }
 }

@@ -31,14 +31,14 @@ class HabitsActivity : AppCompatActivity() {
         startForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 when (result.resultCode) {
-                    KEY_ADD -> {
+                    CODE_ADD -> {
                         val intent = result.data
                         val newHabit = intent?.getParcelableExtra<Habits>(NEW_HABIT)
                         habitList.add(newHabit!!)
                         isVisibleText()
                         setHabitRecyclerView(habitList)
                     }
-                    KEY_EDIT -> {
+                    CODE_EDIT -> {
                         val intent = result.data
                         val habit = intent?.getParcelableExtra<Habits>(UPDATE_HABIT)
                         if (habit != null) {
@@ -90,11 +90,9 @@ class HabitsActivity : AppCompatActivity() {
         private const val EXTRA_HABIT_ITEM_ID = "extra_habit_item_id"
         private const val NEW_HABIT = "new_habit"
         private const val UPDATE_HABIT = "update_habit"
-        private const val RESULT_HABIT = "result_habit"
         private const val EXTRA_HABIT_ITEM = "extra_habit_item"
-
-        private const val KEY_ADD = 1
-        private const val KEY_EDIT = 2
+        private const val CODE_ADD = 1
+        private const val CODE_EDIT = 2
 
         fun newIntentAddItem(context: Context, habitId : Int) : Intent {
             val intent = Intent(context, CreateUpdateHabitActivity::class.java)

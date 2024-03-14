@@ -15,4 +15,6 @@
     <string name="text_close">Закрыть</string>
     <string name="text_gone">Готово</string>
     <string name="text_choose_color">Выберите цвет карточки</string>
+    <string name="text_create_habit">Создать привычку</string>
+    <string name="text_update_habit">Редактировать привычку</string>
 </resources>
