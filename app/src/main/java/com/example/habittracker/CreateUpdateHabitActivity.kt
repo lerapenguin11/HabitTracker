@@ -206,7 +206,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             colorLayout = colorLayout)
         colorPicker.createColorCard(rgb, hsv)
 
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_color))
             .setView(viewDialog)
             .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
@@ -223,7 +223,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     private fun openTypeHabitDialog(){
         val singleItems = arrayOf(TypeHabits.HARMFUL.type, TypeHabits.USEFUL.type)
         val checkedItem = intArrayOf(checkedTypeNumber)
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_type_habit))
             .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
                 binding.tiEtTypeHabit.text?.clear()
@@ -243,7 +243,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         val singleItems = arrayOf(
             PeriodExecutionHabit.REGULAR.period, PeriodExecutionHabit.ONE_TIME.period)
         val checkedItem = intArrayOf(checkedPeriodNumber)
-        MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_period_habit))
             .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
                 binding.tiEtFrequency.text?.clear()
@@ -287,6 +287,8 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             }
             itemArrayPriority = habit?.priorityHabit?.priority
             itemArrayExecutions = habit?.numberExecutions
+            color = habit?.color!!
+            binding.tilColorCard.setEndIconTintList(habit?.color?.let { ColorStateList.valueOf(it) })
         }
     }
 

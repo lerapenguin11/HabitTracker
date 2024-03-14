@@ -41,7 +41,7 @@ class ColorPicker(
         val cardList = createColorPalette()
         rgb.setText(getTextColorRgb())
         hsv.setText(getTextColorHsv())
-        for (positionCard in 0 until cardList.size){
+        for (positionCard in 0 until cardList.size) {
             val card = cardList[positionCard]
             card.cardElevation = 5F
             card.strokeWidth = 0
@@ -53,10 +53,11 @@ class ColorPicker(
                 Bitmap.Config.ARGB_8888
             )
 
-            val backgroundBitmap = bitmap
-            val middleColor = backgroundBitmap.getPixel((widthBtn*positionCard/2 +
-                    (card.marginLeft*positionCard) + positionCard * card.marginRight),
-                backgroundBitmap.height / 2)
+            val middleColor = bitmap.getPixel(
+                (widthBtn * positionCard / 2 +
+                        (card.marginLeft * positionCard) + positionCard * card.marginRight),
+                bitmap.height / 2
+            )
 
             listColor.add(middleColor)
 
