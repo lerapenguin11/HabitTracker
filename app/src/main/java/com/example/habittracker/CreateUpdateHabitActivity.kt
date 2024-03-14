@@ -3,7 +3,6 @@ package com.example.habittracker
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import com.example.habittracker.databinding.ActivityCreateUpdateHabitBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -23,10 +21,10 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityCreateUpdateHabitBinding
     private var screenMode = MODE_UNKNOWN
-    private var habitID = Habits.UNDEFINED_ID
+    private var habitID = Habit.UNDEFINED_ID
     private var itemArrayExecutions : String? = null
     private var itemArrayPriority : String? = null
-    private var habit : Habits? = null
+    private var habit : Habit? = null
     private var checkedTypeNumber = -1
     private var checkedPeriodNumber = -1
     private var color : Int = 0
@@ -36,9 +34,9 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         binding = ActivityCreateUpdateHabitBinding.inflate(layoutInflater)
         setContentView(binding.root)
         parseParams()
-        launchRightMode()
-        textInputEditTextClickListener()
-        checkingButtonActivity()
+        handleAction()
+        initSelectorInputListeners()
+        initTextInputListeners()
         saveHabit()
         binding.btClose.setOnClickListener { finish() }
     }
@@ -46,30 +44,30 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     private fun saveHabit() {
         binding.btSaveHabit.setOnClickListener {
             when(screenMode){
-                MODE_ADD -> intentAddHabit()
-                MODE_EDIT -> intentUpdateHabit()
+                MODE_ADD -> launchAddHabitIntent()
+                MODE_EDIT -> launchUpdateHabitIntent()
             }
         }
     }
 
-    private fun intentUpdateHabit() {
-        val habit = getHabit()
+    private fun launchUpdateHabitIntent() {
+        val habit = createHabit()
         setResult(CODE_EDIT, Intent().putExtra(UPDATE_HABIT, habit))
         finish()
     }
 
-    private fun intentAddHabit() {
-        val newHabit = getHabit()
+    private fun launchAddHabitIntent() {
+        val newHabit = createHabit()
         setResult(CODE_ADD, Intent().putExtra(NEW_HABIT, newHabit))
         finish()
     }
 
-    private fun checkingButtonActivity() {
+    private fun initTextInputListeners() {
         val textChangedListenerAdd = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btSaveHabit.isEnabled = textFieldCheck() }
+                binding.btSaveHabit.isEnabled = checkIfFieldsNotEmpty() }
 
             override fun afterTextChanged(s: Editable?) {}
         }
@@ -82,7 +80,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         binding.tilFrequency.editText?.addTextChangedListener(textChangedListenerAdd)
     }
 
-    private fun textFieldCheck(): Boolean {
+    private fun checkIfFieldsNotEmpty(): Boolean {
         return (binding.tilNameHabit.editText?.length() != 0 &&
                 binding.tilDescHabit.editText?.length() != 0 &&
                 binding.tilPriority.editText?.length() != 0 &&
@@ -91,15 +89,15 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
                 binding.tilFrequency.editText?.length() != 0)
     }
 
-    private fun textInputEditTextClickListener() {
-        binding.tiEtTypeHabit.setOnClickListener { openTypeHabitDialog() }
-        binding.tiEtFrequency.setOnClickListener { openPeriodExecutionHabitDialog() }
+    private fun initSelectorInputListeners() {
+        binding.tiEtTypeHabit.setOnClickListener { openHabitTypeDialog() }
+        binding.tiEtFrequency.setOnClickListener { openExecutionPeriodHabitDialog() }
         binding.tiEtColorCard.setOnClickListener { openColorPickerDialog() }
-        setArrayPriority()
-        setArrayNumberExecutions()
+        openHabitPriorityModal()
+        openHabitRepetitionsNumberModal()
     }
 
-    private fun setArrayNumberExecutions() {
+    private fun openHabitRepetitionsNumberModal() {
         val items = mutableListOf<String>()
         for (i in 1 until 11){ items.add("$i") }
         val adapter = ArrayAdapter(this, R.layout.item_priority, items)
@@ -118,9 +116,9 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun setArrayPriority() {
+    private fun openHabitPriorityModal() {
         val items = listOf(
-            PriorityHabit.HIGH.priority, PriorityHabit.MEDIUM.priority, PriorityHabit.LOW.priority)
+            HabitPriority.HIGH.priority, HabitPriority.MEDIUM.priority, HabitPriority.LOW.priority)
         val adapter = ArrayAdapter(this, R.layout.item_priority, items)
         binding.tvArrayPriority.setDropDownBackgroundDrawable(
             ResourcesCompat.getDrawable(
@@ -149,32 +147,32 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             if (!intent.hasExtra(EXTRA_HABIT_ITEM_ID)) {
                 throw RuntimeException("Param habit id is absent")
             }
-            habitID = intent.getIntExtra(EXTRA_HABIT_ITEM_ID, Habits.UNDEFINED_ID)
+            habitID = intent.getIntExtra(EXTRA_HABIT_ITEM_ID, Habit.UNDEFINED_ID)
         }
         if(screenMode == MODE_EDIT){
             if (!intent.hasExtra(EXTRA_HABIT_ITEM)){
                 throw RuntimeException("Param habit id is absent")
             }
-            habit = intent.getParcelableExtra<Habits>(EXTRA_HABIT_ITEM)
+            habit = intent.getParcelableExtra<Habit>(EXTRA_HABIT_ITEM)
         }
     }
 
-    private fun launchRightMode() {
+    private fun handleAction() {
         when (screenMode) {
             MODE_EDIT -> launchEditMode()
             MODE_ADD -> launchAddMode()
         }
     }
 
-    private fun getHabit() : Habits{
-        return Habits(
+    private fun createHabit() : Habit {
+        return Habit(
             id = getHabitId(),
             title = binding.tiEtNameHabit.text.toString(),
             description = binding.tiEtDescHabit.text.toString(),
-            type = getHabitType()!!,
-            priorityHabit = getPriorityHabit()!!,
+            type = getSelectedHabitType()!!,
+            habitPriority = getSelectedHabitPriority()!!,
             numberExecutions = itemArrayExecutions!!,
-            period = getHabitPeriod()!!,
+            period = getSelectedHabitPeriod()!!,
             color = color
         )
     }
@@ -187,27 +185,27 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         }
     }
 
-    private fun getPriorityHabit() : PriorityHabit?{
+    private fun getSelectedHabitPriority() : HabitPriority?{
         return when(itemArrayPriority){
-            PriorityHabit.HIGH.priority -> PriorityHabit.HIGH
-            PriorityHabit.LOW.priority -> PriorityHabit.LOW
-            PriorityHabit.MEDIUM.priority -> PriorityHabit.MEDIUM
+            HabitPriority.HIGH.priority -> HabitPriority.HIGH
+            HabitPriority.LOW.priority -> HabitPriority.LOW
+            HabitPriority.MEDIUM.priority -> HabitPriority.MEDIUM
             else -> null
         }
     }
 
-    private fun getHabitPeriod(): PeriodExecutionHabit? {
+    private fun getSelectedHabitPeriod(): HabitRepetitionPeriod? {
         return when(binding.tiEtFrequency.text.toString()){
-            PeriodExecutionHabit.REGULAR.period -> PeriodExecutionHabit.REGULAR
-            PeriodExecutionHabit.ONE_TIME.period -> PeriodExecutionHabit.ONE_TIME
+            HabitRepetitionPeriod.REGULAR.period -> HabitRepetitionPeriod.REGULAR
+            HabitRepetitionPeriod.ONE_TIME.period -> HabitRepetitionPeriod.ONE_TIME
             else -> null
         }
     }
 
-    private fun getHabitType() : TypeHabits? {
+    private fun getSelectedHabitType() : HabitType? {
         return when(binding.tiEtTypeHabit.text.toString()){
-            TypeHabits.USEFUL.type -> TypeHabits.USEFUL
-            TypeHabits.HARMFUL.type ->TypeHabits.HARMFUL
+            HabitType.USEFUL.type -> HabitType.USEFUL
+            HabitType.HARMFUL.type ->HabitType.HARMFUL
             else -> null
         }
     }
@@ -232,15 +230,15 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
                 dialog.cancel()
             }
             .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
-                color = colorPicker.getColorCard()
+                color = colorPicker.getCardColor()
                 binding.tilColorCard.setEndIconTintList(ColorStateList.valueOf(color))
                 dialog.cancel()
             }
             .show()
     }
 
-    private fun openTypeHabitDialog(){
-        val singleItems = arrayOf(TypeHabits.HARMFUL.type, TypeHabits.USEFUL.type)
+    private fun openHabitTypeDialog(){
+        val singleItems = arrayOf(HabitType.HARMFUL.type, HabitType.USEFUL.type)
         val checkedItem = intArrayOf(checkedTypeNumber)
         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_type_habit))
@@ -258,9 +256,9 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun openPeriodExecutionHabitDialog() {
+    private fun openExecutionPeriodHabitDialog() {
         val singleItems = arrayOf(
-            PeriodExecutionHabit.REGULAR.period, PeriodExecutionHabit.ONE_TIME.period)
+            HabitRepetitionPeriod.REGULAR.period, HabitRepetitionPeriod.ONE_TIME.period)
         val checkedItem = intArrayOf(checkedPeriodNumber)
         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_period_habit))
@@ -284,27 +282,27 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
 
     private fun launchEditMode() {
         binding.tvTitle.setText(R.string.text_update_habit)
-        setDataHabit()
+        setHabitData()
     }
 
-    private fun setDataHabit() {
+    private fun setHabitData() {
         if (habit != null){
             binding.btSaveHabit.isEnabled = true
             binding.tiEtNameHabit.setText(habit?.title)
             binding.tiEtDescHabit.setText(habit?.description)
-            binding.tvArrayPriority.setText(habit?.priorityHabit?.priority)
+            binding.tvArrayPriority.setText(habit?.habitPriority?.priority)
             binding.tvArrayExecutions.setText(habit?.numberExecutions)
             binding.tiEtTypeHabit.setText(habit?.type?.type)
             binding.tiEtFrequency.setText(habit?.period?.period)
             when(habit?.period?.period){
-                PeriodExecutionHabit.REGULAR.period -> checkedPeriodNumber = 0
-                PeriodExecutionHabit.ONE_TIME.period -> checkedPeriodNumber = 1
+                HabitRepetitionPeriod.REGULAR.period -> checkedPeriodNumber = 0
+                HabitRepetitionPeriod.ONE_TIME.period -> checkedPeriodNumber = 1
             }
             when(habit?.type?.type){
-                TypeHabits.HARMFUL.type -> checkedTypeNumber = 0
-                TypeHabits.USEFUL.type -> checkedTypeNumber = 1
+                HabitType.HARMFUL.type -> checkedTypeNumber = 0
+                HabitType.USEFUL.type -> checkedTypeNumber = 1
             }
-            itemArrayPriority = habit?.priorityHabit?.priority
+            itemArrayPriority = habit?.habitPriority?.priority
             itemArrayExecutions = habit?.numberExecutions
             color = habit?.color!!
             binding.tilColorCard.setEndIconTintList(habit?.color?.let { ColorStateList.valueOf(it) })

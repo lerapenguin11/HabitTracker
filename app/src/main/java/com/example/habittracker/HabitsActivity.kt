@@ -14,7 +14,7 @@ import com.example.habittracker.databinding.ActivityHabitsBinding
 class HabitsActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityHabitsBinding
-    private var habitList : MutableList<Habits> = arrayListOf()
+    private var habitList : MutableList<Habit> = arrayListOf()
     private val adapter = HabitsAdapter()
     private var startForResult: ActivityResultLauncher<Intent>? = null
 
@@ -22,36 +22,36 @@ class HabitsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHabitsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        isVisibleText()
-        resultHabits()
+        handleEmptyListMessageVisibility()
+        handleSave()
         addHabitClickListener()
     }
 
-    private fun resultHabits() {
+    private fun handleSave() {
         startForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 when (result.resultCode) {
                     CODE_ADD -> {
                         val intent = result.data
-                        val newHabit = intent?.getParcelableExtra<Habits>(NEW_HABIT)
+                        val newHabit = intent?.getParcelableExtra<Habit>(NEW_HABIT)
                         habitList.add(newHabit!!)
-                        isVisibleText()
+                        handleEmptyListMessageVisibility()
                         setHabitRecyclerView(habitList)
                     }
                     CODE_EDIT -> {
                         val intent = result.data
-                        val habit = intent?.getParcelableExtra<Habits>(UPDATE_HABIT)
+                        val habit = intent?.getParcelableExtra<Habit>(UPDATE_HABIT)
                         if (habit != null) {
                             habitList[habit.id] = habit
                         }
-                        isVisibleText()
+                        handleEmptyListMessageVisibility()
                         setHabitRecyclerView(habitList)
                     }
                 }
             }
     }
 
-    private fun setHabitRecyclerView(habitList: MutableList<Habits>) {
+    private fun setHabitRecyclerView(habitList: MutableList<Habit>) {
         adapter.submitList(habitList)
         binding.rvHabits.adapter = adapter
         adapter.onHabitListClickListener = {habit ->
@@ -59,23 +59,23 @@ class HabitsActivity : AppCompatActivity() {
         }
     }
 
-    private fun updateHabit(habit : Habits) {
+    private fun updateHabit(habit : Habit) {
         val intent = newIntentEditItem(this, habit)
         startForResult?.launch(intent)
     }
 
-    private fun isVisibleText() {
+    private fun handleEmptyListMessageVisibility() {
         binding.tvTextNoHabits.isVisible = habitList.isEmpty()
     }
 
     private fun addHabitClickListener() {
         binding.fabAddHabits.setOnClickListener{
-            val intent = newIntentAddItem(this, checkHabitId())
+            val intent = newIntentAddItem(this, getHabitId())
             startForResult?.launch(intent)
         }
     }
 
-    private fun checkHabitId() : Int{
+    private fun getHabitId() : Int{
         if (habitList.isEmpty()){
             return 0
         } else{
@@ -101,7 +101,7 @@ class HabitsActivity : AppCompatActivity() {
             return intent
         }
 
-        fun newIntentEditItem(context: Context, habit : Habits) : Intent{
+        fun newIntentEditItem(context: Context, habit : Habit) : Intent{
             val intent = Intent(context, CreateUpdateHabitActivity::class.java)
             intent.putExtra(EXTRA_SCREEN_MODE, MODE_EDIT)
             intent.putExtra(EXTRA_HABIT_ITEM, habit)

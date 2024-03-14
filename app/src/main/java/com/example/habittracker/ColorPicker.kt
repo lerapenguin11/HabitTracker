@@ -39,8 +39,8 @@ class ColorPicker(
     fun createColorCard(rgb: TextView, hsv: TextView) {
         val listColor = arrayListOf<Int>()
         val cardList = createColorPalette()
-        rgb.setText(getTextColorRgb())
-        hsv.setText(getTextColorHsv())
+        rgb.setText(getColorRGBText())
+        hsv.setText(getColorHSVText())
         for (positionCard in 0 until cardList.size) {
             val card = cardList[positionCard]
             card.cardElevation = 5F
@@ -61,14 +61,13 @@ class ColorPicker(
 
             listColor.add(middleColor)
 
-
             card.setCardBackgroundColor(middleColor)
             colorLayout.addView(card)
 
             card.setOnClickListener {
                 cardSelectionHandler(cardList, card, listColor, positionCard)
-                rgb.setText(getTextColorRgb())
-                hsv.setText(getTextColorHsv())
+                rgb.setText(getColorRGBText())
+                hsv.setText(getColorHSVText())
             }
         }
     }
@@ -90,7 +89,7 @@ class ColorPicker(
         selectedColor = listColor.get(positionCard)
     }
 
-    fun getColorCard(): Int {
+    fun getCardColor(): Int {
         return selectedColor
     }
 
@@ -107,18 +106,18 @@ class ColorPicker(
         return hsv
     }
 
-    private fun getTextColorHsv() : String {
-        val red = hexToHSV(getColorCard()).get(0)
-        val green = hexToHSV(getColorCard()).get(1)
-        val blue = hexToHSV(getColorCard()).get(2)
+    private fun getColorHSVText() : String {
+        val red = hexToHSV(getCardColor()).get(0)
+        val green = hexToHSV(getCardColor()).get(1)
+        val blue = hexToHSV(getCardColor()).get(2)
 
         return "HSV - (${red}, ${green}, ${blue})"
     }
 
-    private fun getTextColorRgb() : String{
-        val red = hexToRGB(getColorCard()).get(0)
-        val green = hexToRGB(getColorCard()).get(1)
-        val blue = hexToRGB(getColorCard()).get(2)
+    private fun getColorRGBText() : String{
+        val red = hexToRGB(getCardColor()).get(0)
+        val green = hexToRGB(getCardColor()).get(1)
+        val blue = hexToRGB(getCardColor()).get(2)
         return "RGB - (${red}, ${green}, ${blue})"
     }
 

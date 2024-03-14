@@ -1,16 +1,15 @@
 package com.example.habittracker.adapter
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.habittracker.Habits
+import com.example.habittracker.Habit
 import com.example.habittracker.R
 
-class HabitsAdapter : ListAdapter<Habits, HabitViewHolder>(HabitItemDiffCallback())
+class HabitsAdapter : ListAdapter<Habit, HabitViewHolder>(HabitItemDiffCallback())
 {
-    var onHabitListClickListener : ((Habits) -> Unit)? = null
+    var onHabitListClickListener : ((Habit) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -24,7 +23,7 @@ class HabitsAdapter : ListAdapter<Habits, HabitViewHolder>(HabitItemDiffCallback
         holder.titleHabit.text = habit.title
         holder.descHabit.text = habit.description
         holder.type.text = habit.type.type
-        holder.priority.text = habit.priorityHabit.priority
+        holder.priority.text = habit.habitPriority.priority
         holder.frequency.text = "${habit.numberExecutions} ${checkingNumberExclusion(habit.numberExecutions)} | ${habit.period.period}"
         holder.itemView.setOnClickListener {
             onHabitListClickListener?.invoke(habit)
