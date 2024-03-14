@@ -122,6 +122,8 @@
                     <AutoCompleteTextView
                         android:id="@+id/tv_array_priority"
                         style="@style/TextInputEditText"
+                        android:background="@null"
+                        android:dropDownSelector="@drawable/ic_card"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="none" />

@@ -1,7 +1,9 @@
 package com.example.habittracker
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +13,8 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import com.example.habittracker.databinding.ActivityCreateUpdateHabitBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -100,16 +104,31 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         for (i in 1 until 11){ items.add("$i") }
         val adapter = ArrayAdapter(this, R.layout.item_priority, items)
         binding.tvArrayExecutions.threshold = 1
+        binding.tvArrayExecutions.setDropDownBackgroundDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_card,
+                null
+            )
+        )
         binding.tvArrayExecutions.setAdapter(adapter)
         binding.tvArrayExecutions.onItemClickListener = OnItemClickListener { parent, view, position, id ->
             itemArrayExecutions = parent.getItemAtPosition(position).toString()
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun setArrayPriority() {
         val items = listOf(
             PriorityHabit.HIGH.priority, PriorityHabit.MEDIUM.priority, PriorityHabit.LOW.priority)
         val adapter = ArrayAdapter(this, R.layout.item_priority, items)
+        binding.tvArrayPriority.setDropDownBackgroundDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                R.drawable.ic_card,
+                null
+            )
+        )
         binding.tvArrayPriority.threshold = 1
         binding.tvArrayPriority.setAdapter(adapter)
         binding.tvArrayPriority.onItemClickListener = OnItemClickListener { parent, view, position, id ->
