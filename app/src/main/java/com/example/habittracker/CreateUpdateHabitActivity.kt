@@ -1,13 +1,23 @@
 package com.example.habittracker
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.marginLeft
+import androidx.core.view.marginRight
 import com.example.habittracker.databinding.ActivityCreateUpdateHabitBinding
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
@@ -21,6 +31,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     private var habit : Habits? = null
     private var checkedTypeNumber = -1
     private var checkedPeriodNumber = -1
+    private var color : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +96,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     private fun textInputEditTextClickListener() {
         binding.tiEtTypeHabit.setOnClickListener { openTypeHabitDialog() }
         binding.tiEtFrequency.setOnClickListener { openPeriodExecutionHabitDialog() }
+        binding.tiEtColorCard.setOnClickListener { openColorPickerDialog() }
         setArrayPriority()
         setArrayNumberExecutions()
     }
@@ -150,7 +162,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             priorityHabit = getPriorityHabit()!!,
             numberExecutions = itemArrayExecutions!!,
             period = getHabitPeriod()!!,
-            color = 0
+            color = color
         )
     }
 
@@ -185,6 +197,26 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
             TypeHabits.HARMFUL.type ->TypeHabits.HARMFUL
             else -> null
         }
+    }
+
+    private fun openColorPickerDialog() {
+        val viewDialog = LayoutInflater.from(this).inflate(R.layout.color_picker_layout, null)
+        val colorLayout = viewDialog.findViewById<LinearLayout>(R.id.color_layout)
+        val colorPicker = ColorPicker(widthBtn = 185, heightBtn = 185, margin = 50, context = this, colorLayout = colorLayout)
+        colorPicker.createColorCard()
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.text_choose_color))
+            .setView(viewDialog)
+            .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
+                dialog.cancel()
+            }
+            .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
+                color = colorPicker.getColorCard()
+                binding.tilColorCard.setEndIconTintList(ColorStateList.valueOf(color))
+                dialog.cancel()
+            }
+            .show()
     }
 
     private fun openTypeHabitDialog(){

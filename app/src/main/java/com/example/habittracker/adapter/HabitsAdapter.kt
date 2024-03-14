@@ -1,6 +1,7 @@
 package com.example.habittracker.adapter
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
@@ -28,6 +29,7 @@ class HabitsAdapter : ListAdapter<Habits, HabitViewHolder>(HabitItemDiffCallback
         holder.itemView.setOnClickListener {
             onHabitListClickListener?.invoke(habit)
         }
+        holder.card.setCardBackgroundColor(habit.color)
     }
 
     private fun checkingNumberExclusion(numberExecutions: String): String{

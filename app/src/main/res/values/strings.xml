@@ -14,4 +14,5 @@
     <string name="text_choose_period_habit">Выберите период выполнения привычки</string>
     <string name="text_close">Закрыть</string>
     <string name="text_gone">Готово</string>
+    <string name="text_choose_color">Выберите цвет карточки</string>
 </resources>

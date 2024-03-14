@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.R
+import com.google.android.material.card.MaterialCardView
 import com.google.android.material.chip.Chip
 
 class HabitViewHolder(view : View) : RecyclerView.ViewHolder(view)
@@ -13,4 +14,5 @@ class HabitViewHolder(view : View) : RecyclerView.ViewHolder(view)
     val type : Chip = view.findViewById(R.id.chip_type)
     val priority : Chip = view.findViewById(R.id.chip_priority)
     val frequency : Chip = view.findViewById(R.id.chip_frequency)
+    var card : MaterialCardView = view.findViewById(R.id.habit_card)
 }
