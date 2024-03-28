@@ -31,7 +31,7 @@ class HabitsAdapter : ListAdapter<Habit, HabitViewHolder>(HabitItemDiffCallback(
         holder.itemView.setOnClickListener {
             onHabitListClickListener?.invoke(habit)
         }
-        holder.card.setCardBackgroundColor(habit.color)
+        //holder.card.setCardBackgroundColor(habit.color)
     }
 
     private fun checkingNumberExclusion(numberExecutions: String): String{

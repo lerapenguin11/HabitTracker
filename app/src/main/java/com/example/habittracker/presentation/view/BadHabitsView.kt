@@ -4,16 +4,23 @@ import androidx.core.view.isVisible
 import com.example.habittracker.databinding.FragmentHabitsBadBinding
 import com.example.habittracker.presentation.adapter.HabitsAdapter
 import com.example.habittracker.presentation.model.Habit
+import javax.security.auth.callback.Callback
 
 class BadHabitsView(
-    private val binding : FragmentHabitsBadBinding
+    private val binding : FragmentHabitsBadBinding,
+    private val callback: Callback
 )
 {
-    init {
+    private val adapter = HabitsAdapter()
 
+    interface Callback {
+        fun onEditHabit(habit: Habit)
     }
 
-    private val adapter = HabitsAdapter()
+    init {
+        adapter.onHabitListClickListener = {habit -> callback.onEditHabit(habit)}
+    }
+
     private fun handleEmptyListMessageVisibility(habitList : List<Habit>) = with(binding){
         tvTextNoHabits.isVisible = habitList.isEmpty()
     }
