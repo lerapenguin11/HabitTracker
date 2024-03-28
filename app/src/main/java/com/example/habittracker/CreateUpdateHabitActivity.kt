@@ -9,11 +9,16 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.recyclerview.widget.RecyclerView
+import com.example.habittracker.presentation.adapter.ColorPickerAdapter
 import com.example.habittracker.databinding.ActivityCreateUpdateHabitBinding
+import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.presentation.model.HabitPriority
+import com.example.habittracker.presentation.model.HabitRepetitionPeriod
+import com.example.habittracker.presentation.model.HabitType
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
@@ -28,6 +33,8 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     private var checkedTypeNumber = -1
     private var checkedPeriodNumber = -1
     private var color : Int = 0
+
+    private val adapter = ColorPickerAdapter()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -205,7 +212,7 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
     private fun getSelectedHabitType() : HabitType? {
         return when(binding.tiEtTypeHabit.text.toString()){
             HabitType.USEFUL.type -> HabitType.USEFUL
-            HabitType.HARMFUL.type ->HabitType.HARMFUL
+            HabitType.HARMFUL.type -> HabitType.HARMFUL
             else -> null
         }
     }
@@ -214,14 +221,17 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
         val viewDialog = LayoutInflater.from(this).inflate(R.layout.color_picker_layout, null)
         val rgb : TextView = viewDialog.findViewById(R.id.tv_rgb)
         val hsv : TextView = viewDialog.findViewById(R.id.tv_hsv)
-        val colorLayout = viewDialog.findViewById<LinearLayout>(R.id.color_layout)
-        val colorPicker = ColorPicker(
+        val rvColorPicker = viewDialog.findViewById<RecyclerView>(R.id.rv_color_picker)
+        //val colorLayout = viewDialog.findViewById<LinearLayout>(R.id.color_layout)
+        rvColorPicker.adapter = adapter
+        /*val colorPicker = ColorPicker(
             widthBtn = 185,
             heightBtn = 185,
             margin = 50,
             context = this,
-            colorLayout = colorLayout)
-        colorPicker.createColorCard(rgb, hsv)
+            colorLayout = colorLayout,
+            rvColorPicker = rvColorPicker)
+        val list = colorPicker.createColorCard(rgb, hsv)*/
 
         MaterialAlertDialogBuilder(this, R.style.ThemeOverlay_App_MaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_color))
@@ -230,8 +240,8 @@ class CreateUpdateHabitActivity : AppCompatActivity() {
                 dialog.cancel()
             }
             .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
-                color = colorPicker.getCardColor()
-                binding.tilColorCard.setEndIconTintList(ColorStateList.valueOf(color))
+                //color = colorPicker.getCardColor()
+                //binding.tilColorCard.setEndIconTintList(ColorStateList.valueOf(color))
                 dialog.cancel()
             }
             .show()

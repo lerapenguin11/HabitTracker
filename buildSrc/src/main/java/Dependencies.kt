@@ -29,8 +29,8 @@ object Versions {
     const val mockito_core = "4.0.0"
     const val mockito_kotlin = "4.0.0"
     const val mockito_inline = "3.11.2"
-    const val navigation = "2.7.6"
-    const val navigation_fragment = "2.7.6"
+    const val navigation = "2.7.7"
+    const val navigation_fragment = "2.7.7"
     const val flexbox = "3.0.0"
     const val gson = "2.8.7"
 }

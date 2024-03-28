@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/main_item"
+        android:title="@string/text_habit">
+        <menu>
+            <item
+                android:id="@+id/inbox_item"
+                android:icon="@drawable/ic_check_circle"
+                android:title="@string/text_list_habits"
+                android:checkable="true" />
+            <item
+                android:id="@+id/outbox_item"
+                android:icon="@drawable/ic_mood"
+                android:title="@string/text_about_app"
+                android:checkable="true"/>
+        </menu>
+    </item>
+</menu>

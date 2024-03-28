@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_graph"
+    app:startDestination="@id/habitsFragment">
+
+    <fragment
+        android:id="@+id/habitsFragment"
+        android:name="com.example.habittracker.presentation.HabitsFragment"
+        android:label="fragment_habits"
+        tools:layout="@layout/fragment_habits" >
+        <action
+            app:restoreState="true"
+            android:id="@+id/action_habitsFragment_to_habitProcessingFragment"
+            app:destination="@id/habitProcessingFragment"
+            app:popEnterAnim="@animator/nav_default_enter_anim"
+            app:popExitAnim="@animator/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/habitProcessingFragment"
+        android:name="com.example.habittracker.presentation.HabitProcessingFragment"
+        android:label="fragment_habit_processing"
+        tools:layout="@layout/fragment_habit_processing" >
+        <action
+            android:id="@+id/action_habitProcessingFragment_to_habitsFragment"
+            app:destination="@id/habitsFragment" />
+    </fragment>
+    <include app:graph="@navigation/nav_good" />
+    <include app:graph="@navigation/nav_bad" />
+</navigation>

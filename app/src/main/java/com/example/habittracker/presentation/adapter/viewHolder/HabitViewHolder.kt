@@ -1,4 +1,4 @@
-package com.example.habittracker.adapter
+package com.example.habittracker.presentation.adapter.viewHolder
 
 import android.view.View
 import android.widget.TextView
@@ -15,4 +15,6 @@ class HabitViewHolder(view : View) : RecyclerView.ViewHolder(view)
     val priority : Chip = view.findViewById(R.id.chip_priority)
     val frequency : Chip = view.findViewById(R.id.chip_frequency)
     val card : MaterialCardView = view.findViewById(R.id.habit_card)
+
+        //add bind
 }

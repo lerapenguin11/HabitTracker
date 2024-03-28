@@ -1,17 +1,20 @@
-package com.example.habittracker.adapter
+package com.example.habittracker.presentation.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
-import com.example.habittracker.Habit
+import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.R
+import com.example.habittracker.presentation.adapter.itemDiffCallback.HabitItemDiffCallback
+import com.example.habittracker.presentation.adapter.viewHolder.HabitViewHolder
 
 class HabitsAdapter : ListAdapter<Habit, HabitViewHolder>(HabitItemDiffCallback())
 {
-    var onHabitListClickListener : ((Habit) -> Unit)? = null
+    var onHabitListClickListener : ((Habit) -> Unit)? = null // убрать в конструктор
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
+        //binding
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_habits, parent, false)
         return HabitViewHolder(view)
@@ -33,7 +36,7 @@ class HabitsAdapter : ListAdapter<Habit, HabitViewHolder>(HabitItemDiffCallback(
 
     private fun checkingNumberExclusion(numberExecutions: String): String{
         return when(numberExecutions.toInt()){
-            3 -> CONST_TEXT_NUM_EXCEPTION
+            3 -> CONST_TEXT_NUM_EXCEPTION //вынести в string
             else -> CONST_TEXT_NUM
         }
     }

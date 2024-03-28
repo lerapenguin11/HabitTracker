@@ -1,9 +1,9 @@
-package com.example.habittracker
+package com.example.habittracker.presentation.model
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-@Parcelize
+@Parcelize //ghjxbnfnm
 data class Habit(
     var id : Int = UNDEFINED_ID,
     val title : String,

@@ -5,75 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".HabitsActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+    <androidx.fragment.app.FragmentContainerView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        app:defaultNavHost="false"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:id="@+id/activity_root_fragment_nav_host"
+        app:navGraph="@navigation/navigation_graph">
 
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/material_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="112dp"
-            android:elevation="0dp"
-            app:layout_collapseMode="pin"
-            app:navigationIconTint="?attr/colorOnSurface"
-            app:title="Привычки"
-            app:titleMarginStart="20dp"
-            app:titleTextAppearance="@style/ToolbarTitleText"
-            app:titleTextStyle="@style/ToolbarTitleText" />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <include
-        android:id="@+id/include"
-        layout="@layout/motivational_banner"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
-
-    <TextView
-        android:id="@+id/tv_text_no_habits"
-        style="@style/TextNoHabitsStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="10dp"
-        android:text="@string/text_no_habits"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/appBarLayout" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_habits"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:focusable="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"
-        android:src="@drawable/ic_add_habits"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-     <androidx.recyclerview.widget.RecyclerView
-         android:id="@+id/rv_habits"
-         android:layout_width="match_parent"
-         android:layout_height="0dp"
-         android:layout_marginStart="20dp"
-         android:layout_marginEnd="20dp"
-         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-         android:orientation="vertical"
-         app:layout_constraintBottom_toBottomOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/include"
-         tools:listitem="@layout/item_habits" />
+    </androidx.fragment.app.FragmentContainerView>
 </androidx.constraintlayout.widget.ConstraintLayout>

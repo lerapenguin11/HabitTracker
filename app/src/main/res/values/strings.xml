@@ -17,4 +17,11 @@
     <string name="text_choose_color">Выберите цвет карточки</string>
     <string name="text_create_habit">Создать привычку</string>
     <string name="text_update_habit">Редактировать привычку</string>
+    <string name="text_tab1">Полезные</string>
+    <string name="text_tab2">Вредные</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_habit">Привычки</string>
+    <string name="text_list_habits">Список привычек</string>
+    <string name="text_about_app">О приложении</string>
 </resources>

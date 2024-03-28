@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="32dp"
-    android:layout_height="32dp"
-    app:cardCornerRadius="3dp"
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/color_card"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    app:cardCornerRadius="5dp"
     app:strokeWidth="0dp"
+    android:layout_margin="25dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="#F1F6EB">
+    app:cardBackgroundColor="@color/md_theme_light_error">
 
 </com.google.android.material.card.MaterialCardView>

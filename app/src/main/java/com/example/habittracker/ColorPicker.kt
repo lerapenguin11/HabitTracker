@@ -1,30 +1,33 @@
 package com.example.habittracker
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.view.marginLeft
-import androidx.core.view.marginRight
+import androidx.recyclerview.widget.RecyclerView
+import com.example.habittracker.presentation.adapter.ColorPickerAdapter
 import com.google.android.material.card.MaterialCardView
 
 class ColorPicker(
-    var widthBtn : Int = 0,
-    var heightBtn : Int = 0,
-    val margin : Int,
-    val context: Context,
-    val colorLayout: LinearLayout)  {
+    var widthBtn: Int = 0,
+    var heightBtn: Int = 0, //плохо
+    val margin: Int,
+    val context: Context, //плохо
+    val colorLayout: LinearLayout,
+    rvColorPicker: RecyclerView
+)  {
 
     private val param = LinearLayout.LayoutParams(
         widthBtn,
         heightBtn
     )
     private var selectedColor : Int = Color.parseColor("#F1F6EB")
+    private val adapter = ColorPickerAdapter()
 
-    private fun createColorPalette(): MutableList<MaterialCardView> {
+    private fun createColorPalette(): MutableList<Int> {
         val cardList : MutableList<MaterialCardView> = mutableListOf()
+
+        val list : MutableList<Int> = mutableListOf()
         for (i in 0..15) {
             val card = MaterialCardView(context)
             val param = LinearLayout.LayoutParams(widthBtn, heightBtn)
@@ -33,15 +36,18 @@ class ColorPicker(
             cardList.add(card)
         }
 
-        return cardList
+        return list
     }
 
-    fun createColorCard(rgb: TextView, hsv: TextView) {
+    fun createColorCard(rgb: TextView, hsv: TextView): MutableList<Int> {
         val listColor = arrayListOf<Int>()
         val cardList = createColorPalette()
         rgb.setText(getColorRGBText())
         hsv.setText(getColorHSVText())
-        for (positionCard in 0 until cardList.size) {
+
+
+        return cardList
+        /*for (positionCard in 0 until cardList.size) {
             val card = cardList[positionCard]
             card.cardElevation = 5F
             card.strokeWidth = 0
@@ -69,7 +75,7 @@ class ColorPicker(
                 rgb.setText(getColorRGBText())
                 hsv.setText(getColorHSVText())
             }
-        }
+        }*/
     }
 
     private fun cardSelectionHandler(
@@ -120,5 +126,4 @@ class ColorPicker(
         val blue = hexToRGB(getCardColor()).get(2)
         return "RGB - (${red}, ${green}, ${blue})"
     }
-
 }

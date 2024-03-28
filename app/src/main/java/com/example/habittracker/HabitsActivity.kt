@@ -4,12 +4,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.isVisible
-import com.example.habittracker.adapter.HabitsAdapter
+import com.example.habittracker.presentation.adapter.HabitsAdapter
 import com.example.habittracker.databinding.ActivityHabitsBinding
+import com.example.habittracker.presentation.model.Habit
 
 class HabitsActivity : AppCompatActivity() {
 
@@ -22,12 +20,13 @@ class HabitsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityHabitsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        /*setContentView(binding.root)
         handleEmptyListMessageVisibility()
         handleSave()
-        addHabitClickListener()
+        addHabitClickListener()*/
     }
 
-    private fun handleSave() {
+    /*private fun handleSave() {
         startForResult =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
                 when (result.resultCode) {
@@ -51,20 +50,22 @@ class HabitsActivity : AppCompatActivity() {
             }
     }
 
+    //TODO
     private fun setHabitRecyclerView(habitList: MutableList<Habit>) {
         adapter.submitList(habitList)
         binding.rvHabits.adapter = adapter
         adapter.onHabitListClickListener = {habit ->
             updateHabit(habit)
         }
-    }
+    }*/
 
     private fun updateHabit(habit : Habit) {
         val intent = newIntentEditItem(this, habit)
         startForResult?.launch(intent)
     }
 
-    private fun handleEmptyListMessageVisibility() {
+    //TODO
+    /*private fun handleEmptyListMessageVisibility() {
         binding.tvTextNoHabits.isVisible = habitList.isEmpty()
     }
 
@@ -73,7 +74,7 @@ class HabitsActivity : AppCompatActivity() {
             val intent = newIntentAddItem(this, getHabitId())
             startForResult?.launch(intent)
         }
-    }
+    }*/
 
     private fun getHabitId() : Int{
         if (habitList.isEmpty()){
