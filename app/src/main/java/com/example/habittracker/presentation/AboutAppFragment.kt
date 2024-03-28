@@ -1,13 +1,12 @@
-package com.example.habittracker
+package com.example.habittracker.presentation
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
+import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentAboutAppBinding
-import com.example.habittracker.presentation.BaseFragment
 
 class AboutAppFragment : BaseFragment<FragmentAboutAppBinding>() {
 

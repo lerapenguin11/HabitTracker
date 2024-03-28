@@ -32,7 +32,7 @@
     <include app:graph="@navigation/nav_bad" />
     <fragment
         android:id="@+id/aboutAppFragment"
-        android:name="com.example.habittracker.AboutAppFragment"
+        android:name="com.example.habittracker.presentation.AboutAppFragment"
         android:label="fragment_about_app"
         tools:layout="@layout/fragment_about_app" >
         <action
