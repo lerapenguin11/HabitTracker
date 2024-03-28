@@ -29,7 +29,7 @@ internal class HabitProcessingView(
         binding.tiEtFrequency.setOnClickListener { callback.onSelectionExecutionPeriod() }
         initTextInputListeners()
         binding.btClose.setOnClickListener {
-            it.findNavController().navigate(R.id.action_habitProcessingFragment_to_habitsFragment)
+            it.findNavController().popBackStack()
         }
     }
 
@@ -72,10 +72,10 @@ internal class HabitProcessingView(
     }
 
     private fun getHabitId(): Int {
-        if (habit?.id == null){
-            return HabitsFragment.hashCode()
+        if (habit != null){
+            return habit!!.id
         } else{
-            return habit?.id!!
+            return (Math.random() * 100000).toInt()
         }
     }
 

@@ -12,6 +12,7 @@
         tools:layout="@layout/fragment_habits" >
         <action
             app:restoreState="true"
+            app:popUpTo="@id/habitsFragment"
             android:id="@+id/action_habitsFragment_to_habitProcessingFragment"
             app:destination="@id/habitProcessingFragment"
             app:popEnterAnim="@animator/nav_default_enter_anim"
@@ -23,9 +24,19 @@
         android:label="fragment_habit_processing"
         tools:layout="@layout/fragment_habit_processing" >
         <action
+            app:popUpTo="@id/habitsFragment"
             android:id="@+id/action_habitProcessingFragment_to_habitsFragment"
             app:destination="@id/habitsFragment" />
     </fragment>
     <include app:graph="@navigation/nav_good" />
     <include app:graph="@navigation/nav_bad" />
+    <fragment
+        android:id="@+id/aboutAppFragment"
+        android:name="com.example.habittracker.AboutAppFragment"
+        android:label="fragment_about_app"
+        tools:layout="@layout/fragment_about_app" >
+        <action
+            android:id="@+id/action_aboutAppFragment_to_habitsFragment"
+            app:destination="@id/habitsFragment" />
+    </fragment>
 </navigation>

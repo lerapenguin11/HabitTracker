@@ -2,9 +2,12 @@ package com.example.habittracker.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.setFragmentResultListener
 import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitsBinding
@@ -14,7 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private var screenMode : String? = null
-    private var habit : Habit? = null
+    //private var habit : Habit? = null
     private var habitList : MutableList<Habit> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,35 +25,10 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         arguments?.let {
             screenMode = it.getString(SCREEN_MODE)
         }
-
-        if (savedInstanceState != null) {
-            habitList = savedInstanceState.getSerializable("habitList") as MutableList<Habit>
+        setFragmentResultListener("habit"){requestKey, bundle ->
+            val habit = bundle.getParcelable<Habit>(NEW_HABIT)
+            habit?.let { habitList.add(it) }
         }
-    }
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        if (savedInstanceState != null) {
-            habitList = savedInstanceState.getSerializable("habitList") as MutableList<Habit>
-        }
-
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
-
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable("habitList", ArrayList(habitList))
-
-        this.arguments = outState
-        super.onSaveInstanceState(outState)
     }
 
     override fun createBinding(
@@ -65,15 +43,17 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         when(screenMode){
             MODE_ADD ->{
                 arguments?.let {
-                    habit = it.getParcelable(NEW_HABIT)
-                    habit?.let { it1 -> habitList.add(it1) }
-                    val bundle = Bundle()
 
-                    bundle.putParcelable(NEW_HABIT, habit)
-                    bundle.putString(SCREEN_MODE, MODE_ADD)
                 }
             }
-            MODE_EDIT -> {}
+            MODE_EDIT -> {
+                arguments?.let {
+                    /*habit = it.getParcelable(UPDATE_HABIT)
+                    if (habit != null) {
+                        habitList[habit!!.id] = habit!!
+                    }*/
+                }
+            }
         }
         setUpTabBar()
         val v = HabitsView(FragmentHabitsBinding.bind(view), object : HabitsView.Callback{
@@ -82,10 +62,32 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
             }
 
             override fun onEditHabit(habit: Habit) {
-
+                openEditHabit(habit, SCREEN_MODE, MODE_EDIT)
             }
 
         })
+
+        binding.navigationView.setupWithNavController(view.findNavController())
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.inbox_item -> {
+                    view.findNavController().navigate(R.id.habitsFragment)
+                }
+                R.id.outbox_item -> {
+                    view.findNavController().popBackStack()
+                    view.findNavController().navigate(R.id.aboutAppFragment)
+                }
+            }
+            true
+        }
+    }
+
+    private fun openEditHabit(habit: Habit, screenMode: String?, mode: String) {
+        val bundle = Bundle()
+        bundle.putString(screenMode, mode)
+        bundle.putParcelable(UPDATE_HABIT, habit)
+        view?.findNavController()?.navigate(
+            R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
 
     private fun setUpTabBar() {

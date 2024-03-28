@@ -2,6 +2,7 @@ package com.example.habittracker.presentation
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,12 +10,16 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.setFragmentResult
 import androidx.navigation.ActivityNavigator
+import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.example.habittracker.presentation.model.HabitPriority
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitProcessingBinding
 import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.presentation.model.HabitRepetitionPeriod
+import com.example.habittracker.presentation.model.HabitType
 import com.example.habittracker.presentation.view.HabitDataListener
 import com.example.habittracker.presentation.view.dialog.ExecutionPeriodHabitDialog
 import com.example.habittracker.presentation.view.HabitProcessingView
@@ -25,11 +30,13 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var screenMode : String? = null
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
+    private var habit : Habit? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             screenMode = it.getString(SCREEN_MODE)
+            habit = it.getParcelable(UPDATE_HABIT)
         }
     }
 
@@ -70,17 +77,16 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
         bundle.putParcelable(UPDATE_HABIT, habit)
-        view?.findNavController()?.
-        navigate(R.id.action_habitProcessingFragment_to_habitsFragment, bundle)
+        setFragmentResult("habit", bundle)
+        view?.findNavController()?.popBackStack()
     }
 
     private fun launchAddHabit(habit : Habit) {
         val bundle = Bundle()
         bundle.putParcelable(NEW_HABIT, habit)
         bundle.putString(SCREEN_MODE, MODE_ADD)
-
-        view?.findNavController()?.
-        navigate(R.id.action_habitProcessingFragment_to_habitsFragment, bundle)
+        setFragmentResult("habit", bundle)
+        view?.findNavController()?.popBackStack()
     }
 
     private fun handleAction() {
@@ -96,7 +102,21 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun launchEditMode() {
         binding.tvTitle.setText(R.string.text_update_habit)
-        //setHabitData()
+        setHabitData()
+    }
+
+    private fun setHabitData() {
+        if (habit != null){
+            binding.btSaveHabit.isEnabled = true
+            binding.tiEtNameHabit.setText(habit?.title)
+            binding.tiEtDescHabit.setText(habit?.description)
+            binding.tvArrayPriority.setText(habit?.habitPriority?.priority)
+            binding.tvArrayExecutions.setText(habit?.numberExecutions)
+            binding.tiEtTypeHabit.setText(habit?.type?.type)
+            binding.tiEtFrequency.setText(habit?.period?.period)
+            itemArrayPriority = habit?.habitPriority?.priority
+            itemArrayExecutions = habit?.numberExecutions
+        }
     }
 
     @SuppressLint("ResourceAsColor")

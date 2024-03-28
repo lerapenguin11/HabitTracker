@@ -19,11 +19,6 @@ class BadHabitsFragment(private val habitList: MutableList<Habit>) : BaseFragmen
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        onHabitDataReceived()
-    }
-
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -34,6 +29,11 @@ class BadHabitsFragment(private val habitList: MutableList<Habit>) : BaseFragmen
     private fun onHabitDataReceived() {
         val v = BadHabitsView(FragmentHabitsBadBinding.bind(requireView()))
         v.setHabitRecyclerView(habitList.filter { it.type == HabitType.HARMFUL })
+    }
+
+    override fun onResume() {
+        super.onResume()
+        onHabitDataReceived()
     }
 
     companion object {
