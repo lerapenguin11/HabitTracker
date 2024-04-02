@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.habittracker"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
 
@@ -41,14 +41,12 @@ android {
 
 dependencies {
 
-    implementation(Deps.core)
-    implementation(platform(Deps.kotlin_bom))
-    implementation(Deps.appCompat)
-    implementation(Deps.androidMaterial)
-    implementation(Deps.constraintLayout)
-    implementation(Navigation.navigation)
-    implementation(Navigation.navigation_fragment)
-    testImplementation(TestImplementation.junit)
-    androidTestImplementation(AndroidTestImplementation.junit)
-    androidTestImplementation(AndroidTestImplementation.espresso)
+    implementation(libs.android.core.ktx)
+    implementation(libs.android.appcompat)
+    implementation(libs.android.material)
+    implementation(libs.android.constraintlayout)
+    implementation(libs.bundles.navigation.all)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.android.test.ext.junit)
+    androidTestImplementation(libs.android.test.espresso.core)
 }
