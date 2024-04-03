@@ -2,16 +2,13 @@ package com.example.habittracker.presentation
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.example.habittracker.R
-import com.example.habittracker.databinding.FragmentGoodHabitsBinding
 import com.example.habittracker.databinding.FragmentHabitsBadBinding
 import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.presentation.model.HabitType
 import com.example.habittracker.presentation.view.BadHabitsView
-import com.example.habittracker.presentation.view.GoodHabitsView
 
 class BadHabitsFragment(private val habitList: MutableList<Habit>) : BaseFragment<FragmentHabitsBadBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {

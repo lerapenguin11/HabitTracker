@@ -4,16 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
+import androidx.core.view.isVisible
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentGoodHabitsBinding
+import com.example.habittracker.presentation.adapter.HabitsAdapter
 import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.presentation.model.HabitType
-import com.example.habittracker.presentation.view.GoodHabitsView
 
-class GoodHabitsFragment(private val habitList: MutableList<Habit>) : BaseFragment<FragmentGoodHabitsBinding>() {
+class GoodHabitsFragment(private val habitList: MutableList<Habit>)
+    : BaseFragment<FragmentGoodHabitsBinding>()
+{
+    private val adapter = HabitsAdapter()
+
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -23,24 +26,27 @@ class GoodHabitsFragment(private val habitList: MutableList<Habit>) : BaseFragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHabitGoodRecyclerView(habitList.filter { it.type == HabitType.USEFUL })
+        habitClickListener()
     }
 
-    override fun onResume() {
-        super.onResume()
-        onHabitDataReceived()
+    private fun habitClickListener() {
+        adapter.onHabitListClickListener = {habit ->
+            openEditHabit(habit, SCREEN_MODE, MODE_EDIT)
+        }
     }
 
-   private fun onHabitDataReceived() {
-        val v = GoodHabitsView(FragmentGoodHabitsBinding.bind(requireView()), object : GoodHabitsView.Callback{
-            override fun onEditHabit(habit: Habit) {
-                openEditHabit(habit, SCREEN_MODE, MODE_EDIT)
-            }
-
-        })
-        v.setHabitGoodRecyclerView(habitList.filter { it.type == HabitType.USEFUL })
+    private fun setHabitGoodRecyclerView(habitList : List<Habit>) = with(binding) {
+        handleEmptyListMessageVisibility(habitList = habitList)
+        adapter.submitList(habitList)
+        rvHabitsGood.adapter = adapter
     }
 
-    private fun openEditHabit(habit: Habit, screenMode: String?, mode: String) {
+    private fun handleEmptyListMessageVisibility(habitList : List<Habit>) = with(binding){
+        tvTextNoHabits.isVisible = habitList.isEmpty()
+    }
+
+    private fun openEditHabit(habit: Habit, screenMode: String?, mode : String) {
         val bundle = Bundle()
         bundle.putString(screenMode, mode)
         bundle.putParcelable(UPDATE_HABIT, habit)
@@ -50,9 +56,7 @@ class GoodHabitsFragment(private val habitList: MutableList<Habit>) : BaseFragme
 
     companion object{
         private const val MODE_EDIT = "mode_edit"
-        private const val MODE_ADD = "mode_add"
         private const val SCREEN_MODE = "screen_mode"
-        private const val NEW_HABIT = "new_habit"
         private const val UPDATE_HABIT = "update_habit"
     }
 }
