@@ -24,4 +24,7 @@
     <string name="text_habit">Привычки</string>
     <string name="text_list_habits">Список привычек</string>
     <string name="text_about_app">О приложении</string>
+    <string name="text_num_exception">раза в день</string>
+    <string name="text_num">раз в день</string>
+    <string name="text_habits">Привычки</string>
 </resources>

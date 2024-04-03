@@ -41,6 +41,7 @@
         <item name="android:textSize">32sp</item>
         <item name="android:fontFamily">@font/roboto</item>
         <item name="android:maxLines">2</item>
+        <item name="android:textColor">#1A1C19</item>
     </style>
 
     <style name="TextMotivationalStyle">
