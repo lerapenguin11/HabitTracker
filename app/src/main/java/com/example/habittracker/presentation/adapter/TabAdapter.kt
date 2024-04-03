@@ -7,7 +7,8 @@ import com.example.habittracker.presentation.BadHabitsFragment
 import com.example.habittracker.presentation.GoodHabitsFragment
 import com.example.habittracker.presentation.model.Habit
 
-class TabAdapter(fragmentActivity: FragmentActivity, private val habit: MutableList<Habit>) : FragmentStateAdapter(fragmentActivity) {
+class TabAdapter(fragmentActivity: FragmentActivity, private val habit : MutableList<Habit>)
+    : FragmentStateAdapter(fragmentActivity) {
     private val tabCount = 2
 
     override fun getItemCount(): Int {

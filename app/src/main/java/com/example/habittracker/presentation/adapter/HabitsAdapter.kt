@@ -4,45 +4,56 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.R
+import com.example.habittracker.databinding.ItemHabitsBinding
 import com.example.habittracker.presentation.adapter.itemDiffCallback.HabitItemDiffCallback
-import com.example.habittracker.presentation.adapter.viewHolder.HabitViewHolder
 
-class HabitsAdapter : ListAdapter<Habit, HabitViewHolder>(HabitItemDiffCallback())
+internal class HabitsAdapter(
+    var onHabitListClickListener : ((Habit) -> Unit)? = null
+)
+    : ListAdapter<Habit, HabitsAdapter.HabitViewHolder>(HabitItemDiffCallback())
 {
-    var onHabitListClickListener : ((Habit) -> Unit)? = null // убрать в конструктор
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HabitViewHolder {
-        //binding
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_habits, parent, false)
-        return HabitViewHolder(view)
+        val itemBinding =
+            ItemHabitsBinding.inflate(LayoutInflater.from(parent.context), parent,
+                false)
+        return HabitViewHolder(itemBinding)
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         val habit = getItem(position)
-        holder.titleHabit.text = habit.title
-        holder.descHabit.text = habit.description
-        holder.type.text = habit.type.type
-        holder.priority.text = habit.habitPriority.priority
-        holder.frequency.text = "${habit.numberExecutions} ${checkingNumberExclusion(habit.numberExecutions)} | ${habit.period.period}"
-        holder.itemView.setOnClickListener {
-            onHabitListClickListener?.invoke(habit)
-        }
-        //holder.card.setCardBackgroundColor(habit.color)
+        holder.bind(habit)
     }
 
-    private fun checkingNumberExclusion(numberExecutions: String): String{
-        return when(numberExecutions.toInt()){
-            3 -> CONST_TEXT_NUM_EXCEPTION //вынести в string
-            else -> CONST_TEXT_NUM
+    inner class HabitViewHolder(
+        private val binding : ItemHabitsBinding)
+        : RecyclerView.ViewHolder(binding.root)
+    {
+        init {
+            itemView.setOnClickListener {
+                onHabitListClickListener?.invoke(getItem(adapterPosition))
+            }
         }
-    }
+        @SuppressLint("SetTextI18n")
+        fun bind(habit : Habit) {
+            binding.tvTitleHabit.text = habit.title
+            binding.tvDescHabit.text = habit.description
+            binding.chipType.text = habit.type.type
+            binding.chipPriority.text = habit.habitPriority.priority
+            binding.chipFrequency.text = "${habit.numberExecutions} " +
+                    "${checkingNumberExclusion(habit.numberExecutions)} | ${habit.period.period}"
 
-    companion object{
-        private val CONST_TEXT_NUM_EXCEPTION = "раза в день"
-        private val CONST_TEXT_NUM = "раз в день"
+            //binding.habitCard.setCardBackgroundColor(habit.color)
+        }
+
+        private fun checkingNumberExclusion(numberExecutions: String): Int {
+            return when(numberExecutions.toInt()){
+                3 -> R.string.text_num_exception
+                else -> R.string.text_num
+            }
+        }
     }
 }
+

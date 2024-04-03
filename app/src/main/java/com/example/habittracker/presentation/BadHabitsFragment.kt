@@ -41,7 +41,7 @@ class BadHabitsFragment(private val habitList: MutableList<Habit>) : BaseFragmen
         super.onResume()
         onHabitDataReceived()
     }
-
+    //вынести в один фарагмент
     private fun openEditHabit(habit: Habit, screenMode: String?, mode: String) {
         val bundle = Bundle()
         bundle.putString(screenMode, mode)

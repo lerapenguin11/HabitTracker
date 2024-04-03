@@ -33,7 +33,7 @@ internal class HabitProcessingView(
         }
     }
 
-    fun createHabit() : Habit {
+    fun createHabit() : Habit { //вынести
         return Habit(
             id = getHabitId(),
             title = binding.tiEtNameHabit.text.toString(),

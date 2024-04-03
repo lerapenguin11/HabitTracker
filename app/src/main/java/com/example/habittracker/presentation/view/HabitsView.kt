@@ -11,7 +11,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 internal class HabitsView(
     private val binding : FragmentHabitsBinding,
-    private val callback: Callback
+    private val callback: Callback //не выносят
 )
 {
     interface Callback{
