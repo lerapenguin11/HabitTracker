@@ -1,8 +1,6 @@
 package com.example.habittracker.presentation
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +8,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
-import androidx.navigation.ActivityNavigator
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.habittracker.presentation.model.HabitPriority
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitProcessingBinding
 import com.example.habittracker.presentation.model.Habit
-import com.example.habittracker.presentation.model.HabitRepetitionPeriod
-import com.example.habittracker.presentation.model.HabitType
-import com.example.habittracker.presentation.view.HabitDataListener
 import com.example.habittracker.presentation.view.dialog.ExecutionPeriodHabitDialog
 import com.example.habittracker.presentation.view.HabitProcessingView
 import com.example.habittracker.presentation.view.dialog.HabitTypeDialog
@@ -83,10 +78,16 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun launchAddHabit(habit : Habit) {
         val bundle = Bundle()
-        bundle.putParcelable(NEW_HABIT, habit)
-        bundle.putString(SCREEN_MODE, MODE_ADD)
-        setFragmentResult("habit", bundle)
+        //bundle.putString(SCREEN_MODE, MODE_ADD)
+        bundle.putParcelable(NEW_HABIT, habit) //TODO
+        //habitsFragment.arguments = bundle
+        //requireActivity().supportFragmentManager.setFragmentResult("result", bundle)
+        //view?.findNavController()?.navigate(R.id.action_habitProcessingFragment_to_habitsFragment, bundle)
+
+        //newInstanceNewHabit(newHabit = habit)
         view?.findNavController()?.popBackStack()
+        setFragmentResult(RESULT, bundle)
+        //view?.findNavController()?.navigate(R.id.action_habitProcessingFragment_to_habitsFragment, bundle)
     }
 
     private fun handleAction() {
@@ -164,6 +165,15 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         private const val SCREEN_MODE = "screen_mode"
         private const val NEW_HABIT = "new_habit"
         private const val UPDATE_HABIT = "update_habit"
+
+        const val RESULT = "result"
+
+        private fun newInstanceNewHabit(newHabit : Habit): HabitsFragment =
+            HabitsFragment().apply {
+            arguments = bundleOf(
+                NEW_HABIT to newHabit
+            )
+        }
     }
 
     override fun typeSelection(text: String) {
