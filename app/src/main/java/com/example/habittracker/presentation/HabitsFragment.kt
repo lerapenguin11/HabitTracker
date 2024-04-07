@@ -18,13 +18,10 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private var screenMode : String? = null
     private var habitList : MutableList<Habit> = mutableListOf()
 
-    private var newHabitArgument : Habit? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener(HabitProcessingFragment.RESULT){key, bundle ->
-            newHabitArgument = bundle.getParcelable<Habit>(NEW_HABIT)
-            newHabitArgument?.let { habitList.add(it) }
+        setFragmentResultListener(HabitProcessingFragment.RESULT){_, bundle ->
+            bundle.getParcelable<Habit>(NEW_HABIT)?.let { habitList.add(it) }
             setUpTabLayout()
         }
     }
@@ -38,27 +35,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val habit = arguments?.getParcelable<Habit>(NEW_HABIT)
-
-        arguments?.let {
-
-        }
-
-        //TODO
-        /*requireActivity().supportFragmentManager.setFragmentResultListener("result", viewLifecycleOwner
-        ) { _, result ->
-
-            *//*val bundle = Bundle()
-            val habitArray = habitList.toTypedArray()
-            bundle.putParcelableArray("HabitsList", habitArray)
-            requireActivity().supportFragmentManager.setFragmentResult("resultList", bundle)*//*
-            *//*tabAdapter.addFragment(TypeHabitsListFragment(), "Полезные", habitList.filter { it.type == HabitType.USEFUL })
-            tabAdapter.addFragment(TypeHabitsListFragment(), "Вредные", habitList.filter { it.type == HabitType.HARMFUL })
-            binding.viewPager.adapter = tabAdapter*//*
-        }*/
-
-
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
@@ -82,11 +58,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
                 }
             }
         }
-
-    }
-
-    override fun onResume() {
-        super.onResume()
 
     }
 
@@ -114,23 +85,14 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     }
 
     private fun setUpTabLayout() {
-
         val tabAdapter = TabAdapter(requireActivity())
-
-        //TODO
-
-
         newInstance(habitList.filter { it.type == HabitType.USEFUL })?.let {
-            tabAdapter.addFragment(
-                it, "Полезные")
+            tabAdapter.addFragment(it)
         }
         newInstance(habitList.filter { it.type == HabitType.HARMFUL })?.let {
-            tabAdapter.addFragment(
-                it, "Вредные")
+            tabAdapter.addFragment(it)
         }
-
         binding.viewPager.adapter = tabAdapter
-
         TabLayoutMediator(binding.tabLayoutHabit, binding.viewPager) { tab, position ->
             when(position){
                 0 -> {

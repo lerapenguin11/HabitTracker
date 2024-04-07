@@ -68,6 +68,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         }
     }
 
+    //TODO
     private fun launchUpdateHabit(habit : Habit) {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
@@ -79,15 +80,9 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private fun launchAddHabit(habit : Habit) {
         val bundle = Bundle()
         //bundle.putString(SCREEN_MODE, MODE_ADD)
-        bundle.putParcelable(NEW_HABIT, habit) //TODO
-        //habitsFragment.arguments = bundle
-        //requireActivity().supportFragmentManager.setFragmentResult("result", bundle)
-        //view?.findNavController()?.navigate(R.id.action_habitProcessingFragment_to_habitsFragment, bundle)
-
-        //newInstanceNewHabit(newHabit = habit)
-        view?.findNavController()?.popBackStack()
+        bundle.putParcelable(NEW_HABIT, habit)
         setFragmentResult(RESULT, bundle)
-        //view?.findNavController()?.navigate(R.id.action_habitProcessingFragment_to_habitsFragment, bundle)
+        view?.findNavController()?.popBackStack()
     }
 
     private fun handleAction() {
@@ -135,7 +130,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         binding.tvArrayPriority.threshold = 1
         binding.tvArrayPriority.setAdapter(adapter)
         binding.tvArrayPriority.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id ->
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
                 itemArrayPriority = parent.getItemAtPosition(position).toString()
             }
     }
@@ -154,7 +149,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         )
         binding.tvArrayExecutions.setAdapter(adapter)
         binding.tvArrayExecutions.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, view, position, id ->
+            AdapterView.OnItemClickListener { parent, _, position, _ ->
                 itemArrayExecutions = parent.getItemAtPosition(position).toString()
             }
     }
@@ -167,13 +162,6 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         private const val UPDATE_HABIT = "update_habit"
 
         const val RESULT = "result"
-
-        private fun newInstanceNewHabit(newHabit : Habit): HabitsFragment =
-            HabitsFragment().apply {
-            arguments = bundleOf(
-                NEW_HABIT to newHabit
-            )
-        }
     }
 
     override fun typeSelection(text: String) {

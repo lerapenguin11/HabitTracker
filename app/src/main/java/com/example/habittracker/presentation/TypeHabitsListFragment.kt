@@ -10,7 +10,6 @@ import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
 import com.example.habittracker.presentation.adapter.HabitsAdapter
 import com.example.habittracker.presentation.model.Habit
-import com.example.habittracker.presentation.model.HabitType
 
 class TypeHabitsListFragment()
     : BaseFragment<FragmentTypeHabitsListBinding>()
@@ -20,9 +19,9 @@ class TypeHabitsListFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            val dataList = it.getParcelableArray(HABITS_LIST)
-            if (dataList != null) {
+        arguments?.let { bundle ->
+            val dataList = bundle.getParcelableArray(HABITS_LIST)
+            if (dataList != null){
                 habitList = dataList.map { it as Habit }.toMutableList()
             }
         }
@@ -37,20 +36,8 @@ class TypeHabitsListFragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        /*requireActivity().supportFragmentManager.setFragmentResultListener(
-            "resultList",
-            viewLifecycleOwner
-        ) { _, result ->
-            val dataList = result.getParcelableArray("HabitsList")
-            if (dataList != null) {
-                habitList = dataList.map { it as Habit }.toMutableList()
-            }
-
-        }*/
-        habitList.let { setHabitGoodRecyclerView(it) }
+        setTypeHabitListRecyclerView(habitList)
         habitClickListener()
-        //setHabitGoodRecyclerView(habitList.toList())
     }
 
     private fun habitClickListener() {
@@ -59,10 +46,10 @@ class TypeHabitsListFragment()
         }
     }
 
-    private fun setHabitGoodRecyclerView(habitList : List<Habit>) = with(binding) {
+    private fun setTypeHabitListRecyclerView(habitList : List<Habit>) = with(binding) {
         handleEmptyListMessageVisibility(habitList = habitList)
         adapter.submitList(habitList)
-        rvHabitsGood.adapter = adapter
+        rvHabits.adapter = adapter
     }
 
     private fun handleEmptyListMessageVisibility(habitList : List<Habit>) = with(binding){
@@ -79,7 +66,7 @@ class TypeHabitsListFragment()
 
     override fun onDestroyView() {
         super.onDestroyView()
-        binding.rvHabitsGood.adapter = null
+        binding.rvHabits.adapter = null
     }
 
     companion object{
