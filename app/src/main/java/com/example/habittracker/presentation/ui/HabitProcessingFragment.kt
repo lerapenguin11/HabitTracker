@@ -1,4 +1,4 @@
-package com.example.habittracker.presentation
+package com.example.habittracker.presentation.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -15,6 +15,7 @@ import androidx.navigation.findNavController
 import com.example.habittracker.presentation.model.HabitPriority
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitProcessingBinding
+import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.presentation.model.HabitRepetitionPeriod
 import com.example.habittracker.presentation.model.HabitType
