@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -9,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.habittracker"
-        minSdk = 24
-        targetSdk = 34
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
 
@@ -33,16 +34,19 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures{
+        viewBinding = true
+    }
 }
 
 dependencies {
 
-    implementation(Deps.core)
-    implementation(platform(Deps.kotlin_bom))
-    implementation(Deps.appCompat)
-    implementation(Deps.androidMaterial)
-    implementation(Deps.constraintLayout)
-    testImplementation(TestImplementation.junit)
-    androidTestImplementation(AndroidTestImplementation.junit)
-    androidTestImplementation(AndroidTestImplementation.espresso)
+    implementation(libs.android.core.ktx)
+    implementation(libs.android.appcompat)
+    implementation(libs.android.material)
+    implementation(libs.android.constraintlayout)
+    implementation(libs.bundles.navigation.all)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.android.test.ext.junit)
+    androidTestImplementation(libs.android.test.espresso.core)
 }

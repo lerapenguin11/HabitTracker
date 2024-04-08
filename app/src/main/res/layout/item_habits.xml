@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardBackgroundColor="#F1F6EB"
+    app:strokeWidth="0dp"
+    app:cardElevation="0dp"
+    android:clickable="true"
+    android:layout_marginTop="12dp"
+    app:cardCornerRadius="10dp"
+    android:id="@+id/habit_card"
+    android:focusable="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="22dp"
+        android:paddingEnd="22dp"
+        android:paddingStart="22dp"
+        android:paddingBottom="19dp">
+
+        <TextView
+            android:id="@+id/tv_title_habit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Бросить пить"
+            android:includeFontPadding="false"
+            style="@style/TextTitleCardHabits"/>
+
+        <TextView
+            android:id="@+id/tv_desc_habit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:lineHeight="21dp"
+            style="@style/TextDescCardHabits"
+            android:includeFontPadding="false"
+            android:justificationMode="inter_word"
+            android:maxLines="5"
+            android:layout_marginBottom="6dp"
+            tools:ignore="UnusedAttribute"
+            tools:text="Контроль над ситуацией и собой — базовая потребность, которая необходима человеку для выживания. Почему же часто «ну еще один бокальчик» оказывается сильнее чувства самосохранения? И как же все таки перестать пить алкоголь и избавиться от алкогольной." />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipIcon="@drawable/ic_type"
+                android:clickable="false"
+                style="@style/Widget.App.Chip"
+                app:chipIconVisible="true"
+                tools:text="Вредная"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_priority"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipIcon="@drawable/ic_priority"
+                android:clickable="false"
+                style="@style/Widget.App.Chip"
+                app:chipIconVisible="true"
+                tools:text="Средний"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chip_frequency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:chipIcon="@drawable/ic_frequency"
+                android:clickable="false"
+                style="@style/Widget.App.Chip"
+                app:chipIconVisible="true"
+                tools:text="1 раз в день | постоянная"/>
+        </com.google.android.material.chip.ChipGroup>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>
