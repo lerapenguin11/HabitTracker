@@ -20,9 +20,12 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setFragmentResultListener(HabitProcessingFragment.RESULT){_, bundle ->
-            bundle.getParcelable<Habit>(NEW_HABIT)?.let { habitList.add(it) }
-            setUpTabLayout()
+        setFragmentResultListener(RESULT_HABIT){ _, bundle ->
+            screenMode = bundle.getString(SCREEN_MODE)
+            when(screenMode){
+                MODE_EDIT -> getUpdatedHabit(bundle)
+                MODE_ADD -> getNewHabit(bundle)
+            }
         }
     }
 
@@ -38,30 +41,25 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
-
-        arguments?.let {
-            screenMode = it.getString(SCREEN_MODE) //todo
-        }
-
-        when(screenMode){
-            MODE_ADD ->{
-                arguments?.let {
-
-                }
-            }
-            MODE_EDIT -> {
-                arguments?.let {
-                    /*habit = it.getParcelable(UPDATE_HABIT)
-                    if (habit != null) {
-                        habitList[habit!!.id] = habit!!
-                    }*/
-                }
-            }
-        }
-
     }
 
-    private fun setOnClickListenerFabAddHabit() {
+    private fun getUpdatedHabit(bundle: Bundle) {
+        val habit = bundle.getParcelable<Habit>(UPDATE_HABIT)
+        if (habit != null) {
+            val habitIndex = habitList.indexOfFirst { it.id == habit.id }
+            if (habitIndex != -1) {
+                habitList[habitIndex] = habit
+            }
+            setUpTabLayout()
+        }
+    }
+
+    private fun getNewHabit(bundle: Bundle) {
+        bundle.getParcelable<Habit>(NEW_HABIT)?.let { habitList.add(it) }
+        setUpTabLayout()
+    }
+
+    private fun setOnClickListenerFabAddHabit() { //TODO вынести fab button во фрагмент с привычками
         binding.fabAddHabits.setOnClickListener { openAddHabit(
             MODE_ADD,
             SCREEN_MODE
@@ -86,10 +84,10 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     private fun setUpTabLayout() {
         val tabAdapter = TabAdapter(requireActivity())
-        newInstance(habitList.filter { it.type == HabitType.USEFUL })?.let {
+        newInstance(habitList.filter { it.type == HabitType.USEFUL }).let {
             tabAdapter.addFragment(it)
         }
-        newInstance(habitList.filter { it.type == HabitType.HARMFUL })?.let {
+        newInstance(habitList.filter { it.type == HabitType.HARMFUL }).let {
             tabAdapter.addFragment(it)
         }
         binding.viewPager.adapter = tabAdapter
@@ -122,8 +120,9 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         private const val NEW_HABIT = "new_habit"
         private const val UPDATE_HABIT = "update_habit"
         private const val HABITS_LIST = "habits_list"
+        private const val RESULT_HABIT = "result_habit"
 
-        private fun newInstance(habits: List<Habit>?): TypeHabitsListFragment? {
+        private fun newInstance(habits: List<Habit>?): TypeHabitsListFragment {
             val movieFragment = TypeHabitsListFragment()
             val bundle = Bundle()
             bundle.putParcelableArray(HABITS_LIST, habits?.toTypedArray())

@@ -2,22 +2,23 @@ package com.example.habittracker.presentation
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.habittracker.presentation.model.HabitPriority
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitProcessingBinding
 import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.presentation.model.HabitRepetitionPeriod
+import com.example.habittracker.presentation.model.HabitType
 import com.example.habittracker.presentation.view.dialog.ExecutionPeriodHabitDialog
-import com.example.habittracker.presentation.view.HabitProcessingView
 import com.example.habittracker.presentation.view.dialog.HabitTypeDialog
 
 class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
@@ -26,6 +27,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
     private var habit : Habit? = null
+
+    private var color : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,25 +48,31 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handleAction()
+        setOnClickListener()
+        initTextInputListeners()
         openHabitPriorityModal()
         openHabitRepetitionsNumberModal()
-        val v = HabitProcessingView(FragmentHabitProcessingBinding.bind(view),
-            object : HabitProcessingView.Callback{
-                override fun onTypeSelection() {
-                    HabitTypeDialog().show(childFragmentManager, null)
-                }
-
-                override fun onSelectionExecutionPeriod() {
-                    ExecutionPeriodHabitDialog().show(childFragmentManager, null)
-                }
-            })
-        saveHabit(v)
+        saveHabit()
     }
-    private fun saveHabit(v: HabitProcessingView) {
+
+    private fun setOnClickListener() {
+        with(binding){
+            tiEtTypeHabit.setOnClickListener {
+                HabitTypeDialog().show(childFragmentManager, null) }
+            tiEtFrequency.setOnClickListener {
+                ExecutionPeriodHabitDialog().show(childFragmentManager, null)
+            }
+            btClose.setOnClickListener {
+                it.findNavController().popBackStack()
+            }
+        }
+    }
+
+    private fun saveHabit() {
         binding.btSaveHabit.setOnClickListener {
             when(screenMode){
-                MODE_ADD -> launchAddHabit(v.createHabit())
-                MODE_EDIT -> launchUpdateHabit(v.createHabit())
+                MODE_ADD -> launchAddHabit(habitProcessing())
+                MODE_EDIT -> launchUpdateHabit(habitProcessing())
             }
         }
     }
@@ -73,15 +82,15 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
         bundle.putParcelable(UPDATE_HABIT, habit)
-        setFragmentResult("habit", bundle)
+        setFragmentResult(RESULT_HABIT, bundle)
         view?.findNavController()?.popBackStack()
     }
 
     private fun launchAddHabit(habit : Habit) {
         val bundle = Bundle()
-        //bundle.putString(SCREEN_MODE, MODE_ADD)
+        bundle.putString(SCREEN_MODE, MODE_ADD)
         bundle.putParcelable(NEW_HABIT, habit)
-        setFragmentResult(RESULT, bundle)
+        setFragmentResult(RESULT_HABIT, bundle)
         view?.findNavController()?.popBackStack()
     }
 
@@ -113,6 +122,78 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             itemArrayPriority = habit?.habitPriority?.priority
             itemArrayExecutions = habit?.numberExecutions
         }
+    }
+
+    private fun habitProcessing() : Habit {
+        return Habit(
+            id = getHabitId(),
+            title = binding.tiEtNameHabit.text.toString(),
+            description = binding.tiEtDescHabit.text.toString(),
+            type = getSelectedHabitType()!!,
+            habitPriority = getSelectedHabitPriority()!!,
+            numberExecutions = binding.tvArrayExecutions.text.toString(),
+            period = getSelectedHabitPeriod()!!,
+            color = color
+        )
+    }
+
+    private fun getSelectedHabitPriority() : HabitPriority?{
+        return when(binding.tvArrayPriority.text.toString()){
+            HabitPriority.HIGH.priority -> HabitPriority.HIGH
+            HabitPriority.LOW.priority -> HabitPriority.LOW
+            HabitPriority.MEDIUM.priority -> HabitPriority.MEDIUM
+            else -> null
+        }
+    }
+
+    private fun getSelectedHabitPeriod(): HabitRepetitionPeriod? {
+        return when(binding.tiEtFrequency.text.toString()){
+            HabitRepetitionPeriod.REGULAR.period -> HabitRepetitionPeriod.REGULAR
+            HabitRepetitionPeriod.ONE_TIME.period -> HabitRepetitionPeriod.ONE_TIME
+            else -> null
+        }
+    }
+
+    private fun getSelectedHabitType() : HabitType? {
+        return when(binding.tiEtTypeHabit.text.toString()){
+            HabitType.USEFUL.type -> HabitType.USEFUL
+            HabitType.HARMFUL.type -> HabitType.HARMFUL
+            else -> null
+        }
+    }
+
+    private fun getHabitId(): Int {
+        if (habit != null){
+            return habit!!.id
+        } else{
+            return (Math.random() * 100000).toInt()
+        }
+    }
+
+    private fun initTextInputListeners() {
+        val textChangedListenerAdd = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                binding.btSaveHabit.isEnabled = checkIfFieldsNotEmpty() }
+
+            override fun afterTextChanged(s: Editable?) {}
+        }
+        binding.tilNameHabit.editText?.addTextChangedListener(textChangedListenerAdd)
+        binding.tilDescHabit.editText?.addTextChangedListener(textChangedListenerAdd)
+        binding.tilPriority.editText?.addTextChangedListener(textChangedListenerAdd)
+        binding.tilType.editText?.addTextChangedListener(textChangedListenerAdd)
+        binding.tilNumberExecutions.editText?.addTextChangedListener(textChangedListenerAdd)
+        binding.tilFrequency.editText?.addTextChangedListener(textChangedListenerAdd)
+    }
+
+    private fun checkIfFieldsNotEmpty(): Boolean {
+        return (binding.tilNameHabit.editText?.length() != 0 &&
+                binding.tilDescHabit.editText?.length() != 0 &&
+                binding.tilPriority.editText?.length() != 0 &&
+                binding.tilType.editText?.length() != 0 &&
+                binding.tilNumberExecutions.editText?.length() !=0 &&
+                binding.tilFrequency.editText?.length() != 0)
     }
 
     @SuppressLint("ResourceAsColor")
@@ -160,8 +241,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         private const val SCREEN_MODE = "screen_mode"
         private const val NEW_HABIT = "new_habit"
         private const val UPDATE_HABIT = "update_habit"
-
-        const val RESULT = "result"
+        private const val RESULT_HABIT = "result_habit"
     }
 
     override fun typeSelection(text: String) {

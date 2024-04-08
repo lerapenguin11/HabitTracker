@@ -23,13 +23,7 @@
         android:name="com.example.habittracker.presentation.HabitProcessingFragment"
         android:label="fragment_habit_processing"
         tools:layout="@layout/fragment_habit_processing" >
-        <action
-            app:popUpTo="@id/habitsFragment"
-            android:id="@+id/action_habitProcessingFragment_to_habitsFragment"
-            app:destination="@id/habitsFragment" />
     </fragment>
-    <include app:graph="@navigation/nav_good" />
-    <include app:graph="@navigation/nav_bad" />
     <fragment
         android:id="@+id/aboutAppFragment"
         android:name="com.example.habittracker.presentation.AboutAppFragment"
