@@ -11,9 +11,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.habittracker.presentation.model.HabitPriority
 import com.example.habittracker.R
+import com.example.habittracker.data.HabitRepositoryImpl
 import com.example.habittracker.databinding.FragmentHabitProcessingBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.model.Habit
@@ -21,6 +23,7 @@ import com.example.habittracker.presentation.model.HabitRepetitionPeriod
 import com.example.habittracker.presentation.model.HabitType
 import com.example.habittracker.presentation.view.dialog.ExecutionPeriodHabitDialog
 import com.example.habittracker.presentation.view.dialog.HabitTypeDialog
+import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModel
 
 class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     HabitTypeDialog.Host, ExecutionPeriodHabitDialog.Host {
@@ -28,6 +31,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
     private var habit : Habit? = null
+    private lateinit var viewModel : HabitProcessingViewModel
+
 
     private var color : Int = 0
 
@@ -49,11 +54,20 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handleAction()
+        initViewModel()
         setOnClickListener()
         initTextInputListeners()
         openHabitPriorityModal()
         openHabitRepetitionsNumberModal()
         saveHabit()
+    }
+
+    private fun initViewModel() {
+        val repository = HabitRepositoryImpl()
+        val viewModelFactory = HabitProcessingViewModel.HabitProcessingViewModelFactory(repository)
+        viewModel = ViewModelProvider(
+            this,
+            viewModelFactory)[HabitProcessingViewModel::class.java]
     }
 
     private fun setOnClickListener() {
@@ -78,7 +92,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         }
     }
 
-    //TODO
+    //TODO: обновление привычки
     private fun launchUpdateHabit(habit : Habit) {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
@@ -86,7 +100,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         setFragmentResult(RESULT_HABIT, bundle)
         view?.findNavController()?.popBackStack()
     }
-
+    //TODO: создание привычки
     private fun launchAddHabit(habit : Habit) {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_ADD)

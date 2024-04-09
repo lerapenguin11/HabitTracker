@@ -11,5 +11,5 @@ interface HabitsRepository
 
     //TODO habit_processing_domain
     fun updateHabit(habit : Habit)
-    fun createHabit(habit: Habit)
+    fun createHabit(newHabit: Habit)
 }

@@ -3,7 +3,7 @@ package com.example.habittracker.presentation.model
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
-@Parcelize //ghjxbnfnm
+@Parcelize
 data class Habit(
     var id : Int = UNDEFINED_ID,
     val title : String,

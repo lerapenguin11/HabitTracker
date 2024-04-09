@@ -26,8 +26,8 @@ class HabitRepositoryImpl : HabitsRepository {
         }
     }
 
-    override fun createHabit(habit: Habit) {
-        habitList.add(habit)
+    override fun createHabit(newHabit: Habit) {
+        habitList.add(newHabit)
         updateList()
     }
 
