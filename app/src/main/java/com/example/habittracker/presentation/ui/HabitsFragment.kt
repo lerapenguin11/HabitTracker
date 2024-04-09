@@ -29,7 +29,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
             screenMode = bundle.getString(SCREEN_MODE)
             when(screenMode){
                 MODE_EDIT -> getUpdatedHabit(bundle)
-                MODE_ADD -> getNewHabit(bundle)
             }
         }
     }
@@ -57,11 +56,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
             }
             setUpTabLayout()
         }
-    }
-
-    private fun getNewHabit(bundle: Bundle) {
-        bundle.getParcelable<Habit>(NEW_HABIT)?.let { habitList.add(it) }
-        setUpTabLayout()
     }
 
     private fun setOnClickListenerFabAddHabit() { //TODO вынести fab button во фрагмент с привычками
@@ -122,28 +116,13 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val SCREEN_MODE = "screen_mode"
-        private const val NEW_HABIT = "new_habit"
         private const val UPDATE_HABIT = "update_habit"
-        private const val HABITS_LIST = "habits_list"
         private const val RESULT_HABIT = "result_habit"
-
         private const val TYPE_HABITS = "type_habits"
-
-
-
-        private fun instance(habits: List<Habit>?): TypeHabitsListFragment {
-            val fragment = TypeHabitsListFragment()
-            val bundle = Bundle()
-            bundle.putParcelableArray(HABITS_LIST, habits?.toTypedArray())
-            fragment.arguments = bundle
-            return fragment
-        }
 
         private fun newInstanceTabType(tabType : String) : TypeHabitsListFragment{
             val fragment = TypeHabitsListFragment()
-            val bundle = Bundle()
-            bundle.putString(TYPE_HABITS, tabType)
-            fragment.arguments = bundle
+            fragment.arguments = bundleOf(TYPE_HABITS to tabType)
             return fragment
         }
     }

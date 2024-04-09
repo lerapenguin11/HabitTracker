@@ -103,10 +103,6 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private fun launchAddHabit(habit : Habit) {
         viewModel.createHabit(habit)
 
-        /*val bundle = Bundle()
-        bundle.putString(SCREEN_MODE, MODE_ADD)
-        bundle.putParcelable(NEW_HABIT, habit)
-        setFragmentResult(RESULT_HABIT, bundle)*/
         view?.findNavController()?.popBackStack()
     }
 

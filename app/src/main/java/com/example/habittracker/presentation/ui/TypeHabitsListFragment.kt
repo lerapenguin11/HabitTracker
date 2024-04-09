@@ -28,9 +28,6 @@ class TypeHabitsListFragment()
         super.onCreate(savedInstanceState)
         arguments?.let { bundle ->
             habitType = bundle.getString(TYPE_HABITS)
-            /*if (dataList != null){
-                habitList = dataList.map { it as Habit }.toMutableList()
-            }*/
         }
     }
 
@@ -60,7 +57,6 @@ class TypeHabitsListFragment()
         when(habitType){
             TabHabitType.USEFUL.type -> observeHabitsUseful()
             TabHabitType.HARMFUL.type -> observeHabitsHarmful()
-
         }
     }
 
@@ -93,7 +89,7 @@ class TypeHabitsListFragment()
     }
 
     private fun handleEmptyListMessageVisibility(habitList : List<Habit>) = with(binding){
-        tvTextNoHabits.isVisible = habitList.isEmpty()
+        tvTextNoHabits.isVisible = habitList.isEmpty() //TODO: вынести во viewModel
     }
 
     private fun openEditHabit(habit: Habit, screenMode: String?, mode : String) {
@@ -113,8 +109,6 @@ class TypeHabitsListFragment()
         private const val MODE_EDIT = "mode_edit"
         private const val SCREEN_MODE = "screen_mode"
         private const val UPDATE_HABIT = "update_habit"
-        private const val HABITS_LIST = "habits_list"
-
         private const val TYPE_HABITS = "type_habits"
     }
 }
