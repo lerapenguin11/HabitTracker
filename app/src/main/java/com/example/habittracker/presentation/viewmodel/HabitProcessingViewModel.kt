@@ -7,10 +7,9 @@ import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.UpdateHabitUseCase
 import com.example.habittracker.presentation.model.Habit
 
-class HabitProcessingViewModel(
-    private val repository : HabitRepositoryImpl
-) : ViewModel()
+class HabitProcessingViewModel() : ViewModel()
 {
+    private val repository = HabitRepositoryImpl
     private val createHabitUseCase = CreateHabitUseCase(repository)
     private val updateHabitUseCase = UpdateHabitUseCase(repository)
 
@@ -22,14 +21,12 @@ class HabitProcessingViewModel(
         createHabitUseCase.invoke(newHabit = habit)
     }
 
-    class HabitProcessingViewModelFactory (private val repository : HabitRepositoryImpl) :
+    class HabitProcessingViewModelFactory () :
         ViewModelProvider.NewInstanceFactory(){
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HabitProcessingViewModel(
-                repository
-            ) as T
+            return HabitProcessingViewModel() as T
         }
     }
 }

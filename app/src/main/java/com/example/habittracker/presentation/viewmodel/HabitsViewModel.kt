@@ -1,38 +1,39 @@
 package com.example.habittracker.presentation.viewmodel
 
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.habittracker.data.HabitRepositoryImpl
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.presentation.model.HabitType
 
-class HabitsViewModel(
-    private val repository : HabitRepositoryImpl)
-    : ViewModel()
-{
+class HabitsViewModel()
+    : ViewModel(){
+    private val repository = HabitRepositoryImpl
     private val getHabitsUseCase = GetHabitsUseCase(repository)
 
-    private var _habitList = MutableLiveData<List<Habit>?>()
-    val habitList : LiveData<List<Habit>?> get() = _habitList
+    val habitList = getHabitsUseCase.invoke()
+    private val habitListEmpty = listOf<Habit>()
 
-    init {
-        getHabitList()
+    fun getUsefulHabit(habits : List<Habit>): List<Habit> {
+        return habitList.value?.filter { it.type == HabitType.USEFUL } ?: habitListEmpty
     }
 
-    private fun getHabitList(){
-        _habitList.value = getHabitsUseCase.invoke().value
+    fun getHarmfulHabit(habits : List<Habit>): List<Habit> {
+        return habits?.filter { it.type == HabitType.HARMFUL } ?: habitListEmpty
     }
 
-    class HabitsViewModelFactory (private val repository : HabitRepositoryImpl) :
+    class HabitsViewModelFactory () :
         ViewModelProvider.NewInstanceFactory(){
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HabitsViewModel(
-                repository
-            ) as T
+            return HabitsViewModel() as T
         }
     }
 }

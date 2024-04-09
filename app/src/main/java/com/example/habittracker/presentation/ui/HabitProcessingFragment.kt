@@ -63,8 +63,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun initViewModel() {
-        val repository = HabitRepositoryImpl()
-        val viewModelFactory = HabitProcessingViewModel.HabitProcessingViewModelFactory(repository)
+        val viewModelFactory = HabitProcessingViewModel.HabitProcessingViewModelFactory()
         viewModel = ViewModelProvider(
             this,
             viewModelFactory)[HabitProcessingViewModel::class.java]
@@ -102,10 +101,12 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
     //TODO: создание привычки
     private fun launchAddHabit(habit : Habit) {
-        val bundle = Bundle()
+        viewModel.createHabit(habit)
+
+        /*val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_ADD)
         bundle.putParcelable(NEW_HABIT, habit)
-        setFragmentResult(RESULT_HABIT, bundle)
+        setFragmentResult(RESULT_HABIT, bundle)*/
         view?.findNavController()?.popBackStack()
     }
 

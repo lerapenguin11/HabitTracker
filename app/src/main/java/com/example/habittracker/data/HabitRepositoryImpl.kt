@@ -2,10 +2,11 @@ package com.example.habittracker.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.example.habittracker.domain.repository.HabitsRepository
 import com.example.habittracker.presentation.model.Habit
 
-class HabitRepositoryImpl : HabitsRepository {
+object HabitRepositoryImpl : HabitsRepository {
     private val habitListLD = MutableLiveData<List<Habit>>()
     private val habitList = mutableListOf<Habit>()
 
@@ -32,6 +33,7 @@ class HabitRepositoryImpl : HabitsRepository {
     }
 
     private fun updateList(){
-        habitListLD.value = habitList.toList()
+        habitListLD.value = habitList
+        println("habitListLD: ${habitListLD.value}")
     }
 }

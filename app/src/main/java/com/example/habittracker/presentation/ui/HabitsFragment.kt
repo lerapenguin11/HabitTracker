@@ -4,25 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.habittracker.R
-import com.example.habittracker.data.HabitRepositoryImpl
 import com.example.habittracker.databinding.FragmentHabitsBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.TabAdapter
 import com.example.habittracker.presentation.model.Habit
-import com.example.habittracker.presentation.model.HabitType
-import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModel
+import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private var screenMode : String? = null
     private var habitList : MutableList<Habit> = mutableListOf()
-    private lateinit var viewModel: HabitsViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,18 +43,9 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
-    }
-
-    private fun initViewModel() {
-        val repository = HabitRepositoryImpl()
-        val viewModelFactory = HabitsViewModel.HabitsViewModelFactory(repository)
-        viewModel = ViewModelProvider(
-            this,
-            viewModelFactory)[HabitsViewModel::class.java]
     }
 
     private fun getUpdatedHabit(bundle: Bundle) {
@@ -99,10 +89,10 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     private fun setUpTabLayout() {
         val tabAdapter = TabAdapter(requireActivity())
-        newInstance(habitList.filter { it.type == HabitType.USEFUL }).let {
+        newInstanceTabType(TabHabitType.USEFUL.type).let {
             tabAdapter.addFragment(it)
         }
-        newInstance(habitList.filter { it.type == HabitType.HARMFUL }).let {
+        newInstanceTabType(TabHabitType.HARMFUL.type).let {
             tabAdapter.addFragment(it)
         }
         binding.viewPager.adapter = tabAdapter
@@ -137,12 +127,24 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         private const val HABITS_LIST = "habits_list"
         private const val RESULT_HABIT = "result_habit"
 
-        private fun newInstance(habits: List<Habit>?): TypeHabitsListFragment {
-            val movieFragment = TypeHabitsListFragment()
+        private const val TYPE_HABITS = "type_habits"
+
+
+
+        private fun instance(habits: List<Habit>?): TypeHabitsListFragment {
+            val fragment = TypeHabitsListFragment()
             val bundle = Bundle()
             bundle.putParcelableArray(HABITS_LIST, habits?.toTypedArray())
-            movieFragment.arguments = bundle
-            return movieFragment
+            fragment.arguments = bundle
+            return fragment
+        }
+
+        private fun newInstanceTabType(tabType : String) : TypeHabitsListFragment{
+            val fragment = TypeHabitsListFragment()
+            val bundle = Bundle()
+            bundle.putString(TYPE_HABITS, tabType)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 }
