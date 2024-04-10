@@ -30,7 +30,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var screenMode : String? = null
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
-    private var habit : Habit? = null
+    //private var habit : Habit? = null
+    private var habitId : Int? = null
     private lateinit var viewModel : HabitProcessingViewModel
 
 
@@ -38,9 +39,9 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            screenMode = it.getString(SCREEN_MODE)
-            habit = it.getParcelable(UPDATE_HABIT)
+        arguments?.let { bundle ->
+            screenMode = bundle.getString(SCREEN_MODE)
+            habitId = bundle.getInt(UPDATE_HABIT)
         }
     }
 
@@ -53,8 +54,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handleAction()
         initViewModel()
+        handleAction()
         setOnClickListener()
         initTextInputListeners()
         openHabitPriorityModal()
@@ -97,12 +98,12 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         bundle.putString(SCREEN_MODE, MODE_EDIT)
         bundle.putParcelable(UPDATE_HABIT, habit)
         setFragmentResult(RESULT_HABIT, bundle)
+        viewModel.updateHabit(habit = habit)
         view?.findNavController()?.popBackStack()
     }
     //TODO: создание привычки
     private fun launchAddHabit(habit : Habit) {
-        viewModel.createHabit(habit)
-
+        viewModel.createHabit(habit = habit)
         view?.findNavController()?.popBackStack()
     }
 
@@ -123,17 +124,18 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun setHabitData() {
-        if (habit != null){
-            binding.btSaveHabit.isEnabled = true
-            binding.tiEtNameHabit.setText(habit?.title)
-            binding.tiEtDescHabit.setText(habit?.description)
-            binding.tvArrayPriority.setText(habit?.habitPriority?.priority)
-            binding.tvArrayExecutions.setText(habit?.numberExecutions)
-            binding.tiEtTypeHabit.setText(habit?.type?.type)
-            binding.tiEtFrequency.setText(habit?.period?.period)
-            itemArrayPriority = habit?.habitPriority?.priority
-            itemArrayExecutions = habit?.numberExecutions
+        habitId?.let { viewModel.getHabitItem(habitId = it) }
+        with(viewModel){
+            binding.tiEtNameHabit.setText(habitItem.value?.title)
+            binding.tiEtDescHabit.setText(habitItem.value?.description)
+            binding.tvArrayPriority.setText(habitItem.value?.habitPriority?.priority)
+            binding.tvArrayExecutions.setText(habitItem.value?.numberExecutions)
+            binding.tiEtTypeHabit.setText(habitItem.value?.type?.type)
+            binding.tiEtFrequency.setText(habitItem.value?.period?.period)
+            itemArrayPriority = habitItem.value?.habitPriority?.priority
+            itemArrayExecutions = habitItem.value?.numberExecutions
         }
+        binding.btSaveHabit.isEnabled = true
     }
 
     private fun habitProcessing() : Habit {
@@ -175,8 +177,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun getHabitId(): Int {
-        if (habit != null){
-            return habit!!.id
+        if (habitId != null){
+            return habitId as Int
         } else{
             return (Math.random() * 100000).toInt()
         }

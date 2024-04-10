@@ -14,6 +14,7 @@ object HabitRepositoryImpl : HabitsRepository {
         return habitListLD
     }
 
+    //-------TODO: вынести в HabitProcessingRepositoryImpl------
     override fun getHabitItem(habitId: Int): Habit {
         return habitList.find {
             it.id == habitId
@@ -31,7 +32,9 @@ object HabitRepositoryImpl : HabitsRepository {
         habitList.add(newHabit)
         updateList()
     }
+    //-------TODO: вынести в HabitProcessingRepositoryImpl------
 
+    //TODO: удалить
     private fun updateList(){
         habitListLD.value = habitList
         println("habitListLD: ${habitListLD.value}")

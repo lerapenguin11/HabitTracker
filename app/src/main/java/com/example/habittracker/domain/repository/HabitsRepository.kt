@@ -7,9 +7,9 @@ import com.example.habittracker.presentation.model.Habit
 interface HabitsRepository
 {
     fun getHabits() : LiveData<List<Habit>>
-    fun getHabitItem(habitId : Int) : Habit
 
     //TODO habit_processing_domain
     fun updateHabit(habit : Habit)
     fun createHabit(newHabit: Habit)
+    fun getHabitItem(habitId : Int) : Habit
 }
