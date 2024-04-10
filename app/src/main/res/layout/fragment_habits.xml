@@ -102,7 +102,7 @@
             <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:id="@+id/coordinatorLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent">
 
                 <LinearLayout
@@ -134,6 +134,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:behavior_peekHeight="30dp"
+                    android:isScrollContainer="false"
                     app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
                     tools:ignore="MissingConstraints"
                     tools:layout="@layout/layout_modal_bottom_sheet" />
