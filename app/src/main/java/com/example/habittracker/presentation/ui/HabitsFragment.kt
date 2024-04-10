@@ -19,19 +19,6 @@ import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
-    private var screenMode : String? = null
-    private var habitList : MutableList<Habit> = mutableListOf()
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setFragmentResultListener(RESULT_HABIT){ _, bundle ->
-            screenMode = bundle.getString(SCREEN_MODE)
-            when(screenMode){
-                //MODE_EDIT -> getUpdatedHabit(bundle)
-            }
-        }
-    }
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -45,17 +32,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
-    }
-
-    private fun getUpdatedHabit(bundle: Bundle) {
-        val habit = bundle.getParcelable<Habit>(UPDATE_HABIT)
-        if (habit != null) {
-            val habitIndex = habitList.indexOfFirst { it.id == habit.id }
-            if (habitIndex != -1) {
-                habitList[habitIndex] = habit
-            }
-            setUpTabLayout()
-        }
     }
 
     private fun setOnClickListenerFabAddHabit() { //TODO вынести fab button во фрагмент с привычками
@@ -113,11 +89,8 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     }
 
     companion object {
-        private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val SCREEN_MODE = "screen_mode"
-        private const val UPDATE_HABIT = "update_habit"
-        private const val RESULT_HABIT = "result_habit"
         private const val TYPE_HABITS = "type_habits"
 
         private fun newInstanceTabType(tabType : String) : TypeHabitsListFragment{

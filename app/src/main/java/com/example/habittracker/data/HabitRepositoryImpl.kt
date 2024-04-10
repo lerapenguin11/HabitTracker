@@ -40,6 +40,5 @@ object HabitRepositoryImpl : HabitsRepository {
     //TODO: удалить
     private fun updateList(){
         habitListLD.value = habitList
-        println("habitListLD: ${habitListLD.value}")
     }
 }

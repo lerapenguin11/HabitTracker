@@ -10,12 +10,10 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.habittracker.presentation.model.HabitPriority
 import com.example.habittracker.R
-import com.example.habittracker.data.HabitRepositoryImpl
 import com.example.habittracker.databinding.FragmentHabitProcessingBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.model.Habit
@@ -39,7 +37,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         super.onCreate(savedInstanceState)
         arguments?.let { bundle ->
             screenMode = bundle.getString(SCREEN_MODE)
-            habitId = bundle.getInt(UPDATE_HABIT)
+            habitId = bundle.getInt(HABIT_ID)
         }
     }
 
@@ -247,9 +245,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val SCREEN_MODE = "screen_mode"
-        private const val NEW_HABIT = "new_habit"
-        private const val UPDATE_HABIT = "update_habit"
-        private const val RESULT_HABIT = "result_habit"
+        private const val HABIT_ID = "update_habit"
     }
 
     override fun typeSelection(text: String) {

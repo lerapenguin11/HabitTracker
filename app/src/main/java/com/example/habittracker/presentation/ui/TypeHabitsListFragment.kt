@@ -21,7 +21,6 @@ class TypeHabitsListFragment()
 {
     private lateinit var viewModel: HabitsViewModel
     private val adapter = HabitsAdapter()
-    private var habitList : MutableList<Habit> = mutableListOf()
     private var habitType : String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +41,6 @@ class TypeHabitsListFragment()
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
         launchTypeHabit()
-        setHabitsRecyclerView(habitList)
         habitClickListener()
     }
 
@@ -95,8 +93,7 @@ class TypeHabitsListFragment()
     private fun openEditHabit(habit: Habit, screenMode: String?, mode : String) {
         val bundle = Bundle()
         bundle.putString(screenMode, mode)
-        bundle.putParcelable(UPDATE_HABIT, habit)
-        bundle.putInt(UPDATE_HABIT, habit.id) //TODO: rename UPDATE_HABIT
+        bundle.putInt(HABIT_ID, habit.id)
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
@@ -109,7 +106,7 @@ class TypeHabitsListFragment()
     companion object{
         private const val MODE_EDIT = "mode_edit"
         private const val SCREEN_MODE = "screen_mode"
-        private const val UPDATE_HABIT = "update_habit"
+        private const val HABIT_ID = "update_habit"
         private const val TYPE_HABITS = "type_habits"
     }
 }
