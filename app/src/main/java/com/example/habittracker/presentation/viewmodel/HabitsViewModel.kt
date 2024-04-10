@@ -21,11 +21,11 @@ class HabitsViewModel()
     private val habitListEmpty = listOf<Habit>()
 
     fun getUsefulHabit(habits : List<Habit>): List<Habit> {
-        return habitList.value?.filter { it.type == HabitType.USEFUL } ?: habitListEmpty
+        return habits.filter { it.type == HabitType.USEFUL } ?: habitListEmpty
     }
 
     fun getHarmfulHabit(habits : List<Habit>): List<Habit> {
-        return habits?.filter { it.type == HabitType.HARMFUL } ?: habitListEmpty
+        return habits.filter { it.type == HabitType.HARMFUL } ?: habitListEmpty
     }
 
     class HabitsViewModelFactory () :

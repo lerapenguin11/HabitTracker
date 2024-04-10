@@ -95,7 +95,7 @@ class TypeHabitsListFragment()
     private fun openEditHabit(habit: Habit, screenMode: String?, mode : String) {
         val bundle = Bundle()
         bundle.putString(screenMode, mode)
-        //bundle.putParcelable(UPDATE_HABIT, habit)
+        bundle.putParcelable(UPDATE_HABIT, habit)
         bundle.putInt(UPDATE_HABIT, habit.id) //TODO: rename UPDATE_HABIT
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)

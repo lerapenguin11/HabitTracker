@@ -1,8 +1,8 @@
 package com.example.habittracker.data
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.example.habittracker.domain.repository.HabitsRepository
 import com.example.habittracker.presentation.model.Habit
 
@@ -21,10 +21,13 @@ object HabitRepositoryImpl : HabitsRepository {
         }!!
     }
 
+    @SuppressLint("NullSafeMutableLiveData")
     override fun updateHabit(habit: Habit) {
-        val habitIndex = habitList.indexOfFirst { it.id == habit.id }
+        val oldHabitList = habitList
+        val habitIndex = oldHabitList.indexOfFirst { it.id == habit.id }
         if (habitIndex != -1) {
-            habitList[habitIndex] = habit
+            oldHabitList[habitIndex] = habit
+            updateList()
         }
     }
 

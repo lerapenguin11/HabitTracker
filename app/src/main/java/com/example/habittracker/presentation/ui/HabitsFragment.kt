@@ -28,7 +28,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         setFragmentResultListener(RESULT_HABIT){ _, bundle ->
             screenMode = bundle.getString(SCREEN_MODE)
             when(screenMode){
-                MODE_EDIT -> getUpdatedHabit(bundle)
+                //MODE_EDIT -> getUpdatedHabit(bundle)
             }
         }
     }

@@ -30,10 +30,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var screenMode : String? = null
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
-    //private var habit : Habit? = null
     private var habitId : Int? = null
     private lateinit var viewModel : HabitProcessingViewModel
-
 
     private var color : Int = 0
 
@@ -94,10 +92,6 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     //TODO: обновление привычки
     private fun launchUpdateHabit(habit : Habit) {
-        val bundle = Bundle()
-        bundle.putString(SCREEN_MODE, MODE_EDIT)
-        bundle.putParcelable(UPDATE_HABIT, habit)
-        setFragmentResult(RESULT_HABIT, bundle)
         viewModel.updateHabit(habit = habit)
         view?.findNavController()?.popBackStack()
     }
@@ -177,7 +171,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun getHabitId(): Int {
-        if (habitId != null){
+        if (habitId != null && habitId != 0){
             return habitId as Int
         } else{
             return (Math.random() * 100000).toInt()
