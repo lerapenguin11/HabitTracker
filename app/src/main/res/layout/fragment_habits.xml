@@ -105,17 +105,13 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent">
 
-                <include layout="@layout/layout_modal_bottom_sheet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_gravity="end|top"
                     android:gravity="end|top"
-                    app:layout_anchor="@id/bottomSheet">
+                    app:layout_anchor="@id/bottom_sheet">
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
                         android:id="@+id/fab_add_habits"
@@ -124,12 +120,23 @@
                         android:layout_margin="20dp"
                         android:clickable="true"
                         android:focusable="true"
-                        app:layout_anchor="@id/bottomSheet"
                         android:layout_gravity="top|end"
+                        app:layout_anchor="@id/bottom_sheet"
                         android:src="@drawable/ic_add_habits"
                         app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"
                         app:layout_constraintEnd_toEndOf="parent" />
                 </LinearLayout>
+
+                <androidx.fragment.app.FragmentContainerView
+                    android:id="@+id/bottom_sheet"
+                    android:name="com.example.habittracker.presentation.view.bottomSheet.ModalBottomSheet"
+                    style="@style/Widget.Material3.BottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:behavior_peekHeight="30dp"
+                    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                    tools:ignore="MissingConstraints"
+                    tools:layout="@layout/layout_modal_bottom_sheet" />
             </androidx.coordinatorlayout.widget.CoordinatorLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -15,7 +15,11 @@ import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.TabAdapter
 import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.presentation.model.TabHabitType
+import com.example.habittracker.presentation.view.bottomSheet.ModalBottomSheet
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
@@ -32,6 +36,9 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
+
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
     }
 
     private fun setOnClickListenerFabAddHabit() { //TODO вынести fab button во фрагмент с привычками
