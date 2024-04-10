@@ -27,4 +27,7 @@
     <string name="text_num_exception">раза в день</string>
     <string name="text_num">раз в день</string>
     <string name="text_habits">Привычки</string>
+    <string name="text_filter">Фильтры</string>
+    <string name="text_search_name_habit">Поиск по названию привычки</string>
+    <string name="text_search_desc_habit">Поиск по описанию привычки</string>
 </resources>

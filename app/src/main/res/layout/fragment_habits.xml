@@ -69,7 +69,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
                 tools:layout_editor_absoluteX="20dp" />
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
+           <!-- <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/fab_add_habits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -78,8 +78,9 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/ic_add_habits"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"
                 app:layout_constraintEnd_toEndOf="parent" />
+-->
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout_habit"
@@ -110,7 +111,113 @@
                 android:layout_height="0dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tab_layout_habit" />
+
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:id="@+id/coordinatorLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <LinearLayout
+                    android:id="@+id/bottomSheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingBottom="16dp"
+                    style="@style/Widget.Material3.BottomSheet"
+                    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+                    <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+                        android:id="@+id/drag_handle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/title_bsh"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:fontFamily="@font/roboto_medium"
+                        android:gravity="center_horizontal"
+                        android:text="@string/text_filter"
+                        android:textSize="19sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_search_name_habit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/text_search_name_habit"
+                            app:endIconCheckable="true"
+                            app:endIconDrawable="@drawable/ic_clear"
+                            app:endIconMode="clear_text">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/ti_et_search_name_habit"
+                                style="@style/TextInputEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/til_search_desc_habit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:hint="@string/text_search_desc_habit"
+                            app:endIconCheckable="true"
+                            app:endIconDrawable="@drawable/ic_clear"
+                            app:endIconMode="clear_text">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/ti_et_search_desc_habit"
+                                style="@style/TextInputEditText"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="end|top"
+                    android:gravity="end|top"
+                    app:layout_anchor="@id/bottomSheet">
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fab_add_habits"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:layout_anchor="@id/bottomSheet"
+                        android:layout_gravity="top|end"
+                        android:src="@drawable/ic_add_habits"
+                        app:layout_constraintBottom_toTopOf="@+id/coordinatorLayout"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </LinearLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView
