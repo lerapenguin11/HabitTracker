@@ -1,15 +1,19 @@
 package com.example.habittracker.presentation.view.bottomSheet
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
-import com.example.habittracker.presentation.model.FilterParameters
+import com.example.habittracker.presentation.ui.HabitsFragment
+import com.example.habittracker.presentation.ui.TypeHabitsListFragment
+import com.example.habittracker.presentation.view.dialog.HabitTypeDialog
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 
 class ModalBottomSheet : Fragment()
@@ -17,6 +21,21 @@ class ModalBottomSheet : Fragment()
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
     private lateinit var viewModel: HabitsViewModel
+    private var updateListListener: UpdateListListener? = null
+
+    override fun onAttachFragment(childFragment: Fragment) {
+        super.onAttachFragment(childFragment)
+        if (childFragmentManager is UpdateListListener) {
+            updateListListener = childFragmentManager as UpdateListListener
+        } else {
+            throw RuntimeException("$childFragment must implement UpdateListListener")
+        }
+    }
+
+    interface UpdateListListener {
+        fun onUpdateList()
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,9 +50,20 @@ class ModalBottomSheet : Fragment()
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
         setObserverOnNameFilter()
+        setOnClickListener()
     }
 
-    fun initViewModel() {
+    private fun setOnClickListener() {
+        binding.btCancelFilter.setOnClickListener {
+            binding.filterNameHabit.text = null
+            updateListListener?.onUpdateList()
+            viewModel.cancelFilter()
+        }
+    }
+
+
+
+    private fun initViewModel() {
         val viewModelFactory = HabitsViewModel.HabitsViewModelFactory()
         viewModel = ViewModelProvider(
             this,

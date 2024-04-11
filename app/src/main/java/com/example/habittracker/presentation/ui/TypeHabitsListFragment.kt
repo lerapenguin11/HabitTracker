@@ -14,10 +14,12 @@ import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.HabitsAdapter
 import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.presentation.model.TabHabitType
+import com.example.habittracker.presentation.view.bottomSheet.ModalBottomSheet
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 
 class TypeHabitsListFragment()
-    : BaseFragment<FragmentTypeHabitsListBinding>()
+    : BaseFragment<FragmentTypeHabitsListBinding>(), ModalBottomSheet.UpdateListListener
+
 {
     private lateinit var viewModel: HabitsViewModel
     private val adapter = HabitsAdapter()
@@ -69,7 +71,7 @@ class TypeHabitsListFragment()
     private fun observeHabitsHarmful(){
         with(viewModel){
             habitList.observe(viewLifecycleOwner, Observer { habits ->
-                setHabitsRecyclerView(getHarmfulHabit(habits))
+                setHabitsRecyclerView(applyFilters(filters.value!!, getHarmfulHabit(habits)))
             })
         }
     }
@@ -108,5 +110,11 @@ class TypeHabitsListFragment()
         private const val SCREEN_MODE = "screen_mode"
         private const val HABIT_ID = "update_habit"
         private const val TYPE_HABITS = "type_habits"
+    }
+
+    override fun onUpdateList() {
+        viewModel.habitList.observe(viewLifecycleOwner, Observer {
+            setHabitsRecyclerView(viewModel.getUsefulHabit(it))
+        })
     }
 }

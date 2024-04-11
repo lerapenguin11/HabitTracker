@@ -16,18 +16,17 @@ class HabitsViewModel()
     private val getHabitsUseCase = GetHabitsUseCase(repository)
 
     var habitList = getHabitsUseCase.invoke()
-    private val habitListEmpty = listOf<Habit>()
     val filters: MutableLiveData<FilterParameters> =
         MutableLiveData(FilterParameters(null, null, null))
-    private val _filterHabitList = MutableLiveData<List<Habit>>()
-    val filterHabitList : LiveData<List<Habit>> get() = _filterHabitList
+
+
 
     fun getUsefulHabit(habits : List<Habit>): List<Habit> {
-        return habits.filter { it.type == HabitType.USEFUL } ?: habitListEmpty
+        return habits.filter { it.type == HabitType.USEFUL }
     }
 
     fun getHarmfulHabit(habits : List<Habit>): List<Habit> {
-        return habits.filter { it.type == HabitType.HARMFUL } ?: habitListEmpty
+        return habits.filter { it.type == HabitType.HARMFUL }
     }
 
 
@@ -38,38 +37,33 @@ class HabitsViewModel()
         return filteredAllHabits
     }
 
-    fun List<Habit>.filterByTitle(valueFilter: String): List<Habit> {
-        val filteredAllHabits: List<Habit> = this.filter{
-            it.title.contains(valueFilter)
-        }.toMutableList()
-        return filteredAllHabits
-    }
-
     fun cancelFilter(){
         filters.value = FilterParameters(null, null, null)
-        habitList.value = applyFilters(filters.value!!, habitList.value!!)
+        habitList.value = getHabitsUseCase.invoke().value
     }
 
     fun searchByName(name: String){
         val filter = filters.value!!
-        val const = ""
-        if (name != const) {
+        if (name != CONST_LINE) {
             filter.habitTitle = name
         } else {
             filter.habitTitle = null
         }
         filters.value = filter
-        habitList.value = applyFilters(filters.value!!, habitList.value!!)
+        habitList.value = applyFilters(filters.value!!)
     }
 
     fun applyFilters(filters: FilterParameters,
-                     filteredList: List<Habit> = habitList.value!!): List<Habit>{
-        if (filters.habitTitle != null){
-            _filterHabitList.value = filteredList.filterByName(filters.habitTitle!!)
-        } else{
-            _filterHabitList.value = habitList.value
+                     filteredList: List<Habit> = habitList.value!!): List<Habit> {
+        return if (filters.habitTitle != null) {
+            filteredList.filterByName(filters.habitTitle!!)
+        } else {
+            filteredList
         }
-        return _filterHabitList.value!!
+    }
+
+    companion object{
+        private const val CONST_LINE = ""
     }
 
     class HabitsViewModelFactory () :

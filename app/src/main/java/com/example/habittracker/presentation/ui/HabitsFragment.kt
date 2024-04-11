@@ -1,5 +1,6 @@
 package com.example.habittracker.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,6 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
+
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -82,8 +84,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                val filterBottomSheet = binding.bottomSheet.getFragment<ModalBottomSheet>()
-                filterBottomSheet.initViewModel()
                 newInstanceTabType(TabHabitType.USEFUL.type).let {
                     tabAdapter.addFragment(it)
                 }
