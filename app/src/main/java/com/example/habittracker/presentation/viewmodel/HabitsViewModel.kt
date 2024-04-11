@@ -8,7 +8,6 @@ import com.example.habittracker.data.HabitRepositoryImpl
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
 import com.example.habittracker.presentation.model.Habit
-import com.example.habittracker.presentation.model.HabitRepetitionPeriod
 import com.example.habittracker.presentation.model.HabitType
 
 class HabitsViewModel()
@@ -46,7 +45,7 @@ class HabitsViewModel()
         return filteredAllHabits
     }
 
-    fun resetFilter(){
+    fun cancelFilter(){
         filters.value = FilterParameters(null, null, null)
         habitList.value = applyFilters(filters.value!!, habitList.value!!)
     }
@@ -63,7 +62,8 @@ class HabitsViewModel()
         habitList.value = applyFilters(filters.value!!, habitList.value!!)
     }
 
-    fun applyFilters(filters: FilterParameters, filteredList: List<Habit> = habitList.value!!) : List<Habit>{
+    fun applyFilters(filters: FilterParameters,
+                     filteredList: List<Habit> = habitList.value!!): List<Habit>{
         if (filters.habitTitle != null){
             _filterHabitList.value = filteredList.filterByName(filters.habitTitle!!)
         } else{

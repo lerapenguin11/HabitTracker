@@ -25,11 +25,11 @@
 
         <TextView
             android:id="@+id/title_bsh"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/roboto_medium"
-            android:gravity="center_horizontal"
+            android:gravity="start"
             android:text="@string/text_filter"
             android:textSize="20sp" />
 
@@ -96,11 +96,11 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/bt_gone_filter"
+                android:id="@+id/bt_cancel_filter"
                 android:layout_width="match_parent"
-                android:layout_height="60dp"
+                android:layout_height="56dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/text_apply"
+                android:text="@string/text_cancel"
                 android:enabled="false"
                 android:focusable="false"
                 android:textAppearance="@style/TextButton"
