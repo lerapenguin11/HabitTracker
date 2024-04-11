@@ -10,7 +10,7 @@ object HabitRepositoryImpl : HabitsRepository {
     private val habitListLD = MutableLiveData<List<Habit>>()
     private val habitList = mutableListOf<Habit>()
 
-    override fun getHabits(): LiveData<List<Habit>> {
+    override fun getHabits(): MutableLiveData<List<Habit>> {
         return habitListLD
     }
 

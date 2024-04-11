@@ -37,7 +37,7 @@ class TypeHabitsListFragment()
         return FragmentTypeHabitsListBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //TODO: вынести bottom sheet сюда
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
         launchTypeHabit()
@@ -61,7 +61,7 @@ class TypeHabitsListFragment()
     private fun observeHabitsUseful(){
         with(viewModel){
             habitList.observe(viewLifecycleOwner, Observer { habits ->
-                setHabitsRecyclerView(getUsefulHabit(habits))
+                setHabitsRecyclerView(applyFilters(filters.value!!, getUsefulHabit(habits)))
             })
         }
     }

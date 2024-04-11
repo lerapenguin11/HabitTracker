@@ -9,6 +9,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.viewpager2.widget.ViewPager2
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitsBinding
 import com.example.habittracker.presentation.BaseFragment
@@ -33,10 +34,13 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initBottomSheet()
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
+    }
 
+    private fun initBottomSheet() {
         val bottomSheetBehavior = BottomSheetBehavior.from(binding.bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetBehavior.saveFlags = BottomSheetBehavior.SAVE_ALL
@@ -74,6 +78,21 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
             tabAdapter.addFragment(it)
         }
         binding.viewPager.adapter = tabAdapter
+
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val filterBottomSheet = binding.bottomSheet.getFragment<ModalBottomSheet>()
+                filterBottomSheet.initViewModel()
+                newInstanceTabType(TabHabitType.USEFUL.type).let {
+                    tabAdapter.addFragment(it)
+                }
+                newInstanceTabType(TabHabitType.HARMFUL.type).let {
+                    tabAdapter.addFragment(it)
+                }
+            }
+        })
+
         TabLayoutMediator(binding.tabLayoutHabit, binding.viewPager) { tab, position ->
             when(position){
                 0 -> {
