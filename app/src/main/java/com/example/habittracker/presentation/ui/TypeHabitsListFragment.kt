@@ -18,8 +18,7 @@ import com.example.habittracker.presentation.view.bottomSheet.ModalBottomSheet
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 
 class TypeHabitsListFragment()
-    : BaseFragment<FragmentTypeHabitsListBinding>(), ModalBottomSheet.UpdateListListener
-
+    : BaseFragment<FragmentTypeHabitsListBinding>()
 {
     private lateinit var viewModel: HabitsViewModel
     private val adapter = HabitsAdapter()
@@ -49,7 +48,7 @@ class TypeHabitsListFragment()
     private fun initViewModel() {
         val viewModelFactory = HabitsViewModel.HabitsViewModelFactory()
         viewModel = ViewModelProvider(
-            this,
+            requireActivity(),
             viewModelFactory)[HabitsViewModel::class.java]
     }
 
@@ -62,16 +61,16 @@ class TypeHabitsListFragment()
 
     private fun observeHabitsUseful(){
         with(viewModel){
-            habitList.observe(viewLifecycleOwner, Observer { habits ->
-                setHabitsRecyclerView(applyFilters(filters.value!!, getUsefulHabit(habits)))
+            filteredHabit.observe(viewLifecycleOwner, Observer {habits ->
+                setHabitsRecyclerView(getUsefulHabit(habits))
             })
         }
     }
 
     private fun observeHabitsHarmful(){
         with(viewModel){
-            habitList.observe(viewLifecycleOwner, Observer { habits ->
-                setHabitsRecyclerView(applyFilters(filters.value!!, getHarmfulHabit(habits)))
+            filteredHabit.observe(viewLifecycleOwner, Observer {habits ->
+                setHabitsRecyclerView(getHarmfulHabit(habits))
             })
         }
     }
@@ -105,16 +104,12 @@ class TypeHabitsListFragment()
         binding.rvHabits.adapter = null
     }
 
+
+
     companion object{
         private const val MODE_EDIT = "mode_edit"
         private const val SCREEN_MODE = "screen_mode"
         private const val HABIT_ID = "update_habit"
         private const val TYPE_HABITS = "type_habits"
-    }
-
-    override fun onUpdateList() {
-        viewModel.habitList.observe(viewLifecycleOwner, Observer {
-            setHabitsRecyclerView(viewModel.getUsefulHabit(it))
-        })
     }
 }

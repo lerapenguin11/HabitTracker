@@ -1,7 +1,9 @@
 package com.example.habittracker.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.data.HabitRepositoryImpl
@@ -15,11 +17,26 @@ class HabitsViewModel()
     private val repository = HabitRepositoryImpl
     private val getHabitsUseCase = GetHabitsUseCase(repository)
 
-    var habitList = getHabitsUseCase.invoke()
-    val filters: MutableLiveData<FilterParameters> =
+    private var habitList = getHabitsUseCase.invoke()
+    private val filters: MutableLiveData<FilterParameters> =
         MutableLiveData(FilterParameters(null, null, null))
+    val filteredHabit : MediatorLiveData<List<Habit>> = MediatorLiveData<List<Habit>>()
 
+    init {
+        filteredHabit.addSource(habitList) { habits ->
+            val filtersValue = filters.value
+            val filteredList = applyFilters(habits, filtersValue)
+            filteredHabit.value = filteredList
+        }
 
+        filteredHabit.addSource(filters) { filterParams ->
+            val habits = habitList.value
+            if (habits != null) {
+                val filteredList = applyFilters(habits, filterParams)
+                filteredHabit.value = filteredList
+            }
+        }
+    }
 
     fun getUsefulHabit(habits : List<Habit>): List<Habit> {
         return habits.filter { it.type == HabitType.USEFUL }
@@ -30,7 +47,7 @@ class HabitsViewModel()
     }
 
 
-    fun List<Habit>.filterByName(valueFilter: String): MutableList<Habit> {
+    private fun List<Habit>.filterByName(valueFilter: String): MutableList<Habit> {
         val filteredAllHabits: MutableList<Habit> = this.filter{
             it.title.contains(valueFilter)
         }.toMutableList()
@@ -39,7 +56,6 @@ class HabitsViewModel()
 
     fun cancelFilter(){
         filters.value = FilterParameters(null, null, null)
-        habitList.value = getHabitsUseCase.invoke().value
     }
 
     fun searchByName(name: String){
@@ -50,16 +66,20 @@ class HabitsViewModel()
             filter.habitTitle = null
         }
         filters.value = filter
-        habitList.value = applyFilters(filters.value!!)
     }
 
-    fun applyFilters(filters: FilterParameters,
-                     filteredList: List<Habit> = habitList.value!!): List<Habit> {
-        return if (filters.habitTitle != null) {
-            filteredList.filterByName(filters.habitTitle!!)
-        } else {
-            filteredList
+    private fun applyFilters(habits: List<Habit>?, filter: FilterParameters?): List<Habit>{
+        var filtrateObjects = habits ?: emptyList()
+        if (filter?.habitTitle != null && habits != null){
+            filtrateObjects = habits.filterByName(filter.habitTitle!!)
         }
+        if (filter?.habitDescription != null && habits != null){
+
+        }
+        if (filter?.habitFrequency != null && habits != null){
+
+        }
+        return filtrateObjects
     }
 
     companion object{

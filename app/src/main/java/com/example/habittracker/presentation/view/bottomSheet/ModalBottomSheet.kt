@@ -66,7 +66,7 @@ class ModalBottomSheet : Fragment()
     private fun initViewModel() {
         val viewModelFactory = HabitsViewModel.HabitsViewModelFactory()
         viewModel = ViewModelProvider(
-            this,
+            requireActivity(),
             viewModelFactory)[HabitsViewModel::class.java]
     }
 
