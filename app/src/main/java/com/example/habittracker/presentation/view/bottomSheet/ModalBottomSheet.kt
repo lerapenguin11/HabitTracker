@@ -1,19 +1,19 @@
 package com.example.habittracker.presentation.view.bottomSheet
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
+import android.widget.ArrayAdapter
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
-import com.example.habittracker.presentation.ui.HabitsFragment
-import com.example.habittracker.presentation.ui.TypeHabitsListFragment
-import com.example.habittracker.presentation.view.dialog.HabitTypeDialog
+import com.example.habittracker.presentation.model.HabitRepetitionPeriod
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 
 class ModalBottomSheet : Fragment()
@@ -50,6 +50,9 @@ class ModalBottomSheet : Fragment()
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
         setObserverOnNameFilter()
+        setObserverOnDescriptionFilter()
+        setObserverOnExecutionsFilter()
+        openHabitExecutions()
         setOnClickListener()
     }
 
@@ -60,8 +63,6 @@ class ModalBottomSheet : Fragment()
             viewModel.cancelFilter()
         }
     }
-
-
 
     private fun initViewModel() {
         val viewModelFactory = HabitsViewModel.HabitsViewModelFactory()
@@ -80,6 +81,50 @@ class ModalBottomSheet : Fragment()
                 viewModel.searchByName(filter)
             }
         })
+    }
+
+    private fun setObserverOnDescriptionFilter(){
+        binding.tiEtSearchDescHabit.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun afterTextChanged(p0: Editable?) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val filter = p0.toString()
+                viewModel.searchByDescription(filter)
+            }
+        })
+    }
+
+
+    private fun setObserverOnExecutionsFilter() {
+        binding.tilNumberExecutions.editText?.addTextChangedListener(object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+            override fun afterTextChanged(p0: Editable?) {
+                val filter = p0.toString()
+                viewModel.searchByFrequency(filter)
+            }
+        })
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private fun openHabitExecutions() {
+        with(binding){
+            val items = listOf(
+                HabitRepetitionPeriod.ONE_TIME.period, HabitRepetitionPeriod.REGULAR.period)
+            val adapter = ArrayAdapter(requireContext(), R.layout.item_priority, items)
+            tvArrayExecutions.setDropDownBackgroundDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_card,
+                    null
+                )
+            )
+            tvArrayExecutions.threshold = 1
+            tvArrayExecutions.setAdapter(adapter)
+        }
     }
 
     companion object {

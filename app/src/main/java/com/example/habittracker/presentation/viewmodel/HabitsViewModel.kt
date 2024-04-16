@@ -1,15 +1,14 @@
 package com.example.habittracker.presentation.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.data.HabitRepositoryImpl
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
 import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.presentation.model.HabitRepetitionPeriod
 import com.example.habittracker.presentation.model.HabitType
 
 class HabitsViewModel()
@@ -54,6 +53,20 @@ class HabitsViewModel()
         return filteredAllHabits
     }
 
+    private fun List<Habit>.filterByDescription(valueFilter: String): MutableList<Habit> {
+        val filteredAllHabits: MutableList<Habit> = this.filter{
+            it.description.contains(valueFilter)
+        }.toMutableList()
+        return filteredAllHabits
+    }
+
+    private fun List<Habit>.filterByFrequency(valueFilter: String): MutableList<Habit> {
+        val filteredAllHabits: MutableList<Habit> = this.filter{
+            it.period.period == valueFilter
+        }.toMutableList()
+        return filteredAllHabits
+    }
+
     fun cancelFilter(){
         filters.value = FilterParameters(null, null, null)
     }
@@ -68,18 +81,44 @@ class HabitsViewModel()
         filters.value = filter
     }
 
+    fun searchByDescription(desc: String){
+        val filter = filters.value!!
+        if (desc != CONST_LINE) {
+            filter.habitDescription = desc
+        } else {
+            filter.habitDescription = null
+        }
+        filters.value = filter
+    }
+
+    fun searchByFrequency(frequency : String){
+        val filter = filters.value!!
+        if (frequency != CONST_LINE) {
+            filter.habitFrequency = frequency
+        } else {
+            filter.habitFrequency = null
+        }
+        filters.value = filter
+    }
+
+
     private fun applyFilters(habits: List<Habit>?, filter: FilterParameters?): List<Habit>{
         var filtrateObjects = habits ?: emptyList()
-        if (filter?.habitTitle != null && habits != null){
-            filtrateObjects = habits.filterByName(filter.habitTitle!!)
-        }
-        if (filter?.habitDescription != null && habits != null){
-
-        }
-        if (filter?.habitFrequency != null && habits != null){
-
+        filter?.let {
+            if (habits != null) {
+                if (it.habitTitle != null) {
+                    filtrateObjects = filtrateObjects.filterByName(it.habitTitle!!)
+                }
+                if (it.habitDescription != null) {
+                    filtrateObjects = filtrateObjects.filterByDescription(it.habitDescription!!)
+                }
+                if (it.habitFrequency != null){
+                    filtrateObjects = filtrateObjects.filterByFrequency(it.habitFrequency!!)
+                }
+            }
         }
         return filtrateObjects
+
     }
 
     companion object{
