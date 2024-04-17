@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habittracker.presentation.model.Habit
-import com.example.habittracker.R
 import com.example.habittracker.databinding.ItemHabitsBinding
 import com.example.habittracker.presentation.adapter.itemDiffCallback.HabitItemDiffCallback
 
@@ -48,10 +47,10 @@ internal class HabitsAdapter(
             //binding.habitCard.setCardBackgroundColor(habit.color)
         }
 
-        private fun checkingNumberExclusion(numberExecutions: String): Int {
+        private fun checkingNumberExclusion(numberExecutions: String): String {
             return when(numberExecutions.toInt()){
-                3 -> R.string.text_num_exception
-                else -> R.string.text_num
+                3 -> "раза в день"
+                else -> "раз в день"
             }
         }
     }
