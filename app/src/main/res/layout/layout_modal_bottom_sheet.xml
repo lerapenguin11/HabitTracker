@@ -21,6 +21,7 @@
             android:id="@+id/drag_handle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tint="#72796F"
             app:behavior_peekHeight="30dp"/>
 
         <TextView
@@ -28,10 +29,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/roboto_medium"
+            style="@style/TitleFilterBottomSheet"
             android:gravity="start"
-            android:text="@string/text_filter"
-            android:textSize="20sp" />
+            android:text="@string/text_filter" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -39,21 +39,89 @@
             android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/til_number_executions"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:hint="@string/text_frequency"
-                app:helperTextTextAppearance="@style/TextHelper">
+                android:layout_height="wrap_content">
 
-                <AutoCompleteTextView
-                    android:id="@+id/tv_array_executions"
-                    style="@style/TextInputEditText"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_number_executions"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="56dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:hint="@string/text_frequency"
+                    app:helperTextTextAppearance="@style/TextHelper"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/filter_new_date"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/tv_array_executions"
+                        style="@style/TextInputEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/filter_old_date"
+                    android:layout_width="51dp"
+                    android:layout_height="51dp"
+                    app:cardBackgroundColor="#F0F5EB"
+                    app:cardCornerRadius="4dp"
+                    android:layout_marginTop="3dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/til_number_executions"
+                    app:strokeColor="@color/md_theme_light_outline"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/ic_filter_old_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/ic_filter_old_date" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/filter_new_date"
+                    android:layout_width="51dp"
+                    android:layout_height="51dp"
+                    app:cardBackgroundColor="#F0F5EB"
+                    android:layout_marginTop="3dp"
+                    app:cardCornerRadius="4dp"
+                    android:layout_marginEnd="10dp"
+                    android:focusable="true"
+                    android:clickable="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/filter_old_date"
+                    app:layout_constraintTop_toTopOf="@+id/til_number_executions"
+                    app:strokeColor="@color/md_theme_light_outline"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        <ImageView
+                            android:id="@+id/ic_filter_new_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_gravity="center"
+                            app:srcCompat="@drawable/ic_filter_new_date" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -101,8 +169,8 @@
                 android:layout_height="56dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/text_cancel"
-                android:enabled="true"
-                android:focusable="false"
+                android:enabled="false"
+                android:focusable="true"
                 android:textAppearance="@style/TextButton"
                 app:cornerRadius="4dp" />
         </LinearLayout>
