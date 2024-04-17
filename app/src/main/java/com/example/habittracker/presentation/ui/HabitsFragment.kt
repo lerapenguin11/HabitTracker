@@ -47,6 +47,9 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
         bottomSheetBehavior.saveFlags = BottomSheetBehavior.SAVE_ALL
         bottomSheetBehavior.isHideable = false
+        binding.bottomSheet.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 
     private fun setOnClickListenerFabAddHabit() { //TODO вынести fab button во фрагмент с привычками
