@@ -20,17 +20,12 @@ internal class ExecutionPeriodHabitDialog : DialogFragment(){
             HabitRepetitionPeriod.REGULAR.period, HabitRepetitionPeriod.ONE_TIME.period)
         val checkedItem = intArrayOf(checkedPeriodNumber)
         val dialog = MaterialAlertDialogBuilder(requireContext(),
-            R.style.ThemeOverlay_App_MaterialAlertDialog)
+            R.style.ThemeOverlayAppMaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_period_habit))
-            .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
-                dialog.cancel()
-            }
-            .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
-                dialog.cancel()
-            }
             .setSingleChoiceItems(singleItems, checkedItem[0]) { dialog, which ->
                 checkedItem[0] = which
                 (parentFragment as Host).selectionExecutionPeriod(singleItems[which])
+                dialog.cancel()
             }
             .create()
         return dialog

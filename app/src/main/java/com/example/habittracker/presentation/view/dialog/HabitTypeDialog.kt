@@ -16,18 +16,19 @@ internal class HabitTypeDialog : DialogFragment()
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val singleItems = arrayOf(HabitType.HARMFUL.type, HabitType.USEFUL.type)
         val checkedItem = intArrayOf(checkedTypeNumber)
-        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_App_MaterialAlertDialog)
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlayAppMaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_type_habit))
-            .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
+            /*.setNegativeButton(resources.getString(R.string.text_close)) { dialog, _ ->
                 (parentFragment as Host).typeSelection("")
                 dialog.cancel()
-            }
-            .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
+            }*/
+            /*.setPositiveButton(resources.getString(R.string.text_gone)) { dialog, _ ->
                 dialog.cancel()
-            }
+            }*/
             .setSingleChoiceItems(singleItems, checkedItem[0]) { dialog, which ->
                 checkedItem[0] = which
                 (parentFragment as Host).typeSelection(singleItems[which])
+                dialog.cancel()
             }
             .create()
         return dialog
