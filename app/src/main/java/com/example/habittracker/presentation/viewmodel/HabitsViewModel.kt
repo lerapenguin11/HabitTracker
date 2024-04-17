@@ -3,12 +3,10 @@ package com.example.habittracker.presentation.viewmodel
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.data.HabitRepositoryImpl
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
 import com.example.habittracker.presentation.model.Habit
-import com.example.habittracker.presentation.model.HabitRepetitionPeriod
 import com.example.habittracker.presentation.model.HabitType
 
 class HabitsViewModel()
@@ -123,14 +121,5 @@ class HabitsViewModel()
 
     companion object{
         private const val CONST_LINE = ""
-    }
-
-    class HabitsViewModelFactory () :
-        ViewModelProvider.NewInstanceFactory(){
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HabitsViewModel() as T
-        }
     }
 }

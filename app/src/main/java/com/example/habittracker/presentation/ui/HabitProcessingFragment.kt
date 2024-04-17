@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.example.habittracker.presentation.model.HabitPriority
 import com.example.habittracker.R
@@ -29,7 +29,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
     private var habitId : Int? = null
-    private lateinit var viewModel : HabitProcessingViewModel
+    private val viewModel by activityViewModels<HabitProcessingViewModel>()
 
     private var color : Int = 0
 
@@ -50,20 +50,12 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
         handleAction()
         setOnClickListener()
         initTextInputListeners()
         openHabitPriorityModal()
         openHabitRepetitionsNumberModal()
         saveHabit()
-    }
-
-    private fun initViewModel() {
-        val viewModelFactory = HabitProcessingViewModel.HabitProcessingViewModelFactory()
-        viewModel = ViewModelProvider(
-            this,
-            viewModelFactory)[HabitProcessingViewModel::class.java]
     }
 
     private fun setOnClickListener() {
@@ -88,12 +80,11 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         }
     }
 
-    //TODO: обновление привычки
     private fun launchUpdateHabit(habit : Habit) {
         viewModel.updateHabit(habit = habit)
         view?.findNavController()?.popBackStack()
     }
-    //TODO: создание привычки
+
     private fun launchAddHabit(habit : Habit) {
         viewModel.createHabit(habit = habit)
         view?.findNavController()?.popBackStack()
@@ -130,18 +121,19 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         binding.btSaveHabit.isEnabled = true
     }
 
-    private fun habitProcessing() : Habit {
-        return Habit(
-            id = getHabitId(),
-            title = binding.tiEtNameHabit.text.toString(),
-            description = binding.tiEtDescHabit.text.toString(),
-            type = getSelectedHabitType()!!,
-            habitPriority = getSelectedHabitPriority()!!,
-            numberExecutions = binding.tvArrayExecutions.text.toString(),
-            period = getSelectedHabitPeriod()!!,
-            color = color
-        )
-    }
+    private fun habitProcessing() : Habit =
+        with(binding){
+            return Habit(
+                id = getHabitId(),
+                title = tiEtNameHabit.text.toString(),
+                description = tiEtDescHabit.text.toString(),
+                type = getSelectedHabitType()!!,
+                habitPriority = getSelectedHabitPriority()!!,
+                numberExecutions = tvArrayExecutions.text.toString(),
+                period = getSelectedHabitPeriod()!!,
+                color = color
+            )
+        }
 
     private fun getSelectedHabitPriority() : HabitPriority?{
         return when(binding.tvArrayPriority.text.toString()){
@@ -176,70 +168,74 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         }
     }
 
-    private fun initTextInputListeners() {
-        val textChangedListenerAdd = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+    private fun initTextInputListeners() =
+        with(binding){
+            val textChangedListenerAdd = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.btSaveHabit.isEnabled = checkIfFieldsNotEmpty() }
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    btSaveHabit.isEnabled = checkIfFieldsNotEmpty() }
 
-            override fun afterTextChanged(s: Editable?) {}
+                override fun afterTextChanged(s: Editable?) {}
+            }
+            tilNameHabit.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilDescHabit.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilPriority.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilType.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilNumberExecutions.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilFrequency.editText?.addTextChangedListener(textChangedListenerAdd)
         }
-        binding.tilNameHabit.editText?.addTextChangedListener(textChangedListenerAdd)
-        binding.tilDescHabit.editText?.addTextChangedListener(textChangedListenerAdd)
-        binding.tilPriority.editText?.addTextChangedListener(textChangedListenerAdd)
-        binding.tilType.editText?.addTextChangedListener(textChangedListenerAdd)
-        binding.tilNumberExecutions.editText?.addTextChangedListener(textChangedListenerAdd)
-        binding.tilFrequency.editText?.addTextChangedListener(textChangedListenerAdd)
-    }
 
-    private fun checkIfFieldsNotEmpty(): Boolean {
-        return (binding.tilNameHabit.editText?.length() != 0 &&
-                binding.tilDescHabit.editText?.length() != 0 &&
-                binding.tilPriority.editText?.length() != 0 &&
-                binding.tilType.editText?.length() != 0 &&
-                binding.tilNumberExecutions.editText?.length() !=0 &&
-                binding.tilFrequency.editText?.length() != 0)
-    }
+    private fun checkIfFieldsNotEmpty(): Boolean =
+        with(binding){
+            return (tilNameHabit.editText?.length() != 0 &&
+                    tilDescHabit.editText?.length() != 0 &&
+                    tilPriority.editText?.length() != 0 &&
+                    tilType.editText?.length() != 0 &&
+                    tilNumberExecutions.editText?.length() !=0 &&
+                    tilFrequency.editText?.length() != 0)
+        }
 
     @SuppressLint("ResourceAsColor")
-    private fun openHabitPriorityModal() {
-        val items = listOf(
-            HabitPriority.HIGH.priority, HabitPriority.MEDIUM.priority, HabitPriority.LOW.priority)
-        val adapter = ArrayAdapter(requireContext(), R.layout.item_priority, items)
-        binding.tvArrayPriority.setDropDownBackgroundDrawable(
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_card,
-                null
+    private fun openHabitPriorityModal() =
+        with(binding){
+            val items = listOf(
+                HabitPriority.HIGH.priority, HabitPriority.MEDIUM.priority, HabitPriority.LOW.priority)
+            val adapter = ArrayAdapter(requireContext(), R.layout.item_priority, items)
+            tvArrayPriority.setDropDownBackgroundDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_card,
+                    null
+                )
             )
-        )
-        binding.tvArrayPriority.threshold = 1
-        binding.tvArrayPriority.setAdapter(adapter)
-        binding.tvArrayPriority.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, _, position, _ ->
-                itemArrayPriority = parent.getItemAtPosition(position).toString()
-            }
-    }
+            tvArrayPriority.threshold = 1
+            tvArrayPriority.setAdapter(adapter)
+            tvArrayPriority.onItemClickListener =
+                AdapterView.OnItemClickListener { parent, _, position, _ ->
+                    itemArrayPriority = parent.getItemAtPosition(position).toString()
+                }
+        }
 
-    private fun openHabitRepetitionsNumberModal() {
-        val items = mutableListOf<String>()
-        for (i in 1 until 11){ items.add("$i") }
-        val adapter = ArrayAdapter(requireContext(), R.layout.item_priority, items)
-        binding.tvArrayExecutions.threshold = 1
-        binding.tvArrayExecutions.setDropDownBackgroundDrawable(
-            ResourcesCompat.getDrawable(
-                resources,
-                R.drawable.ic_card,
-                null
+    private fun openHabitRepetitionsNumberModal() =
+        with(binding){
+            val items = mutableListOf<String>()
+            for (i in 1 until 11){ items.add("$i") }
+            val adapter = ArrayAdapter(requireContext(), R.layout.item_priority, items)
+            tvArrayExecutions.threshold = 1
+            tvArrayExecutions.setDropDownBackgroundDrawable(
+                ResourcesCompat.getDrawable(
+                    resources,
+                    R.drawable.ic_card,
+                    null
+                )
             )
-        )
-        binding.tvArrayExecutions.setAdapter(adapter)
-        binding.tvArrayExecutions.onItemClickListener =
-            AdapterView.OnItemClickListener { parent, _, position, _ ->
-                itemArrayExecutions = parent.getItemAtPosition(position).toString()
-            }
-    }
+            tvArrayExecutions.setAdapter(adapter)
+            tvArrayExecutions.onItemClickListener =
+                AdapterView.OnItemClickListener { parent, _, position, _ ->
+                    itemArrayExecutions = parent.getItemAtPosition(position).toString()
+                }
+        }
 
     companion object {
         private const val MODE_EDIT = "mode_edit"
@@ -248,11 +244,14 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         private const val HABIT_ID = "update_habit"
     }
 
-    override fun typeSelection(text: String) {
-        binding.tiEtTypeHabit.setText(text)
-    }
+    override fun typeSelection(text: String) =
+        with(binding){
+            tiEtTypeHabit.setText(text)
+        }
 
-    override fun selectionExecutionPeriod(text: String) {
-        binding.tiEtFrequency.setText(text)
+
+    override fun selectionExecutionPeriod(text: String) =
+        with(binding){
+            tiEtFrequency.setText(text)
     }
 }

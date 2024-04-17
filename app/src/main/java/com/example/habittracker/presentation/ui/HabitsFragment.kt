@@ -1,31 +1,21 @@
 package com.example.habittracker.presentation.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.viewpager2.widget.ViewPager2
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitsBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.TabAdapter
-import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.presentation.model.TabHabitType
-import com.example.habittracker.presentation.view.bottomSheet.ModalBottomSheet
-import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
-
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -52,7 +42,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         }
     }
 
-    private fun setOnClickListenerFabAddHabit() { //TODO вынести fab button во фрагмент с привычками
+    private fun setOnClickListenerFabAddHabit() {
         binding.fabAddHabits.setOnClickListener { openAddHabit(
             MODE_ADD,
             SCREEN_MODE
@@ -84,19 +74,10 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
             tabAdapter.addFragment(it)
         }
         binding.viewPager.adapter = tabAdapter
+        initTabLayoutMediator()
+    }
 
-        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                newInstanceTabType(TabHabitType.USEFUL.type).let {
-                    tabAdapter.addFragment(it)
-                }
-                newInstanceTabType(TabHabitType.HARMFUL.type).let {
-                    tabAdapter.addFragment(it)
-                }
-            }
-        })
-
+    private fun initTabLayoutMediator() {
         TabLayoutMediator(binding.tabLayoutHabit, binding.viewPager) { tab, position ->
             when(position){
                 0 -> {
@@ -111,7 +92,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         }.attach()
     }
 
-    private fun openAddHabit(mode: String, screenMode: String) { //TODO вынести fab button во фрагмент с привычками
+    private fun openAddHabit(mode: String, screenMode: String) {
         val bundle = Bundle()
         bundle.putString(screenMode, mode)
         view?.findNavController()?.saveState()

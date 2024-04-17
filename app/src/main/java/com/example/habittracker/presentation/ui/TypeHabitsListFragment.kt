@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
@@ -14,15 +14,14 @@ import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.HabitsAdapter
 import com.example.habittracker.presentation.model.Habit
 import com.example.habittracker.presentation.model.TabHabitType
-import com.example.habittracker.presentation.view.bottomSheet.ModalBottomSheet
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 
 class TypeHabitsListFragment()
     : BaseFragment<FragmentTypeHabitsListBinding>()
 {
-    private lateinit var viewModel: HabitsViewModel
     private val adapter = HabitsAdapter()
     private var habitType : String? = null
+    private val viewModel by activityViewModels<HabitsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,18 +37,10 @@ class TypeHabitsListFragment()
         return FragmentTypeHabitsListBinding.inflate(inflater, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) { //TODO: вынести bottom sheet сюда
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
         launchTypeHabit()
         habitClickListener()
-    }
-
-    private fun initViewModel() {
-        val viewModelFactory = HabitsViewModel.HabitsViewModelFactory()
-        viewModel = ViewModelProvider(
-            requireActivity(),
-            viewModelFactory)[HabitsViewModel::class.java]
     }
 
     private fun launchTypeHabit() {
@@ -88,7 +79,7 @@ class TypeHabitsListFragment()
     }
 
     private fun handleEmptyListMessageVisibility(habitList : List<Habit>) = with(binding){
-        tvTextNoHabits.isVisible = habitList.isEmpty() //TODO: вынести во viewModel
+        tvTextNoHabits.isVisible = habitList.isEmpty()
     }
 
     private fun openEditHabit(habit: Habit, screenMode: String?, mode : String) {
@@ -103,8 +94,6 @@ class TypeHabitsListFragment()
         super.onDestroyView()
         binding.rvHabits.adapter = null
     }
-
-
 
     companion object{
         private const val MODE_EDIT = "mode_edit"

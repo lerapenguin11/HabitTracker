@@ -32,14 +32,4 @@ class HabitProcessingViewModel() : ViewModel()
     fun createHabit(habit : Habit){
         createHabitUseCase.invoke(newHabit = habit)
     }
-
-    //TODO: удалить
-    class HabitProcessingViewModelFactory () :
-        ViewModelProvider.NewInstanceFactory(){
-
-        @Suppress("UNCHECKED_CAST")
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return HabitProcessingViewModel() as T
-        }
-    }
 }

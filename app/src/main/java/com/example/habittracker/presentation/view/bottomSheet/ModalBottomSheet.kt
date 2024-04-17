@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
 import com.example.habittracker.presentation.model.HabitRepetitionPeriod
@@ -20,7 +20,7 @@ class ModalBottomSheet : Fragment()
 {
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: HabitsViewModel
+    private val viewModel by activityViewModels<HabitsViewModel>()
     private var updateListListener: UpdateListListener? = null
 
     override fun onAttachFragment(childFragment: Fragment) {
@@ -48,7 +48,6 @@ class ModalBottomSheet : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
         setObserverOnNameFilter()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
@@ -64,18 +63,10 @@ class ModalBottomSheet : Fragment()
         }
     }
 
-    private fun initViewModel() {
-        val viewModelFactory = HabitsViewModel.HabitsViewModelFactory()
-        viewModel = ViewModelProvider(
-            requireActivity(),
-            viewModelFactory)[HabitsViewModel::class.java]
-    }
-
     private fun setObserverOnNameFilter(){
         binding.filterNameHabit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val filter = p0.toString()
                 viewModel.searchByName(filter)
@@ -87,7 +78,6 @@ class ModalBottomSheet : Fragment()
         binding.tiEtSearchDescHabit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {}
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val filter = p0.toString()
                 viewModel.searchByDescription(filter)
@@ -99,9 +89,7 @@ class ModalBottomSheet : Fragment()
     private fun setObserverOnExecutionsFilter() {
         binding.tilNumberExecutions.editText?.addTextChangedListener(object : TextWatcher{
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
             override fun afterTextChanged(p0: Editable?) {
                 val filter = p0.toString()
                 viewModel.searchByFrequency(filter)
@@ -125,9 +113,5 @@ class ModalBottomSheet : Fragment()
             tvArrayExecutions.threshold = 1
             tvArrayExecutions.setAdapter(adapter)
         }
-    }
-
-    companion object {
-        const val TAG = "ModalBottomSheet"
     }
 }
