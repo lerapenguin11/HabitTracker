@@ -4,9 +4,8 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.room.Room
-import com.example.habittracker.data.entity.HabitDatabase
+import com.example.habittracker.data.room.HabitDatabase
 import com.example.habittracker.data.repository.HabitRepositoryImpl
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.GetHabitItemUseCase

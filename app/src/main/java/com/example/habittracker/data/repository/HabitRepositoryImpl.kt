@@ -1,8 +1,7 @@
 package com.example.habittracker.data.repository
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
-import com.example.habittracker.data.entity.HabitDao
+import com.example.habittracker.data.room.HabitDao
 import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.domain.repository.HabitsRepository
 import com.example.habittracker.domain.model.Habit

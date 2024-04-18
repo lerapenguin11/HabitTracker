@@ -1,9 +1,10 @@
-package com.example.habittracker.data.entity
+package com.example.habittracker.data.room
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.habittracker.data.entity.HabitEntity
 
 @Database(entities = [HabitEntity::class], version = 1, exportSchema = false)
 abstract class HabitDatabase : RoomDatabase() {
