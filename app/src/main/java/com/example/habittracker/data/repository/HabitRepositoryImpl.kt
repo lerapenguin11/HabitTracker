@@ -1,43 +1,33 @@
 package com.example.habittracker.data.repository
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+import com.example.habittracker.data.entity.HabitDao
+import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.domain.repository.HabitsRepository
 import com.example.habittracker.domain.model.Habit
 
-object HabitRepositoryImpl : HabitsRepository {
-    private val habitListLD = MutableLiveData<List<Habit>>()
-    private val habitList = mutableListOf<Habit>()
+class HabitRepositoryImpl(
+    private val dao : HabitDao
+) : HabitsRepository {
+    private val mapper = HabitMapper()
 
-    override fun getHabits(): MutableLiveData<List<Habit>> {
-        return habitListLD
+    override fun getHabits(): LiveData<List<Habit>> {
+        return mapper.habitsEntityToHabits(dao.getAllHabits())
     }
 
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
-    override fun getHabitItem(habitId: Int): Habit {
-        return habitList.find {
-            it.id == habitId
-        }!!
+    override fun getHabitItem(habitId: Int): LiveData<Habit> {
+        val habit = dao.getHabitById(habitId = habitId)
+        return mapper.habitEntityToHabitLD(entity = habit)
     }
 
-    @SuppressLint("NullSafeMutableLiveData")
     override fun updateHabit(habit: Habit) {
-        val oldHabitList = habitList
-        val habitIndex = oldHabitList.indexOfFirst { it.id == habit.id }
-        if (habitIndex != -1) {
-            oldHabitList[habitIndex] = habit
-            updateList()
-        }
+        dao.updateHabit(mapper.habitToHabitEntity(habit = habit))
     }
 
     override fun createHabit(newHabit: Habit) {
-        habitList.add(newHabit)
-        updateList()
+        dao.insertHabit(mapper.habitToHabitEntity(habit = newHabit))
     }
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
-
-    //TODO: удалить
-    private fun updateList(){
-        habitListLD.value = habitList
-    }
 }
