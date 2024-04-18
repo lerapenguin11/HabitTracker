@@ -49,34 +49,36 @@ class HabitMapper
     fun habitsEntityToHabits(entity : LiveData<List<HabitEntity>>) : LiveData<List<Habit>>{
         val list = arrayListOf<Habit>()
         val listLD = MutableLiveData<List<Habit>>()
-        for (i in entity.value!!){
-            val id = i.id
-            val title = i.title
-            val description = i.description
-            val type = i.type
-            val habitPriority = i.habitPriority
-            val numberExecutions = i.numberExecutions
-            val period = i.period
-            val color = i.color
+         if (entity.value != null){
+             for (i in entity.value!!){
+                 val id = i.id
+                 val title = i.title
+                 val description = i.description
+                 val type = i.type
+                 val habitPriority = i.habitPriority
+                 val numberExecutions = i.numberExecutions
+                 val period = i.period
+                 val color = i.color
 
-            val model = getSelectedHabitPeriod(period)?.let { period ->
-                getSelectedHabitPriority(habitPriority)?.let { habitPriority ->
-                    getSelectedHabitType(type)?.let { type ->
-                        Habit(
-                            id = id!!,
-                            title = title,
-                            description = description,
-                            type = type,
-                            habitPriority = habitPriority,
-                            numberExecutions = numberExecutions,
-                            period = period,
-                            color = color
-                        )
-                    }
-                }
-            }
-            model?.let { list.add(it) }
-        }
+                 val model = getSelectedHabitPeriod(period)?.let { period ->
+                     getSelectedHabitPriority(habitPriority)?.let { habitPriority ->
+                         getSelectedHabitType(type)?.let { type ->
+                             Habit(
+                                 id = id!!,
+                                 title = title,
+                                 description = description,
+                                 type = type,
+                                 habitPriority = habitPriority,
+                                 numberExecutions = numberExecutions,
+                                 period = period,
+                                 color = color
+                             )
+                         }
+                     }
+                 }
+                 model?.let { list.add(it) }
+             }
+         }
         listLD.value = list
         return listLD
     }

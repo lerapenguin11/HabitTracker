@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
@@ -19,9 +20,11 @@ import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 class TypeHabitsListFragment()
     : BaseFragment<FragmentTypeHabitsListBinding>()
 {
+    private val viewModel : HabitsViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(HabitsViewModel::class.java)
+    }
     private val adapter = HabitsAdapter()
     private var habitType : String? = null
-    private val viewModel by activityViewModels<HabitsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

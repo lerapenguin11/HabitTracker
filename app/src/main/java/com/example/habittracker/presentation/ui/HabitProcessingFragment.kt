@@ -11,6 +11,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.habittracker.domain.model.HabitPriority
 import com.example.habittracker.R
@@ -29,7 +30,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
     private var habitId : Int? = null
-    private val viewModel by activityViewModels<HabitProcessingViewModel>()
+    private val viewModel : HabitProcessingViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(HabitProcessingViewModel::class.java)}
 
     private var color : Int = 0
 

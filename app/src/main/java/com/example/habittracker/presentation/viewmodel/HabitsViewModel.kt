@@ -1,25 +1,40 @@
 package com.example.habittracker.presentation.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.room.Room
+import com.example.habittracker.data.entity.HabitDatabase
 import com.example.habittracker.data.repository.HabitRepositoryImpl
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
 
-class HabitsViewModel()
-    : ViewModel(){
-    private val repository = HabitRepositoryImpl
-    private val getHabitsUseCase = GetHabitsUseCase(repository)
-
-    private var habitList = getHabitsUseCase.invoke()
+class HabitsViewModel(
+    applicationContext: Application
+)
+    : AndroidViewModel(applicationContext){
+    private val repository : HabitRepositoryImpl
+    private val getHabitsUseCase : GetHabitsUseCase
+    private var habitList : LiveData<List<Habit>>
     private val filters: MutableLiveData<FilterParameters> =
         MutableLiveData(FilterParameters(null, null, null))
     val filteredHabit : MediatorLiveData<List<Habit>> = MediatorLiveData<List<Habit>>()
 
     init {
+        val db = Room.databaseBuilder(
+            applicationContext,
+            HabitDatabase::class.java, "habit_db"
+        ).allowMainThreadQueries().build().getHabitDao()
+
+        repository = HabitRepositoryImpl(db)
+        getHabitsUseCase = GetHabitsUseCase(repository)
+        habitList = getHabitsUseCase.invoke()
+
         filteredHabit.addSource(habitList) { habits ->
             val filtersValue = filters.value
             val filteredList = applyFilters(habits, filtersValue)

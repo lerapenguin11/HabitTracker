@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
 import com.example.habittracker.domain.model.HabitRepetitionPeriod
@@ -20,22 +21,11 @@ class ModalBottomSheet : Fragment()
 {
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by activityViewModels<HabitsViewModel>()
-    private var updateListListener: UpdateListListener? = null
-
-    override fun onAttachFragment(childFragment: Fragment) {
-        super.onAttachFragment(childFragment)
-        if (childFragmentManager is UpdateListListener) {
-            updateListListener = childFragmentManager as UpdateListListener
-        } else {
-            throw RuntimeException("$childFragment must implement UpdateListListener")
-        }
+    //private val viewModel by activityViewModels<HabitsViewModel>()
+    //private lateinit var viewModel : HabitsViewModel
+    private val viewModel : HabitsViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(HabitsViewModel::class.java)
     }
-
-    interface UpdateListListener {
-        fun onUpdateList()
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,6 +38,11 @@ class ModalBottomSheet : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        /*viewModel = ViewModelProvider(
+            requireActivity(),
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application = requireActivity().application)
+        ).get(HabitsViewModel::class.java)*/
+
         setObserverOnNameFilter()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
@@ -58,7 +53,6 @@ class ModalBottomSheet : Fragment()
     private fun setOnClickListener() {
         binding.btCancelFilter.setOnClickListener {
             binding.filterNameHabit.text = null
-            updateListListener?.onUpdateList()
             viewModel.cancelFilter()
         }
     }
