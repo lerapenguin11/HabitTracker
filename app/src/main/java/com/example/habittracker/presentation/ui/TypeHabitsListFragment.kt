@@ -12,7 +12,7 @@ import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.HabitsAdapter
-import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 

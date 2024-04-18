@@ -3,7 +3,7 @@ package com.example.habittracker.presentation.view.dialog
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.example.habittracker.presentation.model.HabitRepetitionPeriod
+import com.example.habittracker.domain.model.HabitRepetitionPeriod
 import com.example.habittracker.R
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 

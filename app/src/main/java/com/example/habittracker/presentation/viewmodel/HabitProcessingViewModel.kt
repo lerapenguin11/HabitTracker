@@ -3,12 +3,11 @@ package com.example.habittracker.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.example.habittracker.data.HabitRepositoryImpl
+import com.example.habittracker.data.repository.HabitRepositoryImpl
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.UpdateHabitUseCase
-import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.domain.model.Habit
 
 class HabitProcessingViewModel() : ViewModel()
 {

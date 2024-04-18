@@ -1,10 +1,9 @@
-package com.example.habittracker.data
+package com.example.habittracker.data.repository
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.habittracker.domain.repository.HabitsRepository
-import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.domain.model.Habit
 
 object HabitRepositoryImpl : HabitsRepository {
     private val habitListLD = MutableLiveData<List<Habit>>()

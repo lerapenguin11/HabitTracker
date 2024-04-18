@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.habittracker.presentation.model.Habit
+import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.databinding.ItemHabitsBinding
 import com.example.habittracker.presentation.adapter.itemDiffCallback.HabitItemDiffCallback
 

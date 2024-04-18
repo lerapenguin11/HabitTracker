@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("kotlin-parcelize")
+    id("kotlin-kapt")
 }
 
 android {
@@ -46,6 +47,10 @@ dependencies {
     implementation(libs.android.material)
     implementation(libs.android.constraintlayout)
     implementation(libs.bundles.navigation.all)
+    implementation(libs.android.room)
+    implementation(libs.android.room.runtime)
+    //noinspection KaptUsageInsteadOfKsp
+    kapt(libs.android.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)

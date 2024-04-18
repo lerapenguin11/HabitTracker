@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
-import com.example.habittracker.presentation.model.HabitRepetitionPeriod
+import com.example.habittracker.domain.model.HabitRepetitionPeriod
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 
 class ModalBottomSheet : Fragment()
