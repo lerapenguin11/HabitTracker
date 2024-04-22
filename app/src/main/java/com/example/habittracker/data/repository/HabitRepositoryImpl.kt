@@ -28,11 +28,11 @@ class HabitRepositoryImpl(
     }
 
     override fun updateHabit(habit: Habit) {
-        dao.updateHabit(mapper.habitToHabitEntity(habit = habit))
+        dao.updateHabit(mapper.habitToHabitEntityUpdate(habit = habit))
     }
 
     override fun createHabit(newHabit: Habit) {
-        dao.insertHabit(mapper.habitToHabitEntity(habit = newHabit))
+        dao.insertHabit(mapper.habitToHabitEntityInsert(habit = newHabit))
     }
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
 }

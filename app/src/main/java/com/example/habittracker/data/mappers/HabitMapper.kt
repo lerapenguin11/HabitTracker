@@ -9,7 +9,20 @@ import com.example.habittracker.domain.model.HabitType
 
 class HabitMapper
 {
-    fun habitToHabitEntity(habit: Habit) : HabitEntity{
+    fun habitToHabitEntityUpdate(habit: Habit) : HabitEntity{
+        return HabitEntity(
+            id = habit.id,
+            title = habit.title,
+            description = habit.description,
+            type = habit.type.type,
+            habitPriority = habit.habitPriority.priority,
+            numberExecutions = habit.numberExecutions,
+            period = habit.period.period,
+            color = habit.color
+        )
+    }
+
+    fun habitToHabitEntityInsert(habit: Habit) : HabitEntity{
         return HabitEntity(
             title = habit.title,
             description = habit.description,

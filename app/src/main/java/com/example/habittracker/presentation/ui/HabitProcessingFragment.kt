@@ -140,7 +140,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private fun habitProcessing() : Habit =
         with(binding){
             return Habit(
-                id = 0,
+                id = getIdHabit(),
                 title = tiEtNameHabit.text.toString(),
                 description = tiEtDescHabit.text.toString(),
                 type = getSelectedHabitType()!!,
@@ -150,6 +150,14 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 color = color
             )
         }
+
+    private fun getIdHabit(): Int {
+        if (habitId == null){
+            return 0
+        } else{
+            return habitId!!
+        }
+    }
 
     private fun getSelectedHabitPriority() : HabitPriority?{
         return when(binding.tvArrayPriority.text.toString()){
