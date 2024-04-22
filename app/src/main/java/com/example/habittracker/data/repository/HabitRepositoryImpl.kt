@@ -24,15 +24,15 @@ class HabitRepositoryImpl(
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
     override fun getHabitItem(habitId: Int): Habit {
         val habit = dao.getHabitById(habitId = habitId)
-        return mapper.habitEntityToHabitLD(entity = habit)
+        return mapper.habitEntityToHabit(entity = habit)
     }
 
     override fun updateHabit(habit: Habit) {
-        dao.updateHabit(mapper.habitToHabitEntityUpdate(habit = habit))
+        dao.updateHabit(mapper.updateHabitToHabitEntity(habit = habit))
     }
 
     override fun createHabit(newHabit: Habit) {
-        dao.insertHabit(mapper.habitToHabitEntityInsert(habit = newHabit))
+        dao.insertHabit(mapper.insertHabitToHabitEntity(habit = newHabit))
     }
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
 }

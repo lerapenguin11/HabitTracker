@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Habit(
-    val id : Int,
+    var id : Int = UNDEFINED_ID,
     val title : String,
     val description : String,
     val type : HabitType,
@@ -13,7 +13,11 @@ data class Habit(
     val numberExecutions : String,
     val period : HabitRepetitionPeriod,
     val color : Int
-) : Parcelable
+) : Parcelable{
+    companion object{
+        const val UNDEFINED_ID = -1
+    }
+}
 
 enum class HabitPriority(val priority : String){
     HIGH("Высокий"),

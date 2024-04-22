@@ -1,6 +1,5 @@
 package com.example.habittracker.data.mappers
 
-import androidx.lifecycle.MutableLiveData
 import com.example.habittracker.data.entity.HabitEntity
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitPriority
@@ -9,7 +8,7 @@ import com.example.habittracker.domain.model.HabitType
 
 class HabitMapper
 {
-    fun habitToHabitEntityUpdate(habit: Habit) : HabitEntity{
+    fun updateHabitToHabitEntity(habit: Habit) : HabitEntity{
         return HabitEntity(
             id = habit.id,
             title = habit.title,
@@ -22,7 +21,7 @@ class HabitMapper
         )
     }
 
-    fun habitToHabitEntityInsert(habit: Habit) : HabitEntity{
+    fun insertHabitToHabitEntity(habit: Habit) : HabitEntity{
         return HabitEntity(
             title = habit.title,
             description = habit.description,
@@ -34,14 +33,37 @@ class HabitMapper
         )
     }
 
-    fun habitEntityToHabitLD(entity: HabitEntity) : Habit{
-        val habitLD = MutableLiveData<Habit>()
-        val model = entity.id?.let { id ->
+    fun habitEntityToHabit(entity: HabitEntity) : Habit{
+        val model = entity.id.let { id ->
             getSelectedHabitPeriod(entity.period)?.let { period ->
                 getSelectedHabitPriority(entity.habitPriority)?.let { habitPriority ->
                     getSelectedHabitType(entity.type)?.let { type ->
+                        id?.let { id ->
+                            Habit(
+                                id = id,
+                                title = entity.title,
+                                description = entity.description,
+                                type = type,
+                                habitPriority = habitPriority,
+                                numberExecutions = entity.numberExecutions,
+                                period = period,
+                                color = entity.color
+                            )
+                        }
+                    }
+                }
+            }
+        }
+        return model!!
+    }
+    fun habitsEntityToHabits(habitEntities : List<HabitEntity>) : List<Habit>{
+        val habits = arrayListOf<Habit>()
+        for (entity in habitEntities){
+            val habit = getSelectedHabitPeriod(entity.period)?.let { period ->
+                getSelectedHabitPriority(entity.habitPriority)?.let { habitPriority ->
+                    getSelectedHabitType(entity.type)?.let { type ->
                         Habit(
-                            id = id,
+                            id = entity.id!!,
                             title = entity.title,
                             description = entity.description,
                             type = type,
@@ -53,41 +75,9 @@ class HabitMapper
                     }
                 }
             }
+            habit?.let { habits.add(it) }
         }
-        habitLD.value = model!!
-        return model
-    }
-    fun habitsEntityToHabits(entity : List<HabitEntity>) : List<Habit>{
-        val list = arrayListOf<Habit>()
-        for (i in entity){
-            val id = i.id
-            val title = i.title
-            val description = i.description
-            val type = i.type
-            val habitPriority = i.habitPriority
-            val numberExecutions = i.numberExecutions
-            val period = i.period
-            val color = i.color
-
-            val model = getSelectedHabitPeriod(period)?.let { period ->
-                getSelectedHabitPriority(habitPriority)?.let { habitPriority ->
-                    getSelectedHabitType(type)?.let { type ->
-                        Habit(
-                            id = id!!,
-                            title = title,
-                            description = description,
-                            type = type,
-                            habitPriority = habitPriority,
-                            numberExecutions = numberExecutions,
-                            period = period,
-                            color = color
-                        )
-                    }
-                }
-            }
-            model?.let { list.add(it) }
-        }
-        return list
+        return habits
     }
 
     private fun getSelectedHabitType(type : String) : HabitType? {
