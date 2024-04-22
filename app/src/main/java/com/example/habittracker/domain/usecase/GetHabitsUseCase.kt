@@ -1,9 +1,8 @@
 package com.example.habittracker.domain.usecase
 
 import androidx.lifecycle.LiveData
-import com.example.habittracker.domain.repository.HabitsRepository
 import com.example.habittracker.domain.model.Habit
-import kotlinx.coroutines.flow.Flow
+import com.example.habittracker.domain.repository.HabitsRepository
 
 //TODO habits_domain
 class GetHabitsUseCase(private val repository : HabitsRepository)

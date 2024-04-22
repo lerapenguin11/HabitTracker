@@ -1,16 +1,12 @@
 package com.example.habittracker.presentation.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.habittracker.data.room.HabitDatabase
-import com.example.habittracker.data.repository.HabitRepositoryImpl
+import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.UpdateHabitUseCase
-import com.example.habittracker.domain.model.Habit
 
 class HabitProcessingViewModel(
     private val createHabitUseCase : CreateHabitUseCase,

@@ -12,6 +12,7 @@ abstract class HabitDatabase : RoomDatabase() {
     abstract fun getHabitDao(): HabitDao
 
     companion object {
+        private const val NAME_DB = "habit_db"
         private var instance: HabitDatabase? = null
 
         fun getInstance(context: Context): HabitDatabase {
@@ -24,7 +25,7 @@ abstract class HabitDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 context.applicationContext,
                 HabitDatabase::class.java,
-                "habit_db"
+                NAME_DB
             )
                 .allowMainThreadQueries()
                 .build()

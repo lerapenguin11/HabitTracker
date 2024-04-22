@@ -1,8 +1,7 @@
 package com.example.habittracker.domain.usecase
 
-import androidx.lifecycle.LiveData
-import com.example.habittracker.domain.repository.HabitsRepository
 import com.example.habittracker.domain.model.Habit
+import com.example.habittracker.domain.repository.HabitsRepository
 
 class GetHabitItemUseCase(private val repository : HabitsRepository)
 {

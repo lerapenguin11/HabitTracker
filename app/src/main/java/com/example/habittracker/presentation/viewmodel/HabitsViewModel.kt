@@ -1,19 +1,13 @@
 package com.example.habittracker.presentation.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.habittracker.data.room.HabitDatabase
-import com.example.habittracker.data.repository.HabitRepositoryImpl
-import com.example.habittracker.domain.usecase.GetHabitsUseCase
-import com.example.habittracker.presentation.model.FilterParameters
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.toList
+import com.example.habittracker.domain.usecase.GetHabitsUseCase
+import com.example.habittracker.presentation.model.FilterParameters
 
 class HabitsViewModel(
     getHabitsUseCase: GetHabitsUseCase

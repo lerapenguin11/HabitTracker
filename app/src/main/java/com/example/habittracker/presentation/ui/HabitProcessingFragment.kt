@@ -136,6 +136,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         binding.btSaveHabit.isEnabled = true
     }
 
+    //TODO: изменить получение id
     private fun habitProcessing() : Habit =
         with(binding){
             return Habit(
