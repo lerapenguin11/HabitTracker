@@ -13,12 +13,7 @@ data class Habit(
     val numberExecutions : String,
     val period : HabitRepetitionPeriod,
     val color : Int
-) : Parcelable {
-
-    companion object{
-        const val UNDEFINED_ID = -1
-    }
-}
+) : Parcelable
 
 enum class HabitPriority(val priority : String){
     HIGH("Высокий"),

@@ -15,19 +15,3 @@ data class HabitEntity(
     val period : String,
     val color : Int
 )
-/*
-enum class HabitPriorityEntity(val priority : String){
-    HIGH("Высокий"),
-    MEDIUM("Средний"),
-    LOW("Низкий")
-}
-
-enum class HabitTypeEntity(val type : String){
-    USEFUL("Полезная"),
-    HARMFUL("Вредная")
-}
-
-enum class HabitRepetitionPeriodEntity(val period: String){
-    REGULAR("Регулярная"),
-    ONE_TIME("Разовая")
-}*/

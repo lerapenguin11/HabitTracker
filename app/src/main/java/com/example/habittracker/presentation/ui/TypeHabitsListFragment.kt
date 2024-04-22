@@ -1,21 +1,18 @@
 package com.example.habittracker.presentation.ui
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
+import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.HabitsAdapter
-import com.example.habittracker.domain.model.Habit
-import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
@@ -99,7 +96,7 @@ class TypeHabitsListFragment()
     private fun openEditHabit(habit: Habit, screenMode: String?, mode : String) {
         val bundle = Bundle()
         bundle.putString(screenMode, mode)
-        //habit.id?.let { bundle.putInt(HABIT_ID, it) }
+        bundle.putInt(HABIT_ID, habit.id)
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }

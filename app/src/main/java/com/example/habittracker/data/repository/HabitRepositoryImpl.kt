@@ -13,8 +13,8 @@ class HabitRepositoryImpl(
     private val dao : HabitDao
 ) : HabitsRepository {
     private val mapper = HabitMapper()
-    private val habitList = MutableLiveData<List<Habit>>()
 
+    //TODO: обавить flow
     override fun getHabits(): LiveData<List<Habit>> {
         val allHabits = dao.getAllHabits()
         return allHabits.map {
@@ -22,12 +22,11 @@ class HabitRepositoryImpl(
             mapper.habitsEntityToHabits(element)
         }
     }
-        /*dao.getAllHabits().value?.let { mapper.habitsEntityToHabits(it) }*/
-
 
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
-    override fun getHabitItem(habitId: Int): LiveData<Habit> {
+    override fun getHabitItem(habitId: Int): Habit {
         val habit = dao.getHabitById(habitId = habitId)
+        val a = dao.getHabitById(habitId)
         return mapper.habitEntityToHabitLD(entity = habit)
     }
 

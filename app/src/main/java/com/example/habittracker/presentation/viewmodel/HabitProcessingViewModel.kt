@@ -23,7 +23,7 @@ class HabitProcessingViewModel(
     val habitItem : LiveData<Habit> get() = _habitItem
 
     fun getHabitItem(habitId : Int){
-        _habitItem.value = getHabitItemUseCase.invoke(habitId = habitId).value
+        _habitItem.value = getHabitItemUseCase.invoke(habitId = habitId)
     }
 
     fun updateHabit(habit : Habit){

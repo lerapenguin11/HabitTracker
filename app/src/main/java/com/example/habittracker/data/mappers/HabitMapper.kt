@@ -22,28 +22,28 @@ class HabitMapper
         )
     }
 
-    fun habitEntityToHabitLD(entity: LiveData<HabitEntity>) : LiveData<Habit>{
+    fun habitEntityToHabitLD(entity: HabitEntity) : Habit{
         val habitLD = MutableLiveData<Habit>()
-        val model = entity.value?.id?.let { id ->
-            getSelectedHabitPeriod(entity.value!!.period)?.let { period ->
-                getSelectedHabitPriority(entity.value!!.habitPriority)?.let { habitPriority ->
-                    getSelectedHabitType(entity.value!!.type)?.let { type ->
+        val model = entity.id?.let { id ->
+            getSelectedHabitPeriod(entity.period)?.let { period ->
+                getSelectedHabitPriority(entity.habitPriority)?.let { habitPriority ->
+                    getSelectedHabitType(entity.type)?.let { type ->
                         Habit(
                             id = id,
-                            title = entity.value!!.title,
-                            description = entity.value!!.description,
+                            title = entity.title,
+                            description = entity.description,
                             type = type,
                             habitPriority = habitPriority,
-                            numberExecutions = entity.value!!.numberExecutions,
+                            numberExecutions = entity.numberExecutions,
                             period = period,
-                            color = entity.value!!.color
+                            color = entity.color
                         )
                     }
                 }
             }
         }
         habitLD.value = model!!
-        return habitLD
+        return model
     }
     fun habitsEntityToHabits(entity : List<HabitEntity>) : List<Habit>{
         val list = arrayListOf<Habit>()
