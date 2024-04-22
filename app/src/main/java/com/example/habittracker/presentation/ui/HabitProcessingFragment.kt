@@ -20,9 +20,11 @@ import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitRepetitionPeriod
 import com.example.habittracker.domain.model.HabitType
+import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.view.dialog.ExecutionPeriodHabitDialog
 import com.example.habittracker.presentation.view.dialog.HabitTypeDialog
 import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModel
+import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModelFactory
 
 class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     HabitTypeDialog.Host, ExecutionPeriodHabitDialog.Host {
@@ -30,8 +32,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
     private var habitId : Int? = null
-    private val viewModel : HabitProcessingViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(HabitProcessingViewModel::class.java)}
+    private lateinit var viewModel : HabitProcessingViewModel
 
     private var color : Int = 0
 
@@ -52,12 +53,24 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViewModel()
         handleAction()
         setOnClickListener()
         initTextInputListeners()
         openHabitPriorityModal()
         openHabitRepetitionsNumberModal()
         saveHabit()
+    }
+
+    private fun initViewModel() {
+        val createHabitUseCase = (requireActivity().application as BaseApplication).createHabitUseCase
+        val updateHabitUseCase = (requireActivity().application as BaseApplication).updateHabitUseCase
+        val getHabitItemUseCase = (requireActivity().application as BaseApplication).getHabitItemUseCase
+        viewModel = ViewModelProvider(requireActivity(), HabitProcessingViewModelFactory(
+            getHabitItemUseCase = getHabitItemUseCase,
+            updateHabitUseCase = updateHabitUseCase,
+            createHabitUseCase = createHabitUseCase
+        ))[HabitProcessingViewModel::class.java]
     }
 
     private fun setOnClickListener() {
@@ -126,7 +139,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private fun habitProcessing() : Habit =
         with(binding){
             return Habit(
-                id = getHabitId(),
+                id = 0,
                 title = tiEtNameHabit.text.toString(),
                 description = tiEtDescHabit.text.toString(),
                 type = getSelectedHabitType()!!,
@@ -159,14 +172,6 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             HabitType.USEFUL.type -> HabitType.USEFUL
             HabitType.HARMFUL.type -> HabitType.HARMFUL
             else -> null
-        }
-    }
-
-    private fun getHabitId(): Int {
-        if (habitId != null && habitId != 0){
-            return habitId as Int
-        } else{
-            return (Math.random() * 100000).toInt()
         }
     }
 

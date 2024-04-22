@@ -2,6 +2,7 @@ package com.example.habittracker.domain.repository
 
 import androidx.lifecycle.LiveData
 import com.example.habittracker.domain.model.Habit
+import kotlinx.coroutines.flow.Flow
 
 //TODO habits_domain
 interface HabitsRepository

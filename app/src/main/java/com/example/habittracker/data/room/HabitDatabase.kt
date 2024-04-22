@@ -6,14 +6,28 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.habittracker.data.entity.HabitEntity
 
-@Database(entities = [HabitEntity::class], version = 1, exportSchema = false)
+@Database(entities = [HabitEntity::class], version = 4, exportSchema = false)
 abstract class HabitDatabase : RoomDatabase() {
+
+    abstract fun getHabitDao(): HabitDao
+
     companion object {
-        fun getInstance(context: Context) : HabitDatabase {
-            return Room.databaseBuilder(context, HabitDatabase::class.java, "habit_db")
-                .fallbackToDestructiveMigration().build()
+        private var instance: HabitDatabase? = null
+
+        fun getInstance(context: Context): HabitDatabase {
+            return instance ?: synchronized(this) {
+                instance ?: buildDataBase(context).also { instance = it }
+            }
+        }
+
+        private fun buildDataBase(context: Context): HabitDatabase{
+            return Room.databaseBuilder(
+                context.applicationContext,
+                HabitDatabase::class.java,
+                "habit_db"
+            )
+                .allowMainThreadQueries()
+                .build()
         }
     }
-
-    abstract fun getHabitDao() : HabitDao
 }

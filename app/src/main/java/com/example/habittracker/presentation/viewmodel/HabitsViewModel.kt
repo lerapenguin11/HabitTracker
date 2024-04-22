@@ -5,35 +5,27 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.room.Room
+import androidx.lifecycle.ViewModel
 import com.example.habittracker.data.room.HabitDatabase
 import com.example.habittracker.data.repository.HabitRepositoryImpl
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.toList
 
 class HabitsViewModel(
-    applicationContext: Application
+    getHabitsUseCase: GetHabitsUseCase
 )
-    : AndroidViewModel(applicationContext){
-    private val repository : HabitRepositoryImpl
-    private val getHabitsUseCase : GetHabitsUseCase
+    : ViewModel(){
     private var habitList : LiveData<List<Habit>>
     private val filters: MutableLiveData<FilterParameters> =
         MutableLiveData(FilterParameters(null, null, null))
     val filteredHabit : MediatorLiveData<List<Habit>> = MediatorLiveData<List<Habit>>()
 
     init {
-        val db = Room.databaseBuilder(
-            applicationContext,
-            HabitDatabase::class.java, "habit_db"
-        ).allowMainThreadQueries().build().getHabitDao()
-
-        repository = HabitRepositoryImpl(db)
-        getHabitsUseCase = GetHabitsUseCase(repository)
         habitList = getHabitsUseCase.invoke()
-
         filteredHabit.addSource(habitList) { habits ->
             val filtersValue = filters.value
             val filteredList = applyFilters(habits, filtersValue)
@@ -48,6 +40,7 @@ class HabitsViewModel(
             }
         }
     }
+
 
     fun getUsefulHabit(habits : List<Habit>): List<Habit> {
         return habits.filter { it.type == HabitType.USEFUL }

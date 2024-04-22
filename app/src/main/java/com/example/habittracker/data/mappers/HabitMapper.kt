@@ -12,7 +12,6 @@ class HabitMapper
 {
     fun habitToHabitEntity(habit: Habit) : HabitEntity{
         return HabitEntity(
-            id = habit.id,
             title = habit.title,
             description = habit.description,
             type = habit.type.type,
@@ -46,41 +45,37 @@ class HabitMapper
         habitLD.value = model!!
         return habitLD
     }
-    fun habitsEntityToHabits(entity : LiveData<List<HabitEntity>>) : LiveData<List<Habit>>{
+    fun habitsEntityToHabits(entity : List<HabitEntity>) : List<Habit>{
         val list = arrayListOf<Habit>()
-        val listLD = MutableLiveData<List<Habit>>()
-         if (entity.value != null){
-             for (i in entity.value!!){
-                 val id = i.id
-                 val title = i.title
-                 val description = i.description
-                 val type = i.type
-                 val habitPriority = i.habitPriority
-                 val numberExecutions = i.numberExecutions
-                 val period = i.period
-                 val color = i.color
+        for (i in entity){
+            val id = i.id
+            val title = i.title
+            val description = i.description
+            val type = i.type
+            val habitPriority = i.habitPriority
+            val numberExecutions = i.numberExecutions
+            val period = i.period
+            val color = i.color
 
-                 val model = getSelectedHabitPeriod(period)?.let { period ->
-                     getSelectedHabitPriority(habitPriority)?.let { habitPriority ->
-                         getSelectedHabitType(type)?.let { type ->
-                             Habit(
-                                 id = id!!,
-                                 title = title,
-                                 description = description,
-                                 type = type,
-                                 habitPriority = habitPriority,
-                                 numberExecutions = numberExecutions,
-                                 period = period,
-                                 color = color
-                             )
-                         }
-                     }
-                 }
-                 model?.let { list.add(it) }
-             }
-         }
-        listLD.value = list
-        return listLD
+            val model = getSelectedHabitPeriod(period)?.let { period ->
+                getSelectedHabitPriority(habitPriority)?.let { habitPriority ->
+                    getSelectedHabitType(type)?.let { type ->
+                        Habit(
+                            id = id!!,
+                            title = title,
+                            description = description,
+                            type = type,
+                            habitPriority = habitPriority,
+                            numberExecutions = numberExecutions,
+                            period = period,
+                            color = color
+                        )
+                    }
+                }
+            }
+            model?.let { list.add(it) }
+        }
+        return list
     }
 
     private fun getSelectedHabitType(type : String) : HabitType? {

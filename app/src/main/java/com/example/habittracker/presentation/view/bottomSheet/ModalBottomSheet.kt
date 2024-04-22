@@ -15,17 +15,15 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
 import com.example.habittracker.domain.model.HabitRepetitionPeriod
+import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
+import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
 
 class ModalBottomSheet : Fragment()
 {
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
-    //private val viewModel by activityViewModels<HabitsViewModel>()
-    //private lateinit var viewModel : HabitsViewModel
-    private val viewModel : HabitsViewModel by lazy {
-        ViewModelProvider(requireActivity()).get(HabitsViewModel::class.java)
-    }
+    private lateinit var viewModel : HabitsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,16 +36,19 @@ class ModalBottomSheet : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*viewModel = ViewModelProvider(
-            requireActivity(),
-            ViewModelProvider.AndroidViewModelFactory.getInstance(application = requireActivity().application)
-        ).get(HabitsViewModel::class.java)*/
-
+        initViewModel()
         setObserverOnNameFilter()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
         openHabitExecutions()
         setOnClickListener()
+    }
+
+    private fun initViewModel() {
+        val getHabitsUseCase = (requireActivity().application as BaseApplication).getHabitsUseCase
+        viewModel = ViewModelProvider(requireActivity(), HabitsViewModelFactory(getHabitsUseCase))[
+            HabitsViewModel::class.java
+        ]
     }
 
     private fun setOnClickListener() {
