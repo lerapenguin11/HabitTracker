@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,6 +18,7 @@ import com.example.habittracker.domain.model.HabitRepetitionPeriod
 import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
+import com.google.android.material.card.MaterialCardView
 
 class ModalBottomSheet : Fragment()
 {
@@ -38,11 +40,31 @@ class ModalBottomSheet : Fragment()
         initViewModel()
         initTextInputListeners()
         setOnClickListener()
+        setOnClickListerBtFilterDate()
         setObserverOnNameFilter()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
         openHabitExecutions()
         setOnClickListener()
+    }
+
+    private fun setOnClickListerBtFilterDate() = with(binding) {
+        filterNewDate.setOnClickListener {
+            applyStyleDateFilteringButtons(btFiltered = filterNewDate,
+                btNotFiltered = filterOldDate,
+                iconFiltered = icFilterNewDate,
+                iconNotFiltered = icFilterOldDate)
+            setObserveOnNewDateFilter()
+        }
+        filterOldDate.setOnClickListener {
+            applyStyleDateFilteringButtons(
+                btFiltered = filterOldDate,
+                btNotFiltered = filterNewDate,
+                iconFiltered = icFilterOldDate,
+                iconNotFiltered = icFilterNewDate
+            )
+            setObserveOnOldDateFilter()
+        }
     }
 
     private fun initViewModel() {
@@ -74,15 +96,34 @@ class ModalBottomSheet : Fragment()
                     tilNumberExecutions.editText?.length() != 0)
         }
 
-    private fun setOnClickListener() {
-        binding.btCancelFilter.setOnClickListener {
-            binding.filterNameHabit.text = null
-            binding.tiEtSearchDescHabit.text = null
-            binding.tvArrayExecutions.text = null
+    private fun setOnClickListener() = with(binding){
+        btCancelFilter.setOnClickListener {
+            filterNameHabit.text = null
+            tiEtSearchDescHabit.text = null
+            tvArrayExecutions.text = null
             viewModel.cancelFilter()
         }
     }
 
+    private fun applyStyleDateFilteringButtons(
+        btFiltered: MaterialCardView,
+        btNotFiltered: MaterialCardView,
+        iconFiltered: ImageView,
+        iconNotFiltered : ImageView
+    ) {
+        btFiltered.strokeColor = resources.getColor(R.color.md_theme_dark_inversePrimary)
+        btNotFiltered.strokeColor = resources.getColor(R.color.md_theme_light_outline)
+        btFiltered.setCardBackgroundColor(resources.getColor(R.color.light_green))
+        btNotFiltered.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        iconFiltered.setImageResource(R.drawable.ic_filtered_date)
+        when(iconNotFiltered){
+            binding.icFilterNewDate -> iconNotFiltered.setImageResource(R.drawable.ic_filter_new_date)
+            binding.icFilterOldDate -> iconNotFiltered.setImageResource(R.drawable.ic_filter_old_date)
+        }
+    }
+
+    private fun setObserveOnNewDateFilter(){}
+    private fun setObserveOnOldDateFilter(){}
     private fun setObserverOnNameFilter(){
         binding.filterNameHabit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
