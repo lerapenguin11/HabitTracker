@@ -1,33 +1,38 @@
 package com.example.habittracker.data.repository
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.LiveData
-import com.example.habittracker.data.entity.HabitDao
+import androidx.lifecycle.map
 import com.example.habittracker.data.mappers.HabitMapper
-import com.example.habittracker.domain.repository.HabitsRepository
+import com.example.habittracker.data.room.HabitDao
 import com.example.habittracker.domain.model.Habit
+import com.example.habittracker.domain.repository.HabitsRepository
 
 class HabitRepositoryImpl(
     private val dao : HabitDao
 ) : HabitsRepository {
     private val mapper = HabitMapper()
 
+    //TODO: добавить flow
     override fun getHabits(): LiveData<List<Habit>> {
-        return mapper.habitsEntityToHabits(dao.getAllHabits())
+        val allHabits = dao.getAllHabits()
+        return allHabits.map {
+                element ->
+            mapper.habitsEntityToHabits(element)
+        }
     }
 
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
-    override fun getHabitItem(habitId: Int): LiveData<Habit> {
+    override fun getHabitItem(habitId: Int): Habit {
         val habit = dao.getHabitById(habitId = habitId)
-        return mapper.habitEntityToHabitLD(entity = habit)
+        return mapper.habitEntityToHabit(entity = habit)
     }
 
     override fun updateHabit(habit: Habit) {
-        dao.updateHabit(mapper.habitToHabitEntity(habit = habit))
+        dao.updateHabit(mapper.updateHabitToHabitEntity(habit = habit))
     }
 
     override fun createHabit(newHabit: Habit) {
-        dao.insertHabit(mapper.habitToHabitEntity(habit = newHabit))
+        dao.insertHabit(mapper.insertHabitToHabitEntity(habit = newHabit))
     }
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
 }

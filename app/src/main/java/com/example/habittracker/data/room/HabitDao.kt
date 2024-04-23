@@ -1,4 +1,4 @@
-package com.example.habittracker.data.entity
+package com.example.habittracker.data.room
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
@@ -7,6 +7,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.example.habittracker.data.entity.HabitEntity
 
 @Dao
 interface HabitDao
@@ -15,7 +16,7 @@ interface HabitDao
     fun getAllHabits() : LiveData<List<HabitEntity>>
 
     @Query("SELECT * FROM habits WHERE id = :habitId")
-    fun getHabitById(habitId : Int) : LiveData<HabitEntity>
+    fun getHabitById(habitId : Int) : HabitEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertHabit(habit : HabitEntity)

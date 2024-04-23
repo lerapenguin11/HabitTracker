@@ -1,25 +1,28 @@
 package com.example.habittracker.presentation.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.habittracker.data.repository.HabitRepositoryImpl
-import com.example.habittracker.domain.usecase.GetHabitsUseCase
-import com.example.habittracker.presentation.model.FilterParameters
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
+import com.example.habittracker.domain.usecase.GetHabitsUseCase
+import com.example.habittracker.presentation.model.FilterParameters
 
-class HabitsViewModel()
+class HabitsViewModel(
+    getHabitsUseCase: GetHabitsUseCase
+)
     : ViewModel(){
-    private val repository = HabitRepositoryImpl
-    private val getHabitsUseCase = GetHabitsUseCase(repository)
-
-    private var habitList = getHabitsUseCase.invoke()
+    private var habitList : LiveData<List<Habit>>
     private val filters: MutableLiveData<FilterParameters> =
-        MutableLiveData(FilterParameters(null, null, null))
+        MutableLiveData(FilterParameters(null, null,
+            null, null, null))
     val filteredHabit : MediatorLiveData<List<Habit>> = MediatorLiveData<List<Habit>>()
+    private val _filterByDate = MutableLiveData<Boolean>(false)
+    val filterByDate : LiveData<Boolean> = _filterByDate
 
     init {
+        habitList = getHabitsUseCase.invoke()
         filteredHabit.addSource(habitList) { habits ->
             val filtersValue = filters.value
             val filteredList = applyFilters(habits, filtersValue)
@@ -34,6 +37,7 @@ class HabitsViewModel()
             }
         }
     }
+
 
     fun getUsefulHabit(habits : List<Habit>): List<Habit> {
         return habits.filter { it.type == HabitType.USEFUL }
@@ -65,8 +69,40 @@ class HabitsViewModel()
         return filteredAllHabits
     }
 
+    private fun List<Habit>.filterByNewDate(): MutableList<Habit> {
+        val filteredAllHabits: MutableList<Habit> = this.sortedBy{
+            it.dateCreation
+        }.toMutableList()
+        return filteredAllHabits
+    }
+
+    private fun List<Habit>.filterByOldDate(): MutableList<Habit> {
+        val filteredAllHabits: MutableList<Habit> = this.sortedByDescending{
+            it.dateCreation
+        }.toMutableList()
+        return filteredAllHabits
+    }
+
     fun cancelFilter(){
-        filters.value = FilterParameters(null, null, null)
+        _filterByDate.value = false
+        filters.value = FilterParameters(null, null,
+            null, null, null)
+    }
+
+    fun searchByOldDate(){
+        val filter = filters.value!!
+        filter.oldDate = true
+        filter.newDate = null
+        _filterByDate.value = true
+        filters.value = filter
+    }
+
+    fun searchByNewDate(){
+        val filter = filters.value!!
+        filter.oldDate = null
+        filter.newDate = true
+        _filterByDate.value = true
+        filters.value = filter
     }
 
     fun searchByName(name: String){
@@ -112,6 +148,12 @@ class HabitsViewModel()
                 }
                 if (it.habitFrequency != null){
                     filtrateObjects = filtrateObjects.filterByFrequency(it.habitFrequency!!)
+                }
+                if (it.oldDate != null){
+                    filtrateObjects = filtrateObjects.filterByOldDate()
+                }
+                if (it.newDate != null){
+                    filtrateObjects = filtrateObjects.filterByNewDate()
                 }
             }
         }

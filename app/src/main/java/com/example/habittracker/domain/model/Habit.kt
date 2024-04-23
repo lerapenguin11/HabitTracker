@@ -12,9 +12,9 @@ data class Habit(
     val habitPriority : HabitPriority,
     val numberExecutions : String,
     val period : HabitRepetitionPeriod,
-    val color : Int
-) : Parcelable {
-
+    val color : Int,
+    val dateCreation : Long
+) : Parcelable{
     companion object{
         const val UNDEFINED_ID = -1
     }

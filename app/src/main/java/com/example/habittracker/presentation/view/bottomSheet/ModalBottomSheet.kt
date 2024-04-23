@@ -8,34 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
 import com.example.habittracker.domain.model.HabitRepetitionPeriod
+import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
+import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
+import com.google.android.material.card.MaterialCardView
 
 class ModalBottomSheet : Fragment()
 {
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by activityViewModels<HabitsViewModel>()
-    private var updateListListener: UpdateListListener? = null
-
-    override fun onAttachFragment(childFragment: Fragment) {
-        super.onAttachFragment(childFragment)
-        if (childFragmentManager is UpdateListListener) {
-            updateListListener = childFragmentManager as UpdateListListener
-        } else {
-            throw RuntimeException("$childFragment must implement UpdateListListener")
-        }
-    }
-
-    interface UpdateListListener {
-        fun onUpdateList()
-    }
-
+    private lateinit var viewModel : HabitsViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,19 +38,108 @@ class ModalBottomSheet : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initViewModel()
+        initTextInputListeners()
+        setOnClickListener()
+        setOnClickListerBtFilterDate()
         setObserverOnNameFilter()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
         openHabitExecutions()
-        setOnClickListener()
+        setObserveOnFilterByDate()
     }
 
-    private fun setOnClickListener() {
-        binding.btCancelFilter.setOnClickListener {
-            binding.filterNameHabit.text = null
-            updateListListener?.onUpdateList()
+    private fun setOnClickListerBtFilterDate() = with(binding) {
+        filterNewDate.setOnClickListener {
+            applyStyleDateFilteringButtons(btFiltered = filterNewDate,
+                btNotFiltered = filterOldDate,
+                iconFiltered = icFilterNewDate,
+                iconNotFiltered = icFilterOldDate)
+            viewModel.searchByNewDate()
+        }
+        filterOldDate.setOnClickListener {
+            applyStyleDateFilteringButtons(
+                btFiltered = filterOldDate,
+                btNotFiltered = filterNewDate,
+                iconFiltered = icFilterOldDate,
+                iconNotFiltered = icFilterNewDate
+            )
+            viewModel.searchByOldDate()
+        }
+    }
+
+    private fun initViewModel() {
+        val getHabitsUseCase = (requireActivity().application as BaseApplication).getHabitsUseCase
+        viewModel = ViewModelProvider(requireActivity(), HabitsViewModelFactory(getHabitsUseCase))[
+            HabitsViewModel::class.java
+        ]
+    }
+
+    private fun initTextInputListeners() =
+        with(binding){
+            val textChangedListenerAdd = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    btCancelFilter.isEnabled = checkIfFieldsNotEmpty() }
+
+                override fun afterTextChanged(s: Editable?) {}
+            }
+            tilSearchNameHabit.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilSearchDescHabit.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilNumberExecutions.editText?.addTextChangedListener(textChangedListenerAdd)
+        }
+
+    private fun checkIfFieldsNotEmpty(): Boolean =
+        with(binding){
+            return (tilSearchNameHabit.editText?.length() != 0 ||
+                    tilSearchDescHabit.editText?.length() != 0 ||
+                    tilNumberExecutions.editText?.length() != 0)
+        }
+
+    private fun setOnClickListener() = with(binding){
+        btCancelFilter.setOnClickListener {
+            filterNameHabit.text = null
+            tiEtSearchDescHabit.text = null
+            tvArrayExecutions.text = null
             viewModel.cancelFilter()
         }
+    }
+
+    private fun applyStyleDateFilteringButtons(
+        btFiltered: MaterialCardView,
+        btNotFiltered: MaterialCardView,
+        iconFiltered: ImageView,
+        iconNotFiltered : ImageView
+    ) {
+        btFiltered.strokeColor = resources.getColor(R.color.md_theme_dark_inversePrimary)
+        btNotFiltered.strokeColor = resources.getColor(R.color.md_theme_light_outline)
+        btFiltered.setCardBackgroundColor(resources.getColor(R.color.light_green))
+        btNotFiltered.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        iconFiltered.setImageResource(R.drawable.ic_filtered_date)
+        when(iconNotFiltered){
+            binding.icFilterNewDate -> iconNotFiltered.setImageResource(R.drawable.ic_filter_new_date)
+            binding.icFilterOldDate -> iconNotFiltered.setImageResource(R.drawable.ic_filter_old_date)
+        }
+    }
+
+    private fun setObserveOnFilterByDate() = with(viewModel){
+       filterByDate.observe(viewLifecycleOwner, Observer {
+           if (it == true){
+               binding.btCancelFilter.isEnabled = true
+           } else{
+               applyStyleDateNotFilteringButtons()
+           }
+       })
+    }
+
+    private fun applyStyleDateNotFilteringButtons() = with(binding) {
+        filterNewDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
+        filterOldDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
+        filterNewDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        filterOldDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        icFilterNewDate.setImageResource(R.drawable.ic_filter_new_date)
+        icFilterOldDate.setImageResource(R.drawable.ic_filter_old_date)
     }
 
     private fun setObserverOnNameFilter(){
