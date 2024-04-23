@@ -89,7 +89,7 @@ class TypeHabitsListFragment()
         rvHabits.adapter = adapter
     }
 
-    private fun handleEmptyListMessageVisibility(habitList : List<Habit>) = with(binding){
+    private fun handleEmptyListMessageVisibility(habitList: List<Habit>) = with(binding){
         tvTextNoHabits.isVisible = habitList.isEmpty()
     }
 

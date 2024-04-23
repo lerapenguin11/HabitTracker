@@ -21,8 +21,7 @@
             android:id="@+id/drag_handle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tint="#72796F"
-            app:behavior_peekHeight="30dp"/>
+            app:tint="#72796F"/>
 
         <TextView
             android:id="@+id/title_bsh"
