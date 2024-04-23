@@ -21,6 +21,7 @@ import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import java.time.LocalDateTime
+import java.util.Date
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
@@ -38,8 +39,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
-        val currentDateAndTime = LocalDateTime.now()
-        println("CURRENT_DATE_AND_TIME: $currentDateAndTime")
     }
 
     private fun initBottomSheet() {

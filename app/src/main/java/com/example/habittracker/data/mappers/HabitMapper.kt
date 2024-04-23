@@ -17,7 +17,8 @@ class HabitMapper
             habitPriority = habit.habitPriority.priority,
             numberExecutions = habit.numberExecutions,
             period = habit.period.period,
-            color = habit.color
+            color = habit.color,
+            dateCreation = habit.dateCreation
         )
     }
 
@@ -29,7 +30,8 @@ class HabitMapper
             habitPriority = habit.habitPriority.priority,
             numberExecutions = habit.numberExecutions,
             period = habit.period.period,
-            color = habit.color
+            color = habit.color,
+            dateCreation = habit.dateCreation
         )
     }
 
@@ -47,7 +49,8 @@ class HabitMapper
                                 habitPriority = habitPriority,
                                 numberExecutions = entity.numberExecutions,
                                 period = period,
-                                color = entity.color
+                                color = entity.color,
+                                dateCreation = entity.dateCreation
                             )
                         }
                     }
@@ -70,7 +73,8 @@ class HabitMapper
                             habitPriority = habitPriority,
                             numberExecutions = entity.numberExecutions,
                             period = period,
-                            color = entity.color
+                            color = entity.color,
+                            dateCreation = entity.dateCreation
                         )
                     }
                 }

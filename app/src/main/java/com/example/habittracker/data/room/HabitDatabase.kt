@@ -4,15 +4,15 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.habittracker.R
 import com.example.habittracker.data.entity.HabitEntity
 
-@Database(entities = [HabitEntity::class], version = 4, exportSchema = false)
+@Database(entities = [HabitEntity::class], version = 5, exportSchema = false)
 abstract class HabitDatabase : RoomDatabase() {
 
     abstract fun getHabitDao(): HabitDao
 
     companion object {
-        private const val NAME_DB = "habit_db"
         private var instance: HabitDatabase? = null
 
         fun getInstance(context: Context): HabitDatabase {
@@ -25,7 +25,7 @@ abstract class HabitDatabase : RoomDatabase() {
             return Room.databaseBuilder(
                 context.applicationContext,
                 HabitDatabase::class.java,
-                NAME_DB
+                context.getString(R.string.database_name)
             )
                 .allowMainThreadQueries()
                 .build()

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
@@ -45,7 +46,7 @@ class ModalBottomSheet : Fragment()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
         openHabitExecutions()
-        setOnClickListener()
+        setObserveOnFilterByDate()
     }
 
     private fun setOnClickListerBtFilterDate() = with(binding) {
@@ -54,7 +55,7 @@ class ModalBottomSheet : Fragment()
                 btNotFiltered = filterOldDate,
                 iconFiltered = icFilterNewDate,
                 iconNotFiltered = icFilterOldDate)
-            setObserveOnNewDateFilter()
+            viewModel.searchByNewDate()
         }
         filterOldDate.setOnClickListener {
             applyStyleDateFilteringButtons(
@@ -63,7 +64,7 @@ class ModalBottomSheet : Fragment()
                 iconFiltered = icFilterOldDate,
                 iconNotFiltered = icFilterNewDate
             )
-            setObserveOnOldDateFilter()
+            viewModel.searchByOldDate()
         }
     }
 
@@ -122,8 +123,25 @@ class ModalBottomSheet : Fragment()
         }
     }
 
-    private fun setObserveOnNewDateFilter(){}
-    private fun setObserveOnOldDateFilter(){}
+    private fun setObserveOnFilterByDate() = with(viewModel){
+       filterByDate.observe(viewLifecycleOwner, Observer {
+           if (it == true){
+               binding.btCancelFilter.isEnabled = true
+           } else{
+               applyStyleDateNotFilteringButtons()
+           }
+       })
+    }
+
+    private fun applyStyleDateNotFilteringButtons() = with(binding) {
+        filterNewDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
+        filterOldDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
+        filterNewDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        filterOldDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        icFilterNewDate.setImageResource(R.drawable.ic_filter_new_date)
+        icFilterOldDate.setImageResource(R.drawable.ic_filter_old_date)
+    }
+
     private fun setObserverOnNameFilter(){
         binding.filterNameHabit.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}

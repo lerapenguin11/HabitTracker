@@ -146,9 +146,18 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 habitPriority = getSelectedHabitPriority()!!,
                 numberExecutions = tvArrayExecutions.text.toString(),
                 period = getSelectedHabitPeriod()!!,
-                color = color
+                color = color,
+                dateCreation = getDateCreationHabit()
             )
         }
+
+    private fun getDateCreationHabit() : Long {
+        if (viewModel.habitItem.value?.dateCreation == null){
+            return System.currentTimeMillis()
+        } else{
+            return viewModel.habitItem.value!!.dateCreation
+        }
+    }
 
     private fun getIdHabit(): Int {
         if (habitId == null){

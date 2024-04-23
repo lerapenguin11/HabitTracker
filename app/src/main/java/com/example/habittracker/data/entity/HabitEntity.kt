@@ -13,5 +13,6 @@ data class HabitEntity(
     val habitPriority : String,
     val numberExecutions : String,
     val period : String,
-    val color : Int
+    val color : Int,
+    val dateCreation : Long
 )
