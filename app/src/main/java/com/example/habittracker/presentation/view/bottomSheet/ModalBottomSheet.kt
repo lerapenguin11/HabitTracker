@@ -36,6 +36,8 @@ class ModalBottomSheet : Fragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
+        initTextInputListeners()
+        setOnClickListener()
         setObserverOnNameFilter()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
@@ -50,9 +52,33 @@ class ModalBottomSheet : Fragment()
         ]
     }
 
+    private fun initTextInputListeners() =
+        with(binding){
+            val textChangedListenerAdd = object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    btCancelFilter.isEnabled = checkIfFieldsNotEmpty() }
+
+                override fun afterTextChanged(s: Editable?) {}
+            }
+            tilSearchNameHabit.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilSearchDescHabit.editText?.addTextChangedListener(textChangedListenerAdd)
+            tilNumberExecutions.editText?.addTextChangedListener(textChangedListenerAdd)
+        }
+
+    private fun checkIfFieldsNotEmpty(): Boolean =
+        with(binding){
+            return (tilSearchNameHabit.editText?.length() != 0 ||
+                    tilSearchDescHabit.editText?.length() != 0 ||
+                    tilNumberExecutions.editText?.length() != 0)
+        }
+
     private fun setOnClickListener() {
         binding.btCancelFilter.setOnClickListener {
             binding.filterNameHabit.text = null
+            binding.tiEtSearchDescHabit.text = null
+            binding.tvArrayExecutions.text = null
             viewModel.cancelFilter()
         }
     }
