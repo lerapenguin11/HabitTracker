@@ -12,6 +12,9 @@ android-test-ext-junit = "1.1.5"
 android-test-espresso-core = "3.5.1"
 kotlin = "1.9.10"
 roomVersion = "2.6.1"
+kotlinCoroutines = "1.7.1"
+coroutineLifecycleScope = "2.7.0"
+androidApplication = "8.2.0"
 
 [libraries]
 android-core-ktx = {module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx"}
@@ -26,9 +29,20 @@ android-test-espresso-core = {module = "androidx.test.espresso:espresso-core", v
 android-room-compiler = {module = "androidx.room:room-compiler", version.ref = "roomVersion"}
 android-room = {module = "androidx.room:room-ktx", version.ref = "roomVersion"}
 android-room-runtime = {module = "androidx.room:room-runtime", version.ref = "roomVersion"}
+kotlinx-coroutines-core = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinCoroutines"}
+kotlinx-coroutines-android = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinCoroutines"}
+lifecycle-viewmodel-ktx = {module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "coroutineLifecycleScope"}
+lifecycle-runtime-ktx = {module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "coroutineLifecycleScope"}
+
+
 
 [plugins]
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+androidApplication = {id = "com.android.application", version.ref = "androidApplication"}
+kotlin-parcelize = {id = "kotlin-parcelize"}
+kotlin-kapt = {id = "kotlin-kapt"}
 
 [bundles]
 navigation-all = ["android-navigation-ui-ktx", "android-navigation-fragment-ktx"]
+kotlin-coroutines-all = ["kotlinx-coroutines-core", "kotlinx-coroutines-android"]
+coroutine-lifecycle-scope-all = ["lifecycle-viewmodel-ktx", "lifecycle-runtime-ktx"]
