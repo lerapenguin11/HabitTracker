@@ -1,16 +1,15 @@
 package com.example.habittracker.domain.repository
 
-import androidx.lifecycle.LiveData
 import com.example.habittracker.domain.model.Habit
+import kotlinx.coroutines.flow.Flow
 
 //TODO habits_domain
 interface HabitsRepository
 {
-    //TODO: добавить flow
-    fun getHabits() : LiveData<List<Habit>>
+    fun getHabits() : Flow<List<Habit>>
 
     //TODO habit_processing_domain
-    fun updateHabit(habit : Habit)
-    fun createHabit(newHabit: Habit)
-    fun getHabitItem(habitId : Int) : Habit
+    suspend fun updateHabit(habit : Habit)
+    suspend fun createHabit(newHabit: Habit)
+    suspend fun getHabitItem(habitId : Int) : Flow<Habit>
 }

@@ -1,19 +1,25 @@
 package com.example.habittracker.data.repository
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.map
 import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.data.room.HabitDao
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.repository.HabitsRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 
 class HabitRepositoryImpl(
     private val dao : HabitDao
 ) : HabitsRepository {
     private val mapper = HabitMapper()
 
-    //TODO: добавить flow
-    override fun getHabits(): LiveData<List<Habit>> {
+    override fun getHabits(): Flow<List<Habit>> {
         val allHabits = dao.getAllHabits()
         return allHabits.map {
                 element ->
@@ -22,16 +28,16 @@ class HabitRepositoryImpl(
     }
 
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
-    override fun getHabitItem(habitId: Int): Habit {
+    override suspend fun getHabitItem(habitId: Int): Flow<Habit>  {
         val habit = dao.getHabitById(habitId = habitId)
-        return mapper.habitEntityToHabit(entity = habit)
+        return habit.map { mapper.habitEntityToHabit(entity = it) }
     }
 
-    override fun updateHabit(habit: Habit) {
+    override suspend fun updateHabit(habit: Habit) = withContext(Dispatchers.IO) {
         dao.updateHabit(mapper.updateHabitToHabitEntity(habit = habit))
     }
 
-    override fun createHabit(newHabit: Habit) {
+    override suspend fun createHabit(newHabit: Habit) = withContext(Dispatchers.IO) {
         dao.insertHabit(mapper.insertHabitToHabitEntity(habit = newHabit))
     }
     //-------TODO: вынести в HabitProcessingRepositoryImpl------

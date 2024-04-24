@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.habittracker.domain.model.HabitPriority
@@ -118,22 +118,30 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun launchEditMode() {
         binding.tvTitle.setText(R.string.text_update_habit)
-        setHabitData()
+        observeHabitData()
     }
 
-    private fun setHabitData() {
-        habitId?.let { viewModel.getHabitItem(habitId = it) }
-        with(viewModel){
-            binding.tiEtNameHabit.setText(habitItem.value?.title)
-            binding.tiEtDescHabit.setText(habitItem.value?.description)
-            binding.tvArrayPriority.setText(habitItem.value?.habitPriority?.priority)
-            binding.tvArrayExecutions.setText(habitItem.value?.numberExecutions)
-            binding.tiEtTypeHabit.setText(habitItem.value?.type?.type)
-            binding.tiEtFrequency.setText(habitItem.value?.period?.period)
-            itemArrayPriority = habitItem.value?.habitPriority?.priority
-            itemArrayExecutions = habitItem.value?.numberExecutions
+    private fun observeHabitData() = with(viewModel) {
+        habitId?.let {
+            getHabitItem(habitId = habitId!!)
+            habitItem.observe(viewLifecycleOwner, Observer {habit ->
+                setHabitData(habit)
+            })
         }
-        binding.btSaveHabit.isEnabled = true
+    }
+
+    private fun setHabitData(habit : Habit?) = with(binding) {
+        habit?.let {
+            binding.tiEtNameHabit.setText(habit.title)
+            binding.tiEtDescHabit.setText(habit.description)
+            binding.tvArrayPriority.setText(habit.habitPriority.priority)
+            binding.tvArrayExecutions.setText(habit.numberExecutions)
+            binding.tiEtTypeHabit.setText(habit.type.type)
+            binding.tiEtFrequency.setText(habit.period.period)
+            itemArrayPriority = habit.habitPriority.priority
+            itemArrayExecutions = habit.numberExecutions
+        }
+        btSaveHabit.isEnabled = true
     }
 
     private fun habitProcessing() : Habit =

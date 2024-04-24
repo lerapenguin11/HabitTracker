@@ -3,10 +3,21 @@ package com.example.habittracker.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.UpdateHabitUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.launch
 
 class HabitProcessingViewModel(
     private val createHabitUseCase : CreateHabitUseCase,
@@ -18,15 +29,16 @@ class HabitProcessingViewModel(
     private var _habitItem = MutableLiveData<Habit>()
     val habitItem : LiveData<Habit> get() = _habitItem
 
-    fun getHabitItem(habitId : Int){
-        _habitItem.value = getHabitItemUseCase.invoke(habitId = habitId)
+    fun getHabitItem(habitId : Int) = viewModelScope.launch {
+        _habitItem = getHabitItemUseCase.invoke(habitId = habitId)
+            .asLiveData(Dispatchers.IO) as MutableLiveData<Habit>
     }
 
-    fun updateHabit(habit : Habit){
+    fun updateHabit(habit : Habit) = viewModelScope.launch {
         updateHabitUseCase.invoke(habit = habit)
     }
 
-    fun createHabit(habit : Habit){
+    fun createHabit(habit : Habit) = viewModelScope.launch {
         createHabitUseCase.invoke(newHabit = habit)
     }
 }
