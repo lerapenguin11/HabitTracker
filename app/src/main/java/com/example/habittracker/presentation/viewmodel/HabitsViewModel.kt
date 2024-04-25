@@ -9,11 +9,13 @@ import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HabitsViewModel(
-    getHabitsUseCase: GetHabitsUseCase
+    private val getHabitsUseCase: GetHabitsUseCase
 )
     : ViewModel(){
         private val _habitList = MutableLiveData<List<Habit>>()
@@ -21,16 +23,13 @@ class HabitsViewModel(
     private val filters: MutableLiveData<FilterParameters> =
         MutableLiveData(FilterParameters(null, null,
             null, null, null))
+    //TODO: MediatorLiveData -> Flow.combine
     val filteredHabit : MediatorLiveData<List<Habit>> = MediatorLiveData<List<Habit>>()
-    private val _filterByDate = MutableLiveData<Boolean>(false)
+    private val _filterByDate = MutableLiveData(false)
     val filterByDate : LiveData<Boolean> = _filterByDate
 
     init {
-        viewModelScope.launch {
-            getHabitsUseCase.invoke().collect{
-                _habitList.value = it
-            }
-        }
+        getLoadingHabitList()
         filteredHabit.addSource(habitList) { habits ->
             val filtersValue = filters.value
             val filteredList = applyFilters(habits, filtersValue)
@@ -42,6 +41,12 @@ class HabitsViewModel(
                 val filteredList = applyFilters(habits, filterParams)
                 filteredHabit.value = filteredList
             }
+        }
+    }
+
+    private fun getLoadingHabitList() = viewModelScope.launch {
+        getHabitsUseCase.invoke().collect{
+            _habitList.value = it
         }
     }
 

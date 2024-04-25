@@ -73,9 +73,9 @@
         <item name="chipStrokeWidth">0.5dp</item>
         <item name="chipStartPadding">8dp</item>
         <item name="chipEndPadding">2dp</item>
-        <item name="chipCornerRadius">5dp</item>
+        <item name="chipCornerRadius">10dp</item>
         <item name="textStartPadding">5dp</item>
-        <item name="chipIconSize">14dp</item>
+        <item name="chipIconSize">15dp</item>
         <item name="chipStrokeColor">@color/md_theme_light_surfaceTint</item>
         <item name="checkedIconVisible">true</item>
     </style>
