@@ -17,11 +17,11 @@ abstract class HabitDatabase : RoomDatabase() {
 
         fun getInstance(context: Context): HabitDatabase {
             return instance ?: synchronized(this) {
-                instance ?: buildDataBase(context).also { instance = it }
+                instance ?: buildDatabase(context).also { instance = it }
             }
         }
 
-        private fun buildDataBase(context: Context): HabitDatabase{
+        private fun buildDatabase(context: Context): HabitDatabase{
             return Room.databaseBuilder(
                 context.applicationContext,
                 HabitDatabase::class.java,

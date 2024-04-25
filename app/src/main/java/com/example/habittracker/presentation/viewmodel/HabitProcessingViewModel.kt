@@ -22,7 +22,7 @@ class HabitProcessingViewModel(
     private var _habitItem = MutableLiveData<Habit>()
     val habitItem : LiveData<Habit> get() = _habitItem
 
-    fun loadingHabitItem(habitId : Int) = viewModelScope.launch {
+    fun loadHabitItem(habitId : Int) = viewModelScope.launch {
         _habitItem = getHabitItemUseCase.invoke(habitId = habitId)
             .asLiveData(Dispatchers.IO) as MutableLiveData<Habit>
     }

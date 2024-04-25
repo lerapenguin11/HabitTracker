@@ -117,7 +117,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun observeHabitData() = with(viewModel) {
         habitId?.let {
-            loadingHabitItem(habitId = habitId!!)
+            loadHabitItem(habitId = habitId!!)
             habitItem.observe(viewLifecycleOwner, Observer {habit ->
                 setHabitData(habit)
             })

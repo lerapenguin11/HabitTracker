@@ -48,20 +48,20 @@ class ModalBottomSheet : Fragment()
         setObserverOnNameFilter()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
-        openHabitExecutions()
+        openHabitExecutionsList()
         setObserveOnFilterByDate()
     }
 
     private fun setOnClickListerBtFilterDate() = with(binding) {
         filterNewDate.setOnClickListener {
-            applyStyleDateFilteringButtons(btFiltered = filterNewDate,
+            applyDateFilteringButtonsStyle(btFiltered = filterNewDate,
                 btNotFiltered = filterOldDate,
                 iconFiltered = icFilterNewDate,
                 iconNotFiltered = icFilterOldDate)
             viewModel.searchByNewDate()
         }
         filterOldDate.setOnClickListener {
-            applyStyleDateFilteringButtons(
+            applyDateFilteringButtonsStyle(
                 btFiltered = filterOldDate,
                 btNotFiltered = filterNewDate,
                 iconFiltered = icFilterOldDate,
@@ -102,7 +102,7 @@ class ModalBottomSheet : Fragment()
         }
     }
 
-    private fun applyStyleDateFilteringButtons(
+    private fun applyDateFilteringButtonsStyle(
         btFiltered: MaterialCardView,
         btNotFiltered: MaterialCardView,
         iconFiltered: ImageView,
@@ -124,12 +124,12 @@ class ModalBottomSheet : Fragment()
            if (it == true){
                binding.btCancelFilter.isEnabled = true
            } else{
-               applyStyleDateNotFilteringButtons()
+               applyDefaultFilteringButtonsStyle()
            }
        })
     }
 
-    private fun applyStyleDateNotFilteringButtons() = with(binding) {
+    private fun applyDefaultFilteringButtonsStyle() = with(binding) {
         filterNewDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
         filterOldDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
         filterNewDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
@@ -173,7 +173,7 @@ class ModalBottomSheet : Fragment()
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun openHabitExecutions() {
+    private fun openHabitExecutionsList() {
         with(binding){
             val items = listOf(
                 HabitRepetitionPeriod.ONE_TIME.period, HabitRepetitionPeriod.REGULAR.period)

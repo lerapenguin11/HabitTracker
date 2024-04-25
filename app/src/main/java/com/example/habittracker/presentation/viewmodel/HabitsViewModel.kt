@@ -26,7 +26,7 @@ class HabitsViewModel(
     val filterByDate : LiveData<Boolean> = _filterByDate
 
     init {
-        getLoadingHabitList()
+        loadHabitList()
         filteredHabit.addSource(habitList) { habits ->
             val filtersValue = filters.value
             val filteredList = applyFilters(habits, filtersValue)
@@ -41,7 +41,7 @@ class HabitsViewModel(
         }
     }
 
-    private fun getLoadingHabitList() = viewModelScope.launch {
+    private fun loadHabitList() = viewModelScope.launch {
         getHabitsUseCase.invoke().collect{
             _habitList.value = it
         }
