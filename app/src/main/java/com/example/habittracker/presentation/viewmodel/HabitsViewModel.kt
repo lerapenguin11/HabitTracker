@@ -9,10 +9,7 @@ import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class HabitsViewModel(
     private val getHabitsUseCase: GetHabitsUseCase

@@ -10,10 +10,10 @@ import com.example.habittracker.domain.usecase.UpdateHabitUseCase
 
 class BaseApplication : Application()
 {
-    val dataBase by lazy { HabitDatabase.getInstance(this) }
-    val repository by lazy { HabitRepositoryImpl(dataBase.getHabitDao()) }
+    private val dataBase by lazy { HabitDatabase.getInstance(this) }
+    private val repository by lazy { HabitRepositoryImpl(dataBase.getHabitDao()) }
 
-    lateinit var mInstance: BaseApplication
+    private lateinit var mInstance: BaseApplication
 
     val getHabitsUseCase by lazy {GetHabitsUseCase(repository)}
     val createHabitUseCase by lazy { CreateHabitUseCase(repository) }

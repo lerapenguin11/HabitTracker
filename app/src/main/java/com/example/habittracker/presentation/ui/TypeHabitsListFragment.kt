@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
@@ -21,10 +21,14 @@ import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
 class TypeHabitsListFragment()
     : BaseFragment<FragmentTypeHabitsListBinding>()
 {
-    private lateinit var viewModel : HabitsViewModel
     private val adapter = HabitsAdapter()
     private var habitType : String? = null
 
+    private val viewModel : HabitsViewModel by viewModels {
+        HabitsViewModelFactory(
+            (requireActivity().application as BaseApplication).getHabitsUseCase
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,16 +46,8 @@ class TypeHabitsListFragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
         launchTypeHabit()
         habitClickListener()
-    }
-
-    private fun initViewModel() {
-        val getHabitsUseCase = (requireActivity().application as BaseApplication).getHabitsUseCase
-        viewModel = ViewModelProvider(requireActivity(), HabitsViewModelFactory(getHabitsUseCase))[
-            HabitsViewModel::class.java
-        ]
     }
 
     private fun launchTypeHabit() {

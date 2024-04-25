@@ -7,21 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitsBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.TabAdapter
-import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
-import com.example.habittracker.presentation.viewmodel.HabitsViewModel
-import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
-import java.time.LocalDateTime
-import java.util.Date
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
