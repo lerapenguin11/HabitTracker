@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface HabitsRepository
 {
     fun getHabits() : Flow<List<Habit>>
+    fun getTest(habitType : String) : Flow<List<Habit>>
 
     //TODO habit_processing_domain
     suspend fun updateHabit(habit : Habit)
     suspend fun createHabit(newHabit: Habit)
-    suspend fun getHabitItem(habitId : Int) : Flow<Habit>
+    fun getHabitItem(habitId : Int) : Flow<Habit>
 }

@@ -1,6 +1,7 @@
 package com.example.habittracker.presentation.app
 
 import android.app.Application
+import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.data.repository.HabitRepositoryImpl
 import com.example.habittracker.data.room.HabitDatabase
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
@@ -11,7 +12,9 @@ import com.example.habittracker.domain.usecase.UpdateHabitUseCase
 class BaseApplication : Application()
 {
     private val dataBase by lazy { HabitDatabase.getInstance(this) }
-    private val repository by lazy { HabitRepositoryImpl(dataBase.getHabitDao()) }
+    private val mapper by lazy { HabitMapper() }
+    private val repository by lazy { HabitRepositoryImpl(
+        dao = dataBase.getHabitDao(), mapper = mapper) }
 
     private lateinit var mInstance: BaseApplication
 

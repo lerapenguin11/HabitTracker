@@ -3,13 +3,13 @@ package com.example.habittracker.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.UpdateHabitUseCase
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class HabitProcessingViewModel(
@@ -18,13 +18,13 @@ class HabitProcessingViewModel(
     private val getHabitItemUseCase : GetHabitItemUseCase)
     : ViewModel()
 {
-
     private var _habitItem = MutableLiveData<Habit>()
     val habitItem : LiveData<Habit> get() = _habitItem
 
-    fun loadHabitItem(habitId : Int) = viewModelScope.launch {
-        _habitItem = getHabitItemUseCase.invoke(habitId = habitId)
-            .asLiveData(Dispatchers.IO) as MutableLiveData<Habit>
+    fun loadHabitItem(habitId : Int) {
+        getHabitItemUseCase(habitId = habitId)
+            .onEach { _habitItem.value = it}
+            .launchIn(viewModelScope)
     }
 
     fun updateHabit(habit : Habit) = viewModelScope.launch {
