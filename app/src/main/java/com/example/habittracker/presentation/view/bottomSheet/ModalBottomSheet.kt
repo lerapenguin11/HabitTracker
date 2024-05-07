@@ -9,11 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
 import com.example.habittracker.domain.model.HabitRepetitionPeriod
@@ -112,10 +111,10 @@ class ModalBottomSheet : Fragment()
         iconFiltered: ImageView,
         iconNotFiltered : ImageView
     ) {
-        btFiltered.strokeColor = resources.getColor(R.color.md_theme_dark_inversePrimary)
-        btNotFiltered.strokeColor = resources.getColor(R.color.md_theme_light_outline)
-        btFiltered.setCardBackgroundColor(resources.getColor(R.color.light_green))
-        btNotFiltered.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        btFiltered.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_dark_inversePrimary)
+        btNotFiltered.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_light_outline)
+        btFiltered.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_green))
+        btNotFiltered.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background_view))
         iconFiltered.setImageResource(R.drawable.ic_filtered_date)
         when(iconNotFiltered){
             binding.icFilterNewDate -> iconNotFiltered.setImageResource(R.drawable.ic_filter_new_date)
@@ -124,20 +123,20 @@ class ModalBottomSheet : Fragment()
     }
 
     private fun setObserveOnFilterByDate() = with(viewModel){
-       filterByDate.observe(viewLifecycleOwner, Observer {
-           if (it == true){
+       filterByDate.observe(viewLifecycleOwner) {
+           if (it == true) {
                binding.btCancelFilter.isEnabled = true
-           } else{
+           } else {
                applyDefaultFilteringButtonsStyle()
            }
-       })
+       }
     }
 
     private fun applyDefaultFilteringButtonsStyle() = with(binding) {
-        filterNewDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
-        filterOldDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
-        filterNewDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
-        filterOldDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        filterNewDate.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_light_outline)
+        filterOldDate.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_light_outline)
+        filterNewDate.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background_view))
+        filterOldDate.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background_view))
         icFilterNewDate.setImageResource(R.drawable.ic_filter_new_date)
         icFilterOldDate.setImageResource(R.drawable.ic_filter_old_date)
     }
