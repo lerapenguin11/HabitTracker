@@ -30,10 +30,24 @@ class HabitsViewModel(
             null, null, null))
     private val _filteredUsefulHabits = MutableLiveData<List<Habit>>(emptyList())
     val filteredUsefulHabits : LiveData<List<Habit>> = _filteredUsefulHabits
+    private val _filteredHarmfulHabits = MutableLiveData<List<Habit>>(emptyList())
+    val filteredHarmfulHabits : LiveData<List<Habit>> = _filteredHarmfulHabits
 
     init {
         loadHabitList()
-        //TODO: фильтрация по хорошим привычкам
+        listenerFilteredUsefulHabits()
+        listenerFilteredHarmfulHabits()
+    }
+
+    private fun listenerFilteredHarmfulHabits() {
+        _harmfulHabits.combine(filters){habits, filters ->
+            applyFilters(habits = habits, filter = filters)
+        }
+            .onEach { _filteredHarmfulHabits.postValue(it)}
+            .launchIn(viewModelScope)
+    }
+
+    private fun listenerFilteredUsefulHabits() {
         _usefulHabits.combine(filters){habits, filters ->
             applyFilters(habits = habits, filter = filters)
         }

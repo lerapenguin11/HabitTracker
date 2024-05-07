@@ -11,7 +11,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.example.habittracker.domain.model.HabitPriority
 import com.example.habittracker.R
@@ -118,9 +117,9 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private fun observeHabitData() = with(viewModel) {
         habitId?.let {
             loadHabitItem(habitId = habitId!!)
-            habitItem.observe(viewLifecycleOwner, Observer {habit ->
+            habitItem.observe(viewLifecycleOwner) { habit ->
                 setHabitData(habit)
-            })
+            }
         }
     }
 
@@ -154,18 +153,18 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         }
 
     private fun getDateCreationHabit() : Long {
-        if (viewModel.habitItem.value?.dateCreation == null){
-            return System.currentTimeMillis()
+        return if (viewModel.habitItem.value?.dateCreation == null){
+            System.currentTimeMillis()
         } else{
-            return viewModel.habitItem.value!!.dateCreation
+            viewModel.habitItem.value!!.dateCreation
         }
     }
 
     private fun getIdHabit(): Int {
-        if (habitId == null){
-            return 0
+        return if (habitId == null){
+            0
         } else{
-            return habitId!!
+            habitId!!
         }
     }
 

@@ -6,12 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.flowWithLifecycle
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
@@ -22,13 +16,8 @@ import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.observeOn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 
-class TypeHabitsListFragment()
+class TypeHabitsListFragment
     : BaseFragment<FragmentTypeHabitsListBinding>()
 {
     private val adapter = HabitsAdapter()
@@ -68,43 +57,23 @@ class TypeHabitsListFragment()
 
     private fun observeHabitsUseful(){
         with(viewModel){
-            /*test
-                .onEach { setHabitsRecyclerView(it) }
-                .launchIn(viewLifecycleOwner.lifecycleScope)*/
-            filteredUsefulHabits.observe(viewLifecycleOwner, Observer {
+            filteredUsefulHabits.observe(viewLifecycleOwner) {
                 setHabitsRecyclerView(it)
-            })
-            viewLifecycleOwner.lifecycleScope.launch {
-                /*usefulHabit
-                    .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.RESUMED)
-                    .distinctUntilChanged()
-                    .collect {
-                        setHabitsRecyclerView(it)
-                    }*/
-
             }
         }
     }
 
     private fun observeHabitsHarmful(){
-        /*with(viewModel){
-            viewLifecycleOwner.lifecycleScope.launch {
-                harmfulHabit
-                    .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.STARTED)
-                    .distinctUntilChanged()
-                    .collect { habits ->
-                        setHabitsRecyclerView(habits)
-                    }
+        with(viewModel){
+            filteredHarmfulHabits.observe(viewLifecycleOwner) {
+                setHabitsRecyclerView(it)
             }
-            *//*harmfulHabit.observe(viewLifecycleOwner, Observer {habits ->
-                setHabitsRecyclerView(habits)
-            })*//*
-        }*/
+        }
     }
 
     private fun habitClickListener() {
         adapter.onHabitListClickListener = {habit ->
-            openEditHabit(habit, SCREEN_MODE, MODE_EDIT)
+            openEditHabit(habit)
         }
     }
 
@@ -118,9 +87,9 @@ class TypeHabitsListFragment()
         tvTextNoHabits.isVisible = habitList.isEmpty()
     }
 
-    private fun openEditHabit(habit: Habit, screenMode: String?, mode : String) {
+    private fun openEditHabit(habit: Habit) {
         val bundle = Bundle()
-        bundle.putString(screenMode, mode)
+        bundle.putString(SCREEN_MODE, MODE_EDIT)
         bundle.putInt(HABIT_ID, habit.id)
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)

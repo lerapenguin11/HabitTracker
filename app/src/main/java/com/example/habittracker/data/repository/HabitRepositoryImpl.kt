@@ -23,14 +23,6 @@ class HabitRepositoryImpl(
         }
     }
 
-    override fun getTest(habitType: String): Flow<List<Habit>> {
-        val habits = dao.getTEST(habitType = habitType)
-        return habits.map {
-            list ->
-            mapper.habitsEntityToHabits(list)
-        }
-    }
-
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
     override fun getHabitItem(habitId: Int): Flow<Habit>  {
         val habit = dao.getHabitById(habitId = habitId)

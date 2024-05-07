@@ -46,10 +46,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     }
 
     private fun setOnClickListenerFabAddHabit() {
-        binding.fabAddHabits.setOnClickListener { openAddHabit(
-            MODE_ADD,
-            SCREEN_MODE
-        ) }
+        binding.fabAddHabits.setOnClickListener { openAddHabit() }
     }
 
     private fun navigateNavigationView() = with(binding){
@@ -95,9 +92,9 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         }.attach()
     }
 
-    private fun openAddHabit(mode: String, screenMode: String) {
+    private fun openAddHabit() {
         val bundle = Bundle()
-        bundle.putString(screenMode, mode)
+        bundle.putString(SCREEN_MODE, MODE_ADD)
         view?.findNavController()?.saveState()
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
