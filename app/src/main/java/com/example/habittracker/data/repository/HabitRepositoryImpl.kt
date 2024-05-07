@@ -6,7 +6,7 @@ import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.repository.HabitsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -17,7 +17,8 @@ class HabitRepositoryImpl(
 
     override fun getHabits(): Flow<List<Habit>> {
         val allHabits = dao.getAllHabits()
-        return allHabits.map {
+        return allHabits
+            .map {
                 element ->
             mapper.habitsEntityToHabits(element)
         }

@@ -11,6 +11,8 @@ import com.example.habittracker.presentation.model.FilterParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -43,7 +45,9 @@ class HabitsViewModel(
         _harmfulHabits.combine(filters){habits, filters ->
             applyFilters(habits = habits, filter = filters)
         }
-            .onEach { _filteredHarmfulHabits.postValue(it)}
+            .onEach {
+                _filteredHarmfulHabits.postValue(it)
+            }
             .launchIn(viewModelScope)
     }
 
@@ -52,29 +56,31 @@ class HabitsViewModel(
             applyFilters(habits = habits, filter = filters)
         }
             .onEach {
-                _filteredUsefulHabits.postValue(it) }
+                _filteredUsefulHabits.postValue(it)
+            }
             .launchIn(viewModelScope)
     }
 
     private fun loadHabitList() {
-        viewModelScope.launch {
-            combine(getHabitsUseCase()){ allHabits ->
-                Pair(
-                    withContext(Dispatchers.Default){
-                        allHabits.flatMap {
-                                habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
+        combine(getHabitsUseCase()){ allHabits ->
+            Pair(
+                withContext(Dispatchers.Default){
+                    allHabits.flatMap {
+                            habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
 
-                    },
-                    withContext(Dispatchers.Default){
-                        allHabits.flatMap {
-                                habits -> habits.filter { habit -> habit.type == HabitType.HARMFUL } }
-                    }
-                )
-            }.collect { (useful, harmful) ->
+                },
+                withContext(Dispatchers.Default){
+                    allHabits.flatMap {
+                            habits -> habits.filter { habit -> habit.type == HabitType.HARMFUL } }
+                }
+            )
+        }
+            .distinctUntilChanged()
+            .onEach { (useful, harmful) ->
                 _usefulHabits.value = useful
                 _harmfulHabits.value = harmful
             }
-        }
+            .launchIn(viewModelScope)
     }
 
     private fun List<Habit>.filterByName(valueFilter: String): MutableList<Habit> {

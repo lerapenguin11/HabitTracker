@@ -28,10 +28,10 @@ class HabitProcessingViewModel(
     }
 
     fun updateHabit(habit : Habit) = viewModelScope.launch {
-        updateHabitUseCase.invoke(habit = habit)
+        updateHabitUseCase(habit = habit)
     }
 
     fun createHabit(habit : Habit) = viewModelScope.launch {
-        createHabitUseCase.invoke(newHabit = habit)
+        createHabitUseCase(newHabit = habit)
     }
 }
