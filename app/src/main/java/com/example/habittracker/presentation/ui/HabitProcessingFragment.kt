@@ -74,7 +74,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 ExecutionPeriodHabitDialog().show(childFragmentManager, null)
             }
             btClose.setOnClickListener {
-                it.findNavController().popBackStack()
+                it.findNavController().navigateUp()
             }
         }
     }
@@ -90,12 +90,12 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun launchUpdateHabit(habit : Habit) {
         viewModel.updateHabit(habit = habit)
-        view?.findNavController()?.popBackStack()
+        view?.findNavController()?.navigateUp()
     }
 
     private fun launchAddHabit(habit : Habit) {
         viewModel.createHabit(habit = habit)
-        view?.findNavController()?.popBackStack()
+        view?.findNavController()?.navigateUp()
     }
 
     private fun handleAction() {

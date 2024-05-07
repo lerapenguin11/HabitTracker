@@ -2,7 +2,6 @@ package com.example.habittracker.data.room
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -29,10 +28,16 @@ interface HabitDao
     @Delete
     suspend fun deleteHabit(habit : HabitEntity)
 
+    fun getDistinctAllHabits():
+            Flow<List<HabitEntity>> = getAllHabits()
+        .distinctUntilChanged()
+
+    fun getDistinctHabitById(habitId : Int):
+            Flow<HabitEntity> = getHabitById(habitId = habitId)
+        .distinctUntilChanged()
+
     /*@Query("SELECT * FROM habits WHERE id = :id")
     private fun getUserById(id: String): Flow<HabitEntity>
 
-    fun getDistinctUserById(id: String):
-            Flow<HabitEntity> = getUserById(id)
-        .distinctUntilChanged()*/
+    */
 }

@@ -16,7 +16,7 @@ class HabitRepositoryImpl(
 ) : HabitsRepository {
 
     override fun getHabits(): Flow<List<Habit>> {
-        val allHabits = dao.getAllHabits()
+        val allHabits = dao.getDistinctAllHabits()
         return allHabits
             .map {
                 element ->
@@ -26,7 +26,7 @@ class HabitRepositoryImpl(
 
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
     override fun getHabitItem(habitId: Int): Flow<Habit>  {
-        val habit = dao.getHabitById(habitId = habitId)
+        val habit = dao.getDistinctHabitById(habitId = habitId)
         return habit.map { mapper.habitEntityToHabit(entity = it) }
     }
 
