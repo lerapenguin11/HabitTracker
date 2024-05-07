@@ -60,6 +60,7 @@ class ModalBottomSheet : Fragment()
                 iconFiltered = icFilterNewDate,
                 iconNotFiltered = icFilterOldDate)
             viewModel.searchByNewDate()
+            btCancelFilter.isEnabled = true
         }
         filterOldDate.setOnClickListener {
             applyDateFilteringButtonsStyle(
@@ -69,6 +70,7 @@ class ModalBottomSheet : Fragment()
                 iconNotFiltered = icFilterNewDate
             )
             viewModel.searchByOldDate()
+            btCancelFilter.isEnabled = true
         }
     }
 
@@ -85,6 +87,7 @@ class ModalBottomSheet : Fragment()
             tilSearchNameHabit.editText?.addTextChangedListener(textChangedListenerAdd)
             tilSearchDescHabit.editText?.addTextChangedListener(textChangedListenerAdd)
             tilNumberExecutions.editText?.addTextChangedListener(textChangedListenerAdd)
+
         }
 
     private fun checkIfFieldsNotEmpty(): Boolean =

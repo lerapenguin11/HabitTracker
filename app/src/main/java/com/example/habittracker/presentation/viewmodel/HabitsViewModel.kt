@@ -105,51 +105,63 @@ class HabitsViewModel(
     }
 
     fun searchByOldDate(){
-        val filter = filters.value
-        filter?.oldDate = true
-        filter?.newDate = null
-        _filterByDate.value = true
-        filters.value = filter!!
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            oldDate = true,
+            newDate = null,
+            habitDescription = currentFilter.habitDescription,
+            habitFrequency = currentFilter.habitFrequency,
+            habitTitle = currentFilter.habitTitle
+        )
+        filters.value = newFilter
     }
 
     fun searchByNewDate(){
-        val filter = filters.value
-        filter?.oldDate = null
-        filter?.newDate = true
-        _filterByDate.value = true
-        filters.value = filter!!
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            oldDate = null,
+            newDate = true,
+            habitDescription = currentFilter.habitDescription,
+            habitFrequency = currentFilter.habitFrequency,
+            habitTitle = currentFilter.habitTitle
+        )
+        filters.value = newFilter
     }
 
     fun searchByName(name: String){
         val currentFilter = filters.value
         val newFilter = FilterParameters(
-            if (name != CONST_LINE) name else null,
-            currentFilter.habitDescription,
-            currentFilter.habitFrequency,
-            currentFilter.oldDate,
-            currentFilter.newDate
+            habitTitle = if (name != CONST_LINE) name else null,
+            habitDescription = currentFilter.habitDescription,
+            habitFrequency = currentFilter.habitFrequency,
+            oldDate = currentFilter.oldDate,
+            newDate = currentFilter.newDate
         )
         filters.value = newFilter
     }
 
     fun searchByDescription(desc: String){
-        val filter = filters.value!!
-        if (desc != CONST_LINE) {
-            filter.habitDescription = desc
-        } else {
-            filter.habitDescription = null
-        }
-        filters.value = filter
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            habitDescription = if (desc != CONST_LINE) desc else null,
+            habitTitle = currentFilter.habitTitle,
+            habitFrequency = currentFilter.habitFrequency,
+            oldDate = currentFilter.oldDate,
+            newDate = currentFilter.newDate
+        )
+        filters.value = newFilter
     }
 
     fun searchByFrequency(frequency : String){
-        val filter = filters.value!!
-        if (frequency != CONST_LINE) {
-            filter.habitFrequency = frequency
-        } else {
-            filter.habitFrequency = null
-        }
-        filters.value = filter
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            habitFrequency = if (frequency != CONST_LINE) frequency else null,
+            habitDescription = currentFilter.habitDescription,
+            habitTitle = currentFilter.habitTitle,
+            oldDate = currentFilter.oldDate,
+            newDate = currentFilter.newDate
+        )
+        filters.value = newFilter
     }
 
 
