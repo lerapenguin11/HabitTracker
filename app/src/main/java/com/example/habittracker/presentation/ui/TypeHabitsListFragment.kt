@@ -23,7 +23,9 @@ import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.observeOn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class TypeHabitsListFragment()
@@ -66,17 +68,21 @@ class TypeHabitsListFragment()
 
     private fun observeHabitsUseful(){
         with(viewModel){
-            /*viewLifecycleOwner.lifecycleScope.launch {
-                filteredUsefulHabits
+            /*test
+                .onEach { setHabitsRecyclerView(it) }
+                .launchIn(viewLifecycleOwner.lifecycleScope)*/
+            filteredUsefulHabits.observe(viewLifecycleOwner, Observer {
+                setHabitsRecyclerView(it)
+            })
+            viewLifecycleOwner.lifecycleScope.launch {
+                /*usefulHabit
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle, Lifecycle.State.RESUMED)
                     .distinctUntilChanged()
                     .collect {
+                        setHabitsRecyclerView(it)
+                    }*/
 
-                    }
-            }*/
-            filteredUsefulHabits.observe(viewLifecycleOwner, Observer {habits ->
-                setHabitsRecyclerView(habits)
-            })
+            }
         }
     }
 
