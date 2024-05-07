@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.example.habittracker.R
@@ -25,7 +26,7 @@ class ModalBottomSheet : Fragment()
 {
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
-    private val viewModel : HabitsViewModel by viewModels {
+    private val viewModel : HabitsViewModel by activityViewModels {
         HabitsViewModelFactory(
             (requireActivity().application as BaseApplication).getHabitsUseCase
         )
