@@ -17,6 +17,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center_vertical"
         android:layout_marginBottom="60dp"
+        android:visibility="gone"
         android:text="@string/text_no_habits"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,11 +27,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_habits"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="20dp"
         tools:listitem="@layout/item_habits" />
 </androidx.constraintlayout.widget.ConstraintLayout>

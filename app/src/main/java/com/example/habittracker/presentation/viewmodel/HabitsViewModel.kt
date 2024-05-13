@@ -1,52 +1,87 @@
 package com.example.habittracker.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HabitsViewModel(
-    getHabitsUseCase: GetHabitsUseCase
+    private val getHabitsUseCase: GetHabitsUseCase
 )
     : ViewModel(){
-    private var habitList : LiveData<List<Habit>>
-    private val filters: MutableLiveData<FilterParameters> =
-        MutableLiveData(FilterParameters(null, null,
-            null, null, null))
-    val filteredHabit : MediatorLiveData<List<Habit>> = MediatorLiveData<List<Habit>>()
-    private val _filterByDate = MutableLiveData<Boolean>(false)
+    private val _filterByDate = MutableLiveData(false)
     val filterByDate : LiveData<Boolean> = _filterByDate
 
+    private val _usefulHabits = MutableStateFlow<List<Habit>>(emptyList())
+    private val _harmfulHabits = MutableStateFlow<List<Habit>>(emptyList())
+    private val filters: MutableStateFlow<FilterParameters> =
+        MutableStateFlow(FilterParameters(null, null,
+            null, null, null))
+    private val _filteredUsefulHabits = MutableLiveData<List<Habit>>(emptyList())
+    val filteredUsefulHabits : LiveData<List<Habit>> = _filteredUsefulHabits
+    private val _filteredHarmfulHabits = MutableLiveData<List<Habit>>(emptyList())
+    val filteredHarmfulHabits : LiveData<List<Habit>> = _filteredHarmfulHabits
+
     init {
-        habitList = getHabitsUseCase.invoke()
-        filteredHabit.addSource(habitList) { habits ->
-            val filtersValue = filters.value
-            val filteredList = applyFilters(habits, filtersValue)
-            filteredHabit.value = filteredList
-        }
+        loadHabitList()
+        listenerFilteredUsefulHabits()
+        listenerFilteredHarmfulHabits()
+    }
 
-        filteredHabit.addSource(filters) { filterParams ->
-            val habits = habitList.value
-            if (habits != null) {
-                val filteredList = applyFilters(habits, filterParams)
-                filteredHabit.value = filteredList
+    private fun listenerFilteredHarmfulHabits() {
+        _harmfulHabits.combine(filters){habits, filters ->
+            applyFilters(habits = habits, filter = filters)
+        }
+            .onEach {
+                _filteredHarmfulHabits.postValue(it)
             }
+            .launchIn(viewModelScope)
+    }
+
+    private fun listenerFilteredUsefulHabits() {
+        _usefulHabits.combine(filters){habits, filters ->
+            applyFilters(habits = habits, filter = filters)
         }
+            .onEach {
+                _filteredUsefulHabits.postValue(it)
+            }
+            .launchIn(viewModelScope)
     }
 
+    private fun loadHabitList() {
+        combine(getHabitsUseCase()){ allHabits ->
+            Pair(
+                withContext(Dispatchers.Default){
+                    allHabits.flatMap {
+                            habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
 
-    fun getUsefulHabit(habits : List<Habit>): List<Habit> {
-        return habits.filter { it.type == HabitType.USEFUL }
+                },
+                withContext(Dispatchers.Default){
+                    allHabits.flatMap {
+                            habits -> habits.filter { habit -> habit.type == HabitType.HARMFUL } }
+                }
+            )
+        }
+            .distinctUntilChanged()
+            .onEach { (useful, harmful) ->
+                _usefulHabits.value = useful
+                _harmfulHabits.value = harmful
+            }
+            .launchIn(viewModelScope)
     }
-
-    fun getHarmfulHabit(habits : List<Habit>): List<Habit> {
-        return habits.filter { it.type == HabitType.HARMFUL }
-    }
-
 
     private fun List<Habit>.filterByName(valueFilter: String): MutableList<Habit> {
         val filteredAllHabits: MutableList<Habit> = this.filter{
@@ -90,53 +125,67 @@ class HabitsViewModel(
     }
 
     fun searchByOldDate(){
-        val filter = filters.value!!
-        filter.oldDate = true
-        filter.newDate = null
-        _filterByDate.value = true
-        filters.value = filter
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            oldDate = true,
+            newDate = null,
+            habitDescription = currentFilter.habitDescription,
+            habitFrequency = currentFilter.habitFrequency,
+            habitTitle = currentFilter.habitTitle
+        )
+        filters.value = newFilter
     }
 
     fun searchByNewDate(){
-        val filter = filters.value!!
-        filter.oldDate = null
-        filter.newDate = true
-        _filterByDate.value = true
-        filters.value = filter
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            oldDate = null,
+            newDate = true,
+            habitDescription = currentFilter.habitDescription,
+            habitFrequency = currentFilter.habitFrequency,
+            habitTitle = currentFilter.habitTitle
+        )
+        filters.value = newFilter
     }
 
     fun searchByName(name: String){
-        val filter = filters.value!!
-        if (name != CONST_LINE) {
-            filter.habitTitle = name
-        } else {
-            filter.habitTitle = null
-        }
-        filters.value = filter
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            habitTitle = if (name != CONST_LINE) name else null,
+            habitDescription = currentFilter.habitDescription,
+            habitFrequency = currentFilter.habitFrequency,
+            oldDate = currentFilter.oldDate,
+            newDate = currentFilter.newDate
+        )
+        filters.value = newFilter
     }
 
     fun searchByDescription(desc: String){
-        val filter = filters.value!!
-        if (desc != CONST_LINE) {
-            filter.habitDescription = desc
-        } else {
-            filter.habitDescription = null
-        }
-        filters.value = filter
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            habitDescription = if (desc != CONST_LINE) desc else null,
+            habitTitle = currentFilter.habitTitle,
+            habitFrequency = currentFilter.habitFrequency,
+            oldDate = currentFilter.oldDate,
+            newDate = currentFilter.newDate
+        )
+        filters.value = newFilter
     }
 
     fun searchByFrequency(frequency : String){
-        val filter = filters.value!!
-        if (frequency != CONST_LINE) {
-            filter.habitFrequency = frequency
-        } else {
-            filter.habitFrequency = null
-        }
-        filters.value = filter
+        val currentFilter = filters.value
+        val newFilter = FilterParameters(
+            habitFrequency = if (frequency != CONST_LINE) frequency else null,
+            habitDescription = currentFilter.habitDescription,
+            habitTitle = currentFilter.habitTitle,
+            oldDate = currentFilter.oldDate,
+            newDate = currentFilter.newDate
+        )
+        filters.value = newFilter
     }
 
 
-    private fun applyFilters(habits: List<Habit>?, filter: FilterParameters?): List<Habit>{
+    private fun applyFilters(habits: List<Habit>?, filter: FilterParameters?):  List<Habit>{
         var filtrateObjects = habits ?: emptyList()
         filter?.let {
             if (habits != null) {
@@ -158,7 +207,6 @@ class HabitsViewModel(
             }
         }
         return filtrateObjects
-
     }
 
     companion object{

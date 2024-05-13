@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import com.example.habittracker.R
 import com.example.habittracker.databinding.LayoutModalBottomSheetBinding
 import com.example.habittracker.domain.model.HabitRepetitionPeriod
@@ -25,7 +25,11 @@ class ModalBottomSheet : Fragment()
 {
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel : HabitsViewModel
+    private val viewModel : HabitsViewModel by activityViewModels {
+        HabitsViewModelFactory(
+            (requireActivity().application as BaseApplication).getHabitsUseCase
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,41 +42,35 @@ class ModalBottomSheet : Fragment()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
         initTextInputListeners()
         setOnClickListener()
         setOnClickListerBtFilterDate()
         setObserverOnNameFilter()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
-        openHabitExecutions()
+        openHabitExecutionsList()
         setObserveOnFilterByDate()
     }
 
     private fun setOnClickListerBtFilterDate() = with(binding) {
         filterNewDate.setOnClickListener {
-            applyStyleDateFilteringButtons(btFiltered = filterNewDate,
+            applyDateFilteringButtonsStyle(btFiltered = filterNewDate,
                 btNotFiltered = filterOldDate,
                 iconFiltered = icFilterNewDate,
                 iconNotFiltered = icFilterOldDate)
             viewModel.searchByNewDate()
+            btCancelFilter.isEnabled = true
         }
         filterOldDate.setOnClickListener {
-            applyStyleDateFilteringButtons(
+            applyDateFilteringButtonsStyle(
                 btFiltered = filterOldDate,
                 btNotFiltered = filterNewDate,
                 iconFiltered = icFilterOldDate,
                 iconNotFiltered = icFilterNewDate
             )
             viewModel.searchByOldDate()
+            btCancelFilter.isEnabled = true
         }
-    }
-
-    private fun initViewModel() {
-        val getHabitsUseCase = (requireActivity().application as BaseApplication).getHabitsUseCase
-        viewModel = ViewModelProvider(requireActivity(), HabitsViewModelFactory(getHabitsUseCase))[
-            HabitsViewModel::class.java
-        ]
     }
 
     private fun initTextInputListeners() =
@@ -88,6 +86,7 @@ class ModalBottomSheet : Fragment()
             tilSearchNameHabit.editText?.addTextChangedListener(textChangedListenerAdd)
             tilSearchDescHabit.editText?.addTextChangedListener(textChangedListenerAdd)
             tilNumberExecutions.editText?.addTextChangedListener(textChangedListenerAdd)
+
         }
 
     private fun checkIfFieldsNotEmpty(): Boolean =
@@ -106,16 +105,16 @@ class ModalBottomSheet : Fragment()
         }
     }
 
-    private fun applyStyleDateFilteringButtons(
+    private fun applyDateFilteringButtonsStyle(
         btFiltered: MaterialCardView,
         btNotFiltered: MaterialCardView,
         iconFiltered: ImageView,
         iconNotFiltered : ImageView
     ) {
-        btFiltered.strokeColor = resources.getColor(R.color.md_theme_dark_inversePrimary)
-        btNotFiltered.strokeColor = resources.getColor(R.color.md_theme_light_outline)
-        btFiltered.setCardBackgroundColor(resources.getColor(R.color.light_green))
-        btNotFiltered.setCardBackgroundColor(resources.getColor(R.color.background_view))
+        btFiltered.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_dark_inversePrimary)
+        btNotFiltered.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_light_outline)
+        btFiltered.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.light_green))
+        btNotFiltered.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background_view))
         iconFiltered.setImageResource(R.drawable.ic_filtered_date)
         when(iconNotFiltered){
             binding.icFilterNewDate -> iconNotFiltered.setImageResource(R.drawable.ic_filter_new_date)
@@ -124,20 +123,20 @@ class ModalBottomSheet : Fragment()
     }
 
     private fun setObserveOnFilterByDate() = with(viewModel){
-       filterByDate.observe(viewLifecycleOwner, Observer {
-           if (it == true){
+       filterByDate.observe(viewLifecycleOwner) {
+           if (it == true) {
                binding.btCancelFilter.isEnabled = true
-           } else{
-               applyStyleDateNotFilteringButtons()
+           } else {
+               applyDefaultFilteringButtonsStyle()
            }
-       })
+       }
     }
 
-    private fun applyStyleDateNotFilteringButtons() = with(binding) {
-        filterNewDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
-        filterOldDate.strokeColor = resources.getColor(R.color.md_theme_light_outline)
-        filterNewDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
-        filterOldDate.setCardBackgroundColor(resources.getColor(R.color.background_view))
+    private fun applyDefaultFilteringButtonsStyle() = with(binding) {
+        filterNewDate.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_light_outline)
+        filterOldDate.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_light_outline)
+        filterNewDate.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background_view))
+        filterOldDate.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.background_view))
         icFilterNewDate.setImageResource(R.drawable.ic_filter_new_date)
         icFilterOldDate.setImageResource(R.drawable.ic_filter_old_date)
     }
@@ -177,7 +176,7 @@ class ModalBottomSheet : Fragment()
     }
 
     @SuppressLint("ResourceAsColor")
-    private fun openHabitExecutions() {
+    private fun openHabitExecutionsList() {
         with(binding){
             val items = listOf(
                 HabitRepetitionPeriod.ONE_TIME.period, HabitRepetitionPeriod.REGULAR.period)

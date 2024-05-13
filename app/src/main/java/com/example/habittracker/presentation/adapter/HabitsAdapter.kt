@@ -49,8 +49,8 @@ internal class HabitsAdapter(
 
         private fun checkingNumberExclusion(numberExecutions: String): String {
             return when(numberExecutions.toInt()){
-                3 -> "раза в день"
-                else -> "раз в день"
+                3 -> "раза"
+                else -> "раз"
             }
         }
     }

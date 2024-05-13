@@ -1,8 +1,8 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("kotlin-parcelize")
-    id("kotlin-kapt")
+    id(libs.plugins.androidApplication.get().pluginId)
+    id(libs.plugins.kotlinAndroid.get().pluginId)
+    id(libs.plugins.kotlin.parcelize.get().pluginId)
+    id(libs.plugins.kotlin.kapt.get().pluginId)
 }
 
 android {
@@ -51,6 +51,8 @@ dependencies {
     implementation(libs.android.room.runtime)
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.android.room.compiler)
+    implementation(libs.bundles.kotlin.coroutines.all)
+    implementation(libs.bundles.coroutine.lifecycle.scope.all)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)

@@ -1,13 +1,13 @@
 package com.example.habittracker.domain.usecase
 
-import androidx.lifecycle.LiveData
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.repository.HabitsRepository
+import kotlinx.coroutines.flow.Flow
 
 //TODO habits_domain
 class GetHabitsUseCase(private val repository : HabitsRepository)
 {
-    operator fun invoke() : LiveData<List<Habit>> {
+    operator fun invoke() : Flow<List<Habit>> {
         return repository.getHabits()
     }
 }

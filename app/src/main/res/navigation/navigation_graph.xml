@@ -33,4 +33,14 @@
             android:id="@+id/action_aboutAppFragment_to_habitsFragment"
             app:destination="@id/habitsFragment" />
     </fragment>
+
+    <action
+        android:id="@+id/action_habitProcessingFragment_to_habitsFragment"
+        app:destination="@id/habitsFragment"
+        app:popUpTo="@id/habitProcessingFragment"
+        app:popUpToInclusive="true"
+        app:enterAnim="@anim/nav_default_enter_anim"
+        app:exitAnim="@anim/nav_default_exit_anim"
+        app:popEnterAnim="@anim/nav_default_enter_anim"
+        app:popExitAnim="@anim/nav_default_exit_anim" />
 </navigation>
