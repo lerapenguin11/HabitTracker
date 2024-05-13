@@ -2,7 +2,7 @@ package com.example.habittracker.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.habittracker.domain.usecase.GetHabitsUseCase
+import com.example.habittracker.domain.usecase.local.GetHabitsUseCase
 
 class HabitsViewModelFactory(private val getHabitsUseCase : GetHabitsUseCase) :
     ViewModelProvider.Factory {

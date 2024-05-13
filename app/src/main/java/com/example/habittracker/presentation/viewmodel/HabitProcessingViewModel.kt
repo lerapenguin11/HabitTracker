@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habittracker.domain.model.Habit
-import com.example.habittracker.domain.usecase.CreateHabitUseCase
-import com.example.habittracker.domain.usecase.GetHabitItemUseCase
-import com.example.habittracker.domain.usecase.UpdateHabitUseCase
+import com.example.habittracker.domain.usecase.local.CreateHabitUseCase
+import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
+import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 class HabitProcessingViewModel(
     private val createHabitUseCase : CreateHabitUseCase,
     private val updateHabitUseCase : UpdateHabitUseCase,
-    private val getHabitItemUseCase : GetHabitItemUseCase)
+    private val getHabitItemUseCase : GetHabitItemUseCase
+)
     : ViewModel()
 {
     private var _habitItem = MutableLiveData<Habit>()

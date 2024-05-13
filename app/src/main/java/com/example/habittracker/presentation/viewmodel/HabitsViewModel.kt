@@ -6,16 +6,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
-import com.example.habittracker.domain.usecase.GetHabitsUseCase
+import com.example.habittracker.domain.usecase.local.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HabitsViewModel(

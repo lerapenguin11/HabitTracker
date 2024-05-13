@@ -1,4 +1,4 @@
-package com.example.habittracker.domain.usecase
+package com.example.habittracker.domain.usecase.local
 
 import androidx.lifecycle.LiveData
 import com.example.habittracker.domain.model.Habit

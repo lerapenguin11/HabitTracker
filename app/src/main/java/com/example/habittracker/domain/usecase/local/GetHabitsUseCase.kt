@@ -1,4 +1,4 @@
-package com.example.habittracker.domain.usecase
+package com.example.habittracker.domain.usecase.local
 
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.repository.HabitsRepository

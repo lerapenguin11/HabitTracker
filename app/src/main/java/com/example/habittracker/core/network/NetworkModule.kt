@@ -1,6 +1,7 @@
 package com.example.habittracker.core.network
 
 import com.example.habittracker.BuildConfig
+import com.example.habittracker.core.network.interceptor.HeadersHabitInterceptor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -20,12 +21,12 @@ class NetworkModule
     private val loggingInterceptor by lazy {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        loggingInterceptor
+        loggingInterceptor//TODO???
     }
 
     private val httpClient by lazy {
         OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
+            .addInterceptor(HeadersHabitInterceptor())
             .build()
     }
 
