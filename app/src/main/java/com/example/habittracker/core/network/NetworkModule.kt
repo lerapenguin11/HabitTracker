@@ -8,7 +8,9 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 class NetworkModule
 {
@@ -21,12 +23,13 @@ class NetworkModule
     private val loggingInterceptor by lazy {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-        loggingInterceptor//TODO???
+        loggingInterceptor
     }
 
     private val httpClient by lazy {
         OkHttpClient.Builder()
             .addInterceptor(HeadersHabitInterceptor())
+            .addInterceptor(loggingInterceptor)
             .build()
     }
 
@@ -34,6 +37,8 @@ class NetworkModule
         return Retrofit.Builder()
             .baseUrl(BuildConfig.API_URL)
             .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()

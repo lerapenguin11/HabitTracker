@@ -17,7 +17,7 @@ interface HabitDao
     fun getAllHabits() : Flow<List<HabitEntity>>
 
     @Query("SELECT * FROM habits WHERE id = :habitId")
-    fun getHabitById(habitId : Int) : Flow<HabitEntity>
+    fun getHabitById(habitId : String) : Flow<HabitEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabit(habit : HabitEntity)
@@ -32,7 +32,7 @@ interface HabitDao
             Flow<List<HabitEntity>> = getAllHabits()
         .distinctUntilChanged()
 
-    fun getDistinctHabitById(habitId : Int):
+    fun getDistinctHabitById(habitId : String):
             Flow<HabitEntity> = getHabitById(habitId = habitId)
         .distinctUntilChanged()
 

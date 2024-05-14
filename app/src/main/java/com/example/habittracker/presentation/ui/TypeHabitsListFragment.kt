@@ -24,7 +24,8 @@ class TypeHabitsListFragment
     private var habitType : String? = null
     private val viewModel : HabitsViewModel by activityViewModels {
         HabitsViewModelFactory(
-            (requireActivity().application as BaseApplication).getHabitsUseCase
+            (requireActivity().application as BaseApplication).getHabitsUseCase,
+            (requireActivity().application as BaseApplication).getHabitsRemoteUseCase
         )
     }
 
@@ -90,7 +91,7 @@ class TypeHabitsListFragment
     private fun openEditHabit(habit: Habit) {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
-        bundle.putInt(HABIT_ID, habit.id)
+        bundle.putString(HABIT_ID, habit.id)
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }

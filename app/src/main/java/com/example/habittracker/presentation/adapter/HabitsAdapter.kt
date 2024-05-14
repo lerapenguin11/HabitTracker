@@ -39,10 +39,10 @@ internal class HabitsAdapter(
         fun bind(habit : Habit) {
             binding.tvTitleHabit.text = habit.title
             binding.tvDescHabit.text = habit.description
-            binding.chipType.text = habit.type.type
-            binding.chipPriority.text = habit.habitPriority.priority
+            binding.chipType.text = habit.type.type.toString()
+            binding.chipPriority.text = habit.habitPriority.priority.toString()
             binding.chipFrequency.text = "${habit.numberExecutions} " +
-                    "${checkingNumberExclusion(habit.numberExecutions)} | ${habit.period.period}"
+                    "${checkingNumberExclusion(habit.numberExecutions.toString())} | ${habit.period.period}"
 
             //binding.habitCard.setCardBackgroundColor(habit.color)
         }

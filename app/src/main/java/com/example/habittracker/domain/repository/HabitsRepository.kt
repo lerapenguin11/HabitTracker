@@ -1,5 +1,6 @@
 package com.example.habittracker.domain.repository
 
+import com.example.habittracker.core.network.ResultData
 import com.example.habittracker.domain.model.Habit
 import kotlinx.coroutines.flow.Flow
 
@@ -7,9 +8,10 @@ import kotlinx.coroutines.flow.Flow
 interface HabitsRepository
 {
     fun getHabits() : Flow<List<Habit>>
+    suspend fun getHabitsRemote() : ResultData<List<Habit>>
 
     //TODO habit_processing_domain
     suspend fun updateHabit(habit : Habit)
     suspend fun createHabit(newHabit: Habit)
-    fun getHabitItem(habitId : Int) : Flow<Habit>
+    fun getHabitItem(habitId : String) : Flow<Habit>
 }

@@ -4,9 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.habittracker.core.network.ResultData
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
 import com.example.habittracker.domain.usecase.local.GetHabitsUseCase
+import com.example.habittracker.domain.usecase.remote.GetHabitsRemoteUseCase
 import com.example.habittracker.presentation.model.FilterParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,10 +16,12 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HabitsViewModel(
-    private val getHabitsUseCase: GetHabitsUseCase
+    private val getHabitsUseCase: GetHabitsUseCase,
+    private val getHabitsRemoteUseCase: GetHabitsRemoteUseCase
 )
     : ViewModel(){
     private val _filterByDate = MutableLiveData(false)
@@ -34,9 +38,20 @@ class HabitsViewModel(
     val filteredHarmfulHabits : LiveData<List<Habit>> = _filteredHarmfulHabits
 
     init {
-        loadHabitList()
+        loadHabitRemoteList()
         listenerFilteredUsefulHabits()
         listenerFilteredHarmfulHabits()
+    }
+
+    private fun loadHabitRemoteList() = viewModelScope.launch {
+        when(val habitResult = getHabitsRemoteUseCase.invoke()){
+            is ResultData.Success ->{
+                _usefulHabits.value = habitResult.data
+            }
+            is ResultData.Error ->{
+                loadHabitLocalList()
+            }
+        }
     }
 
     private fun listenerFilteredHarmfulHabits() {
@@ -59,7 +74,7 @@ class HabitsViewModel(
             .launchIn(viewModelScope)
     }
 
-    private fun loadHabitList() {
+    private fun loadHabitLocalList() {
         combine(getHabitsUseCase()){ allHabits ->
             Pair(
                 withContext(Dispatchers.Default){
@@ -95,7 +110,7 @@ class HabitsViewModel(
         return filteredAllHabits
     }
 
-    private fun List<Habit>.filterByFrequency(valueFilter: String): MutableList<Habit> {
+    private fun List<Habit>.filterByFrequency(valueFilter: Int): MutableList<Habit> {
         val filteredAllHabits: MutableList<Habit> = this.filter{
             it.period.period == valueFilter
         }.toMutableList()
@@ -170,10 +185,10 @@ class HabitsViewModel(
         filters.value = newFilter
     }
 
-    fun searchByFrequency(frequency : String){
+    fun searchByFrequency(frequency : Int){
         val currentFilter = filters.value
         val newFilter = FilterParameters(
-            habitFrequency = if (frequency != CONST_LINE) frequency else null,
+            habitFrequency = frequency,
             habitDescription = currentFilter.habitDescription,
             habitTitle = currentFilter.habitTitle,
             oldDate = currentFilter.oldDate,

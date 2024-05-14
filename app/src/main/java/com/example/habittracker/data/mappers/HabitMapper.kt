@@ -1,6 +1,7 @@
 package com.example.habittracker.data.mappers
 
 import com.example.habittracker.data.entity.HabitEntity
+import com.example.habittracker.data.modelResponse.HabitResponse
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitPriority
 import com.example.habittracker.domain.model.HabitRepetitionPeriod
@@ -8,9 +9,32 @@ import com.example.habittracker.domain.model.HabitType
 
 class HabitMapper
 {
+    //TODO:HabitMapperRemote
+    fun habitsResponseToHabits(habitsResponse : HabitResponse) : List<Habit>{
+        val habits = mutableListOf<Habit>()
+        habitsResponse.forEach {response ->
+            val habit = getSelectedHabitPeriod(response.frequency)?.let { period ->
+                Habit(
+                    id = response.uid,
+                    title = response.title,
+                    description = response.description,
+                    type = HabitType.createByType(response.type),
+                    habitPriority = HabitPriority.createByPriority(response.priority),
+                    numberExecutions = response.count,
+                    period = period,
+                    color = response.color,
+                    dateCreation = response.date
+                )
+            }
+            habit?.let { habits.add(it) }
+        }
+        return habits
+    }
+
+    //TODO:HabitMapperLocal
     fun updateHabitToHabitEntity(habit: Habit) : HabitEntity{
         return HabitEntity(
-            id = habit.id,
+            id = habit.id.toLong(),
             title = habit.title,
             description = habit.description,
             type = habit.type.type,
@@ -42,7 +66,7 @@ class HabitMapper
                     getSelectedHabitType(entity.type)?.let { type ->
                         id?.let { id ->
                             Habit(
-                                id = id,
+                                id = id.toString(),
                                 title = entity.title,
                                 description = entity.description,
                                 type = type,
@@ -66,7 +90,7 @@ class HabitMapper
                 getSelectedHabitPriority(entity.habitPriority)?.let { habitPriority ->
                     getSelectedHabitType(entity.type)?.let { type ->
                         Habit(
-                            id = entity.id!!,
+                            id = entity.id.toString(),
                             title = entity.title,
                             description = entity.description,
                             type = type,
@@ -84,7 +108,7 @@ class HabitMapper
         return habits
     }
 
-    private fun getSelectedHabitType(type : String) : HabitType? {
+    private fun getSelectedHabitType(type : Int) : HabitType? {
         return when(type){
             HabitType.USEFUL.type -> HabitType.USEFUL
             HabitType.HARMFUL.type -> HabitType.HARMFUL
@@ -92,7 +116,7 @@ class HabitMapper
         }
     }
 
-    private fun getSelectedHabitPriority(habitPriority : String) : HabitPriority?{
+    private fun getSelectedHabitPriority(habitPriority : Int) : HabitPriority?{
         return when(habitPriority){
             HabitPriority.HIGH.priority -> HabitPriority.HIGH
             HabitPriority.LOW.priority -> HabitPriority.LOW
@@ -101,7 +125,7 @@ class HabitMapper
         }
     }
 
-    private fun getSelectedHabitPeriod(period : String): HabitRepetitionPeriod? {
+    private fun getSelectedHabitPeriod(period : Int): HabitRepetitionPeriod? {
         return when(period){
             HabitRepetitionPeriod.REGULAR.period -> HabitRepetitionPeriod.REGULAR
             HabitRepetitionPeriod.ONE_TIME.period -> HabitRepetitionPeriod.ONE_TIME

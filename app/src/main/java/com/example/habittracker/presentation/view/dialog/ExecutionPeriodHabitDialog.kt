@@ -17,7 +17,8 @@ internal class ExecutionPeriodHabitDialog : DialogFragment(){
 
     override fun onCreateDialog(savedInstanceState: Bundle?) : Dialog {
         val singleItems = arrayOf(
-            HabitRepetitionPeriod.REGULAR.period, HabitRepetitionPeriod.ONE_TIME.period)
+            requireContext().getString(HabitRepetitionPeriod.REGULAR.period),
+            requireContext().getString(HabitRepetitionPeriod.ONE_TIME.period))
         val checkedItem = intArrayOf(checkedPeriodNumber)
         val dialog = MaterialAlertDialogBuilder(requireContext(),
             R.style.ThemeOverlayAppMaterialAlertDialog)

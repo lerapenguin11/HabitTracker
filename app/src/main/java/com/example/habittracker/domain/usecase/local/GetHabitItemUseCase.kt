@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 
 class GetHabitItemUseCase(private val repository : HabitsRepository)
 {
-    operator fun invoke(habitId : Int) : Flow<Habit> {
+    operator fun invoke(habitId : String) : Flow<Habit> {
         return repository.getHabitItem(habitId = habitId)
     }
 }

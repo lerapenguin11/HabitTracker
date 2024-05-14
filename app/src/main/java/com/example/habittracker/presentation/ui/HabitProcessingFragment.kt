@@ -30,7 +30,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var screenMode : String? = null
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
-    private var habitId : Int? = null
+    private var habitId : String? = null
     private val viewModel : HabitProcessingViewModel by viewModels{
         HabitProcessingViewModelFactory(
             (requireActivity().application as BaseApplication).getHabitItemUseCase,
@@ -45,7 +45,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         super.onCreate(savedInstanceState)
         arguments?.let { bundle ->
             screenMode = bundle.getString(SCREEN_MODE)
-            habitId = bundle.getInt(HABIT_ID)
+            habitId = bundle.getString(HABIT_ID)
         }
     }
 
@@ -131,8 +131,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             binding.tvArrayExecutions.setText(habit.numberExecutions)
             binding.tiEtTypeHabit.setText(habit.type.type)
             binding.tiEtFrequency.setText(habit.period.period)
-            itemArrayPriority = habit.habitPriority.priority
-            itemArrayExecutions = habit.numberExecutions
+            itemArrayPriority = requireContext().getString(habit.habitPriority.priority)
+            itemArrayExecutions = habit.numberExecutions.toString()
         }
         btSaveHabit.isEnabled = true
     }
@@ -145,10 +145,10 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 description = tiEtDescHabit.text.toString(),
                 type = getSelectedHabitType()!!,
                 habitPriority = getSelectedHabitPriority()!!,
-                numberExecutions = tvArrayExecutions.text.toString(),
+                numberExecutions = tvArrayExecutions.text.toString().toInt(),
                 period = getSelectedHabitPeriod()!!,
                 color = color,
-                dateCreation = getDateCreationHabit()
+                dateCreation = getDateCreationHabit().toInt()
             )
         }
 
@@ -156,13 +156,13 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         return if (viewModel.habitItem.value?.dateCreation == null){
             System.currentTimeMillis()
         } else{
-            viewModel.habitItem.value!!.dateCreation
+            viewModel.habitItem.value!!.dateCreation.toLong()
         }
     }
 
-    private fun getIdHabit(): Int {
+    private fun getIdHabit(): String {
         return if (habitId == null){
-            0
+            Habit.UNDEFINED_ID
         } else{
             habitId!!
         }
@@ -170,25 +170,25 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun getSelectedHabitPriority() : HabitPriority?{
         return when(binding.tvArrayPriority.text.toString()){
-            HabitPriority.HIGH.priority -> HabitPriority.HIGH
-            HabitPriority.LOW.priority -> HabitPriority.LOW
-            HabitPriority.MEDIUM.priority -> HabitPriority.MEDIUM
+            requireContext().getString(HabitPriority.HIGH.priority) -> HabitPriority.HIGH
+            requireContext().getString(HabitPriority.LOW.priority) -> HabitPriority.LOW
+            requireContext().getString(HabitPriority.MEDIUM.priority) -> HabitPriority.MEDIUM
             else -> null
         }
     }
 
     private fun getSelectedHabitPeriod(): HabitRepetitionPeriod? {
         return when(binding.tiEtFrequency.text.toString()){
-            HabitRepetitionPeriod.REGULAR.period -> HabitRepetitionPeriod.REGULAR
-            HabitRepetitionPeriod.ONE_TIME.period -> HabitRepetitionPeriod.ONE_TIME
+            requireContext().getString(HabitRepetitionPeriod.REGULAR.period) -> HabitRepetitionPeriod.REGULAR
+            requireContext().getString(HabitRepetitionPeriod.ONE_TIME.period) -> HabitRepetitionPeriod.ONE_TIME
             else -> null
         }
     }
 
     private fun getSelectedHabitType() : HabitType? {
         return when(binding.tiEtTypeHabit.text.toString()){
-            HabitType.USEFUL.type -> HabitType.USEFUL
-            HabitType.HARMFUL.type -> HabitType.HARMFUL
+            requireContext().getString(HabitType.USEFUL.type) -> HabitType.USEFUL
+            requireContext().getString(HabitType.HARMFUL.type) -> HabitType.HARMFUL
             else -> null
         }
     }

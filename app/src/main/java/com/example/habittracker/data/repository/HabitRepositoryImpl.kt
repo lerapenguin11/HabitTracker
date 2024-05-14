@@ -1,5 +1,7 @@
 package com.example.habittracker.data.repository
 
+import com.example.habittracker.core.network.ResultData
+import com.example.habittracker.data.api.HabitsApi
 import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.data.room.HabitDao
 import com.example.habittracker.domain.model.Habit
@@ -12,7 +14,8 @@ import kotlinx.coroutines.withContext
 
 class HabitRepositoryImpl(
     private val dao : HabitDao,
-    private val mapper : HabitMapper
+    private val mapper : HabitMapper,
+    private val service : HabitsApi
 ) : HabitsRepository {
 
     override fun getHabits(): Flow<List<Habit>> {
@@ -24,8 +27,22 @@ class HabitRepositoryImpl(
         }
     }
 
+    override suspend fun getHabitsRemote(): ResultData<List<Habit>> =
+        withContext(Dispatchers.IO){
+            try {
+                val response = service.getAllHabits()
+                if (response.isSuccessful) {
+                    return@withContext ResultData.Success(mapper.habitsResponseToHabits(response.body()!!))
+                } else {
+                    return@withContext ResultData.Error(Exception(response.message()))
+                }
+            } catch (e: Exception) {
+                return@withContext ResultData.Error(e)
+            }
+    }
+
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
-    override fun getHabitItem(habitId: Int): Flow<Habit>  {
+    override fun getHabitItem(habitId: String): Flow<Habit>  {
         val habit = dao.getDistinctHabitById(habitId = habitId)
         return habit.map { mapper.habitEntityToHabit(entity = it) }
     }

@@ -22,7 +22,7 @@ class HabitProcessingViewModel(
     private var _habitItem = MutableLiveData<Habit>()
     val habitItem : LiveData<Habit> get() = _habitItem
 
-    fun loadHabitItem(habitId : Int) {
+    fun loadHabitItem(habitId : String) {
         getHabitItemUseCase(habitId = habitId)
             .onEach { _habitItem.value = it}
             .launchIn(viewModelScope)
