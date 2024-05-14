@@ -11,7 +11,7 @@ import retrofit2.http.PUT
 interface HabitsApi
 {
     @GET("habit")
-    suspend fun getAllHabits() : Response<HabitResponse> //TODO: получение списка привычек
+    suspend fun getAllHabits() : Response<HabitResponse>
 
     @PUT("habit")
     suspend fun editHabit(@Body habit : HabitItem) //TODO: редактирование привычки

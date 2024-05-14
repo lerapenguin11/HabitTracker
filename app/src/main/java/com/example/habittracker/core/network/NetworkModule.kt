@@ -38,7 +38,6 @@ class NetworkModule
             .baseUrl(BuildConfig.API_URL)
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(CoroutineCallAdapterFactory())
             .build()

@@ -91,7 +91,7 @@ class TypeHabitsListFragment
     private fun openEditHabit(habit: Habit) {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
-        bundle.putString(HABIT_ID, habit.id)
+        bundle.putString(HABIT_ID, habit.uid)
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }

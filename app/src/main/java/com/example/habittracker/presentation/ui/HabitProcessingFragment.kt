@@ -140,7 +140,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private fun habitProcessing() : Habit =
         with(binding){
             return Habit(
-                id = getIdHabit(),
+                uid = getIdHabit(),
                 title = tiEtNameHabit.text.toString(),
                 description = tiEtDescHabit.text.toString(),
                 type = getSelectedHabitType()!!,

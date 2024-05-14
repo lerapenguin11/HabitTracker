@@ -15,7 +15,7 @@ class HabitMapper
         habitsResponse.forEach {response ->
             val habit = getSelectedHabitPeriod(response.frequency)?.let { period ->
                 Habit(
-                    id = response.uid,
+                    uid = response.uid,
                     title = response.title,
                     description = response.description,
                     type = HabitType.createByType(response.type),
@@ -34,7 +34,7 @@ class HabitMapper
     //TODO:HabitMapperLocal
     fun updateHabitToHabitEntity(habit: Habit) : HabitEntity{
         return HabitEntity(
-            id = habit.id.toLong(),
+            id = habit.uid.toLong(),
             title = habit.title,
             description = habit.description,
             type = habit.type.type,
@@ -42,7 +42,8 @@ class HabitMapper
             numberExecutions = habit.numberExecutions,
             period = habit.period.period,
             color = habit.color,
-            dateCreation = habit.dateCreation
+            dateCreation = habit.dateCreation,
+            uid = habit.uid
         )
     }
 
@@ -55,7 +56,8 @@ class HabitMapper
             numberExecutions = habit.numberExecutions,
             period = habit.period.period,
             color = habit.color,
-            dateCreation = habit.dateCreation
+            dateCreation = habit.dateCreation,
+            uid = habit.uid
         )
     }
 
@@ -66,7 +68,7 @@ class HabitMapper
                     getSelectedHabitType(entity.type)?.let { type ->
                         id?.let { id ->
                             Habit(
-                                id = id.toString(),
+                                uid = id.toString(),
                                 title = entity.title,
                                 description = entity.description,
                                 type = type,
@@ -90,7 +92,7 @@ class HabitMapper
                 getSelectedHabitPriority(entity.habitPriority)?.let { habitPriority ->
                     getSelectedHabitType(entity.type)?.let { type ->
                         Habit(
-                            id = entity.id.toString(),
+                            uid = entity.id.toString(),
                             title = entity.title,
                             description = entity.description,
                             type = type,

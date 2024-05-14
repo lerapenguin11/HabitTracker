@@ -17,5 +17,6 @@ data class HabitEntity(
     val numberExecutions : Int,
     val period : Int,
     val color : Int,
-    val dateCreation : Int
+    val dateCreation : Int,
+    val uid : String
 )
