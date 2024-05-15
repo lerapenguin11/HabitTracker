@@ -37,21 +37,25 @@ class HabitsViewModel(
     private val _filteredHarmfulHabits = MutableLiveData<List<Habit>>(emptyList())
     val filteredHarmfulHabits : LiveData<List<Habit>> = _filteredHarmfulHabits
 
+    val loading = MutableLiveData<Boolean>(true)
+
     init {
-        loadHabitRemoteList()
+        //loadHabitRemoteList()
         listenerFilteredUsefulHabits()
         listenerFilteredHarmfulHabits()
     }
 
-    private fun loadHabitRemoteList() = viewModelScope.launch {
+    fun loadHabitRemoteList() = viewModelScope.launch {
         when(val habitResult = getHabitsRemoteUseCase.invoke()){
-            is ResultData.Success ->{
-                _usefulHabits.value = habitResult.data
+            is ResultData.Success -> {
+                _filteredUsefulHabits.value = habitResult.data!!
+
             }
-            is ResultData.Error ->{
+            is ResultData.Error -> {
                 loadHabitLocalList()
             }
         }
+        loading.value = false
     }
 
     private fun listenerFilteredHarmfulHabits() {

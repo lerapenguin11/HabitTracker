@@ -7,17 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitsBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.TabAdapter
+import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
+import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
+    private val viewModel : HabitsViewModel by activityViewModels {
+        (requireActivity().application as BaseApplication).habitsViewModelFactory
+    }
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -43,6 +49,11 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         binding.bottomSheet.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadHabitRemoteList()
     }
 
     private fun setOnClickListenerFabAddHabit() {
@@ -95,7 +106,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private fun openAddHabit() {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_ADD)
-        view?.findNavController()?.saveState()
+        //view?.findNavController()?.saveState()
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
@@ -23,10 +24,7 @@ class TypeHabitsListFragment
     private val adapter = HabitsAdapter()
     private var habitType : String? = null
     private val viewModel : HabitsViewModel by activityViewModels {
-        HabitsViewModelFactory(
-            (requireActivity().application as BaseApplication).getHabitsUseCase,
-            (requireActivity().application as BaseApplication).getHabitsRemoteUseCase
-        )
+        (requireActivity().application as BaseApplication).habitsViewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,9 +56,13 @@ class TypeHabitsListFragment
 
     private fun observeHabitsUseful(){
         with(viewModel){
-            filteredUsefulHabits.observe(viewLifecycleOwner) {
-                setHabitsRecyclerView(it)
-            }
+            loading.observe(viewLifecycleOwner, Observer {
+                if (!it){
+                    filteredUsefulHabits.observe(viewLifecycleOwner) {
+                        setHabitsRecyclerView(it)
+                    }
+                }
+            })
         }
     }
 
@@ -81,6 +83,7 @@ class TypeHabitsListFragment
     private fun setHabitsRecyclerView(habitList : List<Habit>) = with(binding) {
         handleEmptyListMessageVisibility(habitList = habitList)
         adapter.submitList(habitList)
+        adapter.notifyDataSetChanged()
         rvHabits.adapter = adapter
     }
 

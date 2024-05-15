@@ -2,6 +2,7 @@ package com.example.habittracker.data.api
 
 import com.example.habittracker.data.modelResponse.HabitItem
 import com.example.habittracker.data.modelResponse.HabitResponse
+import com.example.habittracker.data.modelResponse.HabitUIDResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -17,7 +18,7 @@ interface HabitsApi
     suspend fun editHabit(@Body habit : HabitItem) //TODO: редактирование привычки
 
     @PUT("habit")
-    suspend fun createHabit(@Body habit : HabitItem) //TODO: создание привычки
+    suspend fun createHabit(@Body newHabit : HabitItem) : Response<HabitUIDResponse> //TODO: создание привычки
 
     @DELETE("habit")
     suspend fun deleteHabit(@Body uid : String) //TODO: удаление привычки

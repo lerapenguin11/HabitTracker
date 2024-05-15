@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.habittracker.domain.usecase.local.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
+import com.example.habittracker.domain.usecase.remote.CreateHabitRemoteUseCase
 
 class HabitProcessingViewModelFactory(
     private val getHabitItemUseCase: GetHabitItemUseCase,
     private val createHabitUseCase: CreateHabitUseCase,
-    private val updateHabitUseCase: UpdateHabitUseCase
+    private val updateHabitUseCase: UpdateHabitUseCase,
+    private val createHabitRemoteUseCase: CreateHabitRemoteUseCase,
     ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>) : T {
 
@@ -17,7 +19,8 @@ class HabitProcessingViewModelFactory(
             HabitProcessingViewModel(
                 this.createHabitUseCase,
                 this.updateHabitUseCase,
-                this.getHabitItemUseCase) as T
+                this.getHabitItemUseCase,
+                this.createHabitRemoteUseCase) as T
         } else {
             throw IllegalArgumentException("ViewModel Not Found")
         }

@@ -26,10 +26,7 @@ class ModalBottomSheet : Fragment()
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
     private val viewModel : HabitsViewModel by activityViewModels {
-        HabitsViewModelFactory(
-            (requireActivity().application as BaseApplication).getHabitsUseCase,
-            (requireActivity().application as BaseApplication).getHabitsRemoteUseCase
-        )
+        (requireActivity().application as BaseApplication).habitsViewModelFactory
     }
 
     override fun onCreateView(

@@ -1,11 +1,14 @@
 package com.example.habittracker.data.mappers
 
 import com.example.habittracker.data.entity.HabitEntity
+import com.example.habittracker.data.modelResponse.HabitItem
 import com.example.habittracker.data.modelResponse.HabitResponse
+import com.example.habittracker.data.modelResponse.HabitUIDResponse
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitPriority
 import com.example.habittracker.domain.model.HabitRepetitionPeriod
 import com.example.habittracker.domain.model.HabitType
+import com.example.habittracker.domain.model.HabitUID
 
 class HabitMapper
 {
@@ -29,6 +32,39 @@ class HabitMapper
             habit?.let { habits.add(it) }
         }
         return habits
+    }
+
+    fun habitToHabitItem(habit : Habit) : HabitItem {
+        return HabitItem(
+            uid = habit.uid,
+            title = habit.title,
+            description = habit.description,
+            type = 0,
+            priority = 0,
+            count = habit.numberExecutions,
+            frequency = 2131951823,
+            color = habit.color,
+            date = habit.dateCreation,
+            done_dates = emptyList()
+        )
+    }
+
+    fun insertHabitToHabitEntityRemoteTest(habit: Habit, uid : String) : HabitEntity{
+        return HabitEntity(
+            title = habit.title,
+            description = habit.description,
+            type = habit.type.type,
+            habitPriority = habit.habitPriority.priority,
+            numberExecutions = habit.numberExecutions,
+            period = habit.period.period,
+            color = habit.color,
+            dateCreation = habit.dateCreation,
+            uid = uid
+        )
+    }
+
+    fun habitUIDResponseToHabitUID(habitUID: HabitUIDResponse) : HabitUID{
+        return HabitUID(uid = habitUID.uid)
     }
 
     //TODO:HabitMapperLocal

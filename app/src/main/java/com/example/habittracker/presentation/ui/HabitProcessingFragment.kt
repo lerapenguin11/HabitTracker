@@ -11,6 +11,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.example.habittracker.domain.model.HabitPriority
 import com.example.habittracker.R
@@ -24,6 +26,10 @@ import com.example.habittracker.presentation.view.dialog.ExecutionPeriodHabitDia
 import com.example.habittracker.presentation.view.dialog.HabitTypeDialog
 import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModel
 import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.time.delay
 
 class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     HabitTypeDialog.Host, ExecutionPeriodHabitDialog.Host {
@@ -32,11 +38,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayExecutions : String? = null
     private var habitId : String? = null
     private val viewModel : HabitProcessingViewModel by viewModels{
-        HabitProcessingViewModelFactory(
-            (requireActivity().application as BaseApplication).getHabitItemUseCase,
-            (requireActivity().application as BaseApplication).createHabitUseCase,
-            (requireActivity().application as BaseApplication).updateHabitUseCase
-        )
+        (requireActivity().application as BaseApplication).habitProcessingViewModelFactory
     }
 
     private var color : Int = 0
@@ -94,7 +96,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun launchAddHabit(habit : Habit) {
-        viewModel.createHabit(habit = habit)
+        //viewModel.createHabit(habit = habit)
+        viewModel.testCreateHabit(habit = habit)
         view?.findNavController()?.navigateUp()
     }
 
@@ -143,12 +146,12 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 uid = getIdHabit(),
                 title = tiEtNameHabit.text.toString(),
                 description = tiEtDescHabit.text.toString(),
-                type = getSelectedHabitType()!!,
-                habitPriority = getSelectedHabitPriority()!!,
+                type = HabitType.USEFUL,
+                habitPriority = HabitPriority.HIGH,
                 numberExecutions = tvArrayExecutions.text.toString().toInt(),
-                period = getSelectedHabitPeriod()!!,
+                period = HabitRepetitionPeriod.REGULAR,
                 color = color,
-                dateCreation = getDateCreationHabit().toInt()
+                dateCreation = getDateCreationHabit().toInt() //TODO
             )
         }
 

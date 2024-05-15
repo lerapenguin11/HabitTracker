@@ -5,10 +5,10 @@ import com.example.habittracker.data.api.HabitsApi
 import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.data.room.HabitDao
 import com.example.habittracker.domain.model.Habit
+import com.example.habittracker.domain.model.HabitUID
 import com.example.habittracker.domain.repository.HabitsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
@@ -54,5 +54,20 @@ class HabitRepositoryImpl(
     override suspend fun createHabit(newHabit: Habit) = withContext(Dispatchers.IO) {
         dao.insertHabit(mapper.insertHabitToHabitEntity(habit = newHabit))
     }
+
+    override suspend fun createHabitRemote(habit: Habit): ResultData<HabitUID> =
+        withContext(Dispatchers.IO){
+            try {
+                val response = service.createHabit(newHabit = mapper.habitToHabitItem(habit))
+                if (response.isSuccessful){
+                    dao.insertHabit(mapper.insertHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
+                    return@withContext ResultData.Success(mapper.habitUIDResponseToHabitUID(response.body()!!))
+                }else{
+                    return@withContext ResultData.Error(Exception(response.message()))
+                }
+            }catch (e: Exception) {
+                return@withContext ResultData.Error(e)
+            }
+        }
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
 }
