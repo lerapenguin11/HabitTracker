@@ -23,6 +23,9 @@
         android:name="com.example.habittracker.presentation.ui.HabitProcessingFragment"
         android:label="fragment_habit_processing"
         tools:layout="@layout/fragment_habit_processing" >
+        <action
+            android:id="@+id/action_habitProcessingFragment_to_habitsFragment"
+            app:destination="@id/habitsFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutAppFragment"

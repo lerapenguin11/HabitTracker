@@ -2,11 +2,13 @@ package com.example.habittracker.presentation.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habittracker.core.network.ResultData
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
+import com.example.habittracker.domain.usecase.local.GetHabitItemUIDUseCase
 import com.example.habittracker.domain.usecase.local.GetHabitsUseCase
 import com.example.habittracker.domain.usecase.remote.GetHabitsRemoteUseCase
 import com.example.habittracker.presentation.model.FilterParameters
@@ -21,7 +23,8 @@ import kotlinx.coroutines.withContext
 
 class HabitsViewModel(
     private val getHabitsUseCase: GetHabitsUseCase,
-    private val getHabitsRemoteUseCase: GetHabitsRemoteUseCase
+    private val getHabitsRemoteUseCase: GetHabitsRemoteUseCase,
+    private val getHabitItemUIDUseCase: GetHabitItemUIDUseCase
 )
     : ViewModel(){
     private val _filterByDate = MutableLiveData(false)
@@ -38,15 +41,17 @@ class HabitsViewModel(
     val filteredHarmfulHabits : LiveData<List<Habit>> = _filteredHarmfulHabits
 
     init {
+        //loadHabitLocalList()
         loadHabitRemoteList()
         listenerFilteredUsefulHabits()
         listenerFilteredHarmfulHabits()
     }
 
-    private fun loadHabitRemoteList() = viewModelScope.launch {
+    fun loadHabitRemoteList() = viewModelScope.launch(Dispatchers.IO){
         when(val habitResult = getHabitsRemoteUseCase.invoke()){
             is ResultData.Success ->{
                 _usefulHabits.value = habitResult.data
+                //_filteredUsefulHabits.postValue(habitResult.data!!)
             }
             is ResultData.Error ->{
                 loadHabitLocalList()

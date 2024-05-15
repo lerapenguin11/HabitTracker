@@ -2,17 +2,21 @@ package com.example.habittracker.presentation.app
 
 import android.app.Application
 import com.example.habittracker.core.network.NetworkModule
-import com.example.habittracker.data.api.HabitsApi
 import com.example.habittracker.data.api.HabitsApiImpl
 import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.data.repository.HabitRepositoryImpl
 import com.example.habittracker.data.room.HabitDatabase
 import com.example.habittracker.domain.usecase.local.CreateHabitUseCase
+import com.example.habittracker.domain.usecase.local.GetHabitItemUIDUseCase
 import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.local.GetHabitsUseCase
 import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
 import com.example.habittracker.domain.usecase.remote.GetHabitsRemoteUseCase
-import retrofit2.Retrofit
+import com.example.habittracker.domain.usecase.remote.CreateHabitRemoteUseCase
+import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModel
+import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModelFactory
+import com.example.habittracker.presentation.viewmodel.HabitsViewModel
+import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
 
 class BaseApplication : Application()
 {
@@ -26,11 +30,34 @@ class BaseApplication : Application()
 
     private lateinit var mInstance: BaseApplication
 
-    val getHabitsUseCase by lazy { GetHabitsUseCase(repository) }
-    val getHabitsRemoteUseCase by lazy { GetHabitsRemoteUseCase(repository) }
+    private val getHabitsUseCase by lazy { GetHabitsUseCase(repository) }
+    private val getHabitsRemoteUseCase by lazy { GetHabitsRemoteUseCase(repository) }
+    private val getHabitItemUIDUseCase by lazy { GetHabitItemUIDUseCase(repository) }
     val createHabitUseCase by lazy { CreateHabitUseCase(repository) }
     val updateHabitUseCase by lazy { UpdateHabitUseCase(repository) }
     val getHabitItemUseCase by lazy { GetHabitItemUseCase(repository) }
+    val createHabitRemoteUseCase by lazy { CreateHabitRemoteUseCase(repository) }
+
+    val habitProcessingViewModelFactory by lazy { HabitProcessingViewModelFactory(
+        createHabitUseCase = createHabitUseCase,
+        updateHabitUseCase = updateHabitUseCase,
+        getHabitItemUseCase = getHabitItemUseCase,
+        createHabitRemoteUseCase = createHabitRemoteUseCase,
+        habitsViewModel = habitsViewModel
+    ) }
+
+    private val habitsViewModel by lazy { HabitsViewModel(
+        getHabitsUseCase,
+        getHabitsRemoteUseCase,
+        getHabitItemUIDUseCase
+    ) }
+
+    val habitsViewModelFactory by lazy {
+        HabitsViewModelFactory(
+            getHabitsUseCase,
+            getHabitsRemoteUseCase,
+            getHabitItemUIDUseCase)
+    }
 
     override fun onCreate() {
         super.onCreate()

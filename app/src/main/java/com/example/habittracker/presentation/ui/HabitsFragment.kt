@@ -95,7 +95,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private fun openAddHabit() {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_ADD)
-        view?.findNavController()?.saveState()
+        //view?.findNavController()?.saveState()
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }

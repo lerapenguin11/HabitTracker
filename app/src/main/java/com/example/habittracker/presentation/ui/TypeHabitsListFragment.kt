@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
@@ -16,6 +18,8 @@ import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 class TypeHabitsListFragment
     : BaseFragment<FragmentTypeHabitsListBinding>()
@@ -23,10 +27,7 @@ class TypeHabitsListFragment
     private val adapter = HabitsAdapter()
     private var habitType : String? = null
     private val viewModel : HabitsViewModel by activityViewModels {
-        HabitsViewModelFactory(
-            (requireActivity().application as BaseApplication).getHabitsUseCase,
-            (requireActivity().application as BaseApplication).getHabitsRemoteUseCase
-        )
+        (requireActivity().application as BaseApplication).habitsViewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +48,11 @@ class TypeHabitsListFragment
         super.onViewCreated(view, savedInstanceState)
         launchTypeHabit()
         habitClickListener()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        observeHabitsUseful()
     }
 
     private fun launchTypeHabit() {

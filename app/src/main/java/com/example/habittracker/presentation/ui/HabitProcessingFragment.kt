@@ -1,6 +1,7 @@
 package com.example.habittracker.presentation.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.example.habittracker.domain.model.HabitPriority
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitProcessingBinding
@@ -32,11 +34,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayExecutions : String? = null
     private var habitId : String? = null
     private val viewModel : HabitProcessingViewModel by viewModels{
-        HabitProcessingViewModelFactory(
-            (requireActivity().application as BaseApplication).getHabitItemUseCase,
-            (requireActivity().application as BaseApplication).createHabitUseCase,
-            (requireActivity().application as BaseApplication).updateHabitUseCase
-        )
+        (requireActivity().application as BaseApplication).habitProcessingViewModelFactory
     }
 
     private var color : Int = 0
@@ -94,8 +92,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun launchAddHabit(habit : Habit) {
-        viewModel.createHabit(habit = habit)
-        view?.findNavController()?.navigateUp()
+        viewModel.testCreateHabit(habit = habit)
+        view?.findNavController()?.popBackStack()
     }
 
     private fun handleAction() {
@@ -143,10 +141,10 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 uid = getIdHabit(),
                 title = tiEtNameHabit.text.toString(),
                 description = tiEtDescHabit.text.toString(),
-                type = getSelectedHabitType()!!,
-                habitPriority = getSelectedHabitPriority()!!,
+                type = HabitType.HARMFUL,
+                habitPriority = HabitPriority.HIGH,
                 numberExecutions = tvArrayExecutions.text.toString().toInt(),
-                period = getSelectedHabitPeriod()!!,
+                period = HabitRepetitionPeriod.REGULAR,
                 color = color,
                 dateCreation = getDateCreationHabit().toInt()
             )

@@ -1,13 +1,18 @@
 package com.example.habittracker.presentation.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.habittracker.core.network.ResultData
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.usecase.local.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
+import com.example.habittracker.domain.usecase.remote.CreateHabitRemoteUseCase
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -15,12 +20,32 @@ import kotlinx.coroutines.launch
 class HabitProcessingViewModel(
     private val createHabitUseCase : CreateHabitUseCase,
     private val updateHabitUseCase : UpdateHabitUseCase,
-    private val getHabitItemUseCase : GetHabitItemUseCase
+    private val getHabitItemUseCase : GetHabitItemUseCase,
+    private val createHabitRemoteUseCase: CreateHabitRemoteUseCase,
+    private val habitsViewModel: HabitsViewModel
 )
     : ViewModel()
 {
-    private var _habitItem = MutableLiveData<Habit>()
+
+    private val _habitItem = MutableLiveData<Habit>()
     val habitItem : LiveData<Habit> get() = _habitItem
+
+    private val _newHabitUID = MutableLiveData<String>()
+    val newHabitUID : LiveData<String> get() = _newHabitUID
+
+    fun testCreateHabit(habit: Habit) = viewModelScope.launch(Dispatchers.IO) {
+        when (val response = createHabitRemoteUseCase(newHabit = habit)) {
+            is ResultData.Success -> {
+                //_newHabitUID.value = response.data.uid
+                habitsViewModel.loadHabitRemoteList()
+                Log.d("ADD HABIT: ", response.data.toString())
+            }
+
+            is ResultData.Error -> {
+                Log.e("ADD HABIT ERROR: ", response.exception.toString())
+            }
+        }
+    }
 
     fun loadHabitItem(habitId : String) {
         getHabitItemUseCase(habitId = habitId)
