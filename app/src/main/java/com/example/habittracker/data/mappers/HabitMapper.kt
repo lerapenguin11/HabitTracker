@@ -13,54 +13,9 @@ import com.example.habittracker.domain.model.HabitUID
 class HabitMapper
 {
     //TODO:HabitMapperRemote
-    fun habitsResponseToHabits(habitsResponse : HabitResponse) : List<Habit>{
-        val habits = mutableListOf<Habit>()
-        habitsResponse.forEach {response ->
-            val habit = Habit(
-                uid = response.uid,
-                title = response.title,
-                description = response.description,
-                type = HabitType.createByType(response.type),
-                habitPriority = HabitPriority.createByPriority(response.priority),
-                numberExecutions = response.count,
-                period = HabitRepetitionPeriod.createByPeriod(response.frequency),
-                color = response.color,
-                dateCreation = response.date
-            )
-            habits.add(habit)
-        }
-        return habits
-    }
 
-    fun createHabitToHabitItem(habit : Habit) : HabitItem {
-        return HabitItem(
-            uid = habit.uid,
-            title = habit.title,
-            description = habit.description,
-            type = 0,
-            priority = 0,
-            count = habit.numberExecutions,
-            frequency = 0, //TODO
-            color = habit.color,
-            date = habit.dateCreation,
-            done_dates = emptyList()
-        )
-    }
 
-    fun updateHabitToHabitItem(habit : Habit) : HabitItem {
-        return HabitItem(
-            uid = habit.uid,
-            title = habit.title,
-            description = habit.description,
-            type = 0,
-            priority = 0,
-            count = habit.numberExecutions,
-            frequency = 0, //TODO
-            color = habit.color,
-            date = (System.currentTimeMillis()/1000).toInt(),
-            done_dates = emptyList()
-        )
-    }
+
 
     fun insertHabitToHabitEntityRemoteTest(habit: Habit, uid : String) : HabitEntity{
         return HabitEntity(
@@ -100,10 +55,10 @@ class HabitMapper
             id = entity.id,
             title = entity.title,
             description = entity.description,
-            type = HabitType.createByType(entity.type),
-            habitPriority = HabitPriority.createByPriority(entity.habitPriority),
+            type = HabitType.codeByType(entity.type),
+            habitPriority = HabitPriority.codeByPriority(entity.habitPriority),
             numberExecutions = entity.numberExecutions,
-            period = HabitRepetitionPeriod.createByPeriod(entity.period),
+            period = HabitRepetitionPeriod.codeByPeriod(entity.period),
             color = entity.color,
             dateCreation = entity.dateCreation,
             uid = entity.uid

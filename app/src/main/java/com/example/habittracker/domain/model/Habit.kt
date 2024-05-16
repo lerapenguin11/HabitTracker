@@ -28,11 +28,19 @@ enum class HabitPriority(val priority : Int){
     LOW(R.string.text_low);
 
     companion object {
-        fun createByPriority(ordinal: Int): HabitPriority {
+        fun codeByPriority(ordinal: Int): HabitPriority {
             return when (ordinal) {
                 0 -> MEDIUM
                 1 -> LOW
                 else -> HIGH
+            }
+        }
+
+        fun priorityByCode(ordinal : HabitPriority) : Int{
+            return when(ordinal){
+                MEDIUM -> 0
+                LOW -> 1
+                HIGH -> 2
             }
         }
     }
@@ -43,10 +51,17 @@ enum class HabitType(val type : Int){
     HARMFUL(R.string.text_harmful);
 
     companion object {
-        fun createByType(ordinal: Int): HabitType {
+        fun codeByType(ordinal: Int): HabitType {
             return when (ordinal) {
                 1 -> USEFUL
                 else -> HARMFUL
+            }
+        }
+
+        fun typeByCode(ordinal: HabitType) : Int{
+            return when(ordinal){
+                HARMFUL -> 0
+                USEFUL -> 1
             }
         }
     }
@@ -57,10 +72,17 @@ enum class HabitRepetitionPeriod(val period: Int){
     ONE_TIME(R.string.text_on_time);
 
     companion object{
-        fun createByPeriod(ordinal: Int) : HabitRepetitionPeriod{
+        fun codeByPeriod(ordinal: Int) : HabitRepetitionPeriod{
             return when(ordinal){
                 0 -> REGULAR
                 else -> ONE_TIME
+            }
+        }
+
+        fun periodByCode(ordinal : HabitRepetitionPeriod) : Int{
+            return when(ordinal){
+                REGULAR -> 0
+                ONE_TIME -> 1
             }
         }
     }
