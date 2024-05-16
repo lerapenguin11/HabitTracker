@@ -77,8 +77,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private fun saveHabit() {
         binding.btSaveHabit.setOnClickListener {
             when(screenMode){
-                MODE_ADD -> launchAddHabit(habitProcessing())
-                MODE_EDIT -> launchUpdateHabit(habitProcessing())
+                MODE_ADD -> launchAddHabit(createHabitProcessing())
+                MODE_EDIT -> launchUpdateHabit(updateHabitProcessing())
             }
         }
     }
@@ -135,9 +135,25 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         btSaveHabit.isEnabled = true
     }
 
-    private fun habitProcessing() : Habit =
+    private fun createHabitProcessing() : Habit =
         with(binding){
             return Habit(
+                uid = getIdHabit(),
+                title = tiEtNameHabit.text.toString(),
+                description = tiEtDescHabit.text.toString(),
+                type = HabitType.USEFUL,
+                habitPriority = HabitPriority.HIGH,
+                numberExecutions = tvArrayExecutions.text.toString().toInt(),
+                period = HabitRepetitionPeriod.REGULAR,
+                color = color,
+                dateCreation = 1715797471 //getDateCreationHabit().toInt() //TODO
+            )
+        }
+
+    private fun updateHabitProcessing() : Habit =
+        with(binding){
+            return Habit(
+                id = viewModel.habitItem.value?.id,
                 uid = getIdHabit(),
                 title = tiEtNameHabit.text.toString(),
                 description = tiEtDescHabit.text.toString(),

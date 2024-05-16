@@ -48,8 +48,7 @@ class HabitsViewModel(
     fun loadHabitRemoteList() = viewModelScope.launch {
         when(val habitResult = getHabitsRemoteUseCase.invoke()){
             is ResultData.Success -> {
-               _usefulHabits.value = habitResult.data
-
+              _usefulHabits.value = habitResult.data
             }
             is ResultData.Error -> {
                 loadHabitLocalList()

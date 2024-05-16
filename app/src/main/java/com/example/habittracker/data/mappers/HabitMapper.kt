@@ -76,6 +76,21 @@ class HabitMapper
         )
     }
 
+    fun updateHabitToHabitEntityRemoteTest(habit: Habit, uid : String) : HabitEntity{
+        return HabitEntity(
+            title = habit.title,
+            description = habit.description,
+            type = habit.type.type,
+            habitPriority = habit.habitPriority.priority,
+            numberExecutions = habit.numberExecutions,
+            period = habit.period.period,
+            color = habit.color,
+            dateCreation = habit.dateCreation,
+            uid = uid,
+            id = habit.id
+        )
+    }
+
     fun habitUIDResponseToHabitUID(habitUID: HabitUIDResponse) : HabitUID{
         return HabitUID(uid = habitUID.uid)
     }

@@ -62,7 +62,7 @@ class HabitRepositoryImpl(
             try {
                 val response = service.editHabit(habit = mapper.updateHabitToHabitItem(habit))
                 if (response.isSuccessful){
-                    dao.updateHabit(mapper.insertHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
+                    dao.updateHabit(mapper.updateHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
                     return@withContext ResultData.Success(mapper.habitUIDResponseToHabitUID(response.body()!!))
                 }else{
                     return@withContext ResultData.Error(Exception(response.message()))
