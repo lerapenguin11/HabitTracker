@@ -15,10 +15,10 @@ interface HabitsApi
     suspend fun getAllHabits() : Response<HabitResponse>
 
     @PUT("habit")
-    suspend fun editHabit(@Body habit : HabitItem) //TODO: редактирование привычки
+    suspend fun editHabit(@Body habit : HabitItem) : Response<HabitUIDResponse> //TODO: редактирование привычки
 
     @PUT("habit")
-    suspend fun createHabit(@Body newHabit : HabitItem) : Response<HabitUIDResponse> //TODO: создание привычки
+    suspend fun createHabit(@Body newHabit : HabitItem) : Response<HabitUIDResponse>
 
     @DELETE("habit")
     suspend fun deleteHabit(@Body uid : String) //TODO: удаление привычки

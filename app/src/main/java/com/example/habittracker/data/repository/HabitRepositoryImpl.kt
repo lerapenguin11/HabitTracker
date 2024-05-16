@@ -47,8 +47,29 @@ class HabitRepositoryImpl(
         return habit.map { mapper.habitEntityToHabit(entity = it) }
     }
 
+    override fun getHabitItemByUID(uid: String): Flow<Habit> {
+        val habit = dao.getDistinctHabitByUID(uid = uid)
+        return habit.map { mapper.habitToHabitEntityRemote( it) }
+    }
+
     override suspend fun updateHabit(habit: Habit) = withContext(Dispatchers.IO) {
         dao.updateHabit(mapper.updateHabitToHabitEntity(habit = habit))
+    }
+
+    //TODO: обновление привычки
+    override suspend fun updateHabitRemote(habit: Habit): ResultData<HabitUID> =
+        withContext(Dispatchers.IO){
+            try {
+                val response = service.editHabit(habit = mapper.updateHabitToHabitItem(habit))
+                if (response.isSuccessful){
+                    dao.updateHabit(mapper.insertHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
+                    return@withContext ResultData.Success(mapper.habitUIDResponseToHabitUID(response.body()!!))
+                }else{
+                    return@withContext ResultData.Error(Exception(response.message()))
+                }
+            }catch (e: Exception) {
+                return@withContext ResultData.Error(e)
+            }
     }
 
     override suspend fun createHabit(newHabit: Habit) = withContext(Dispatchers.IO) {
@@ -58,7 +79,7 @@ class HabitRepositoryImpl(
     override suspend fun createHabitRemote(habit: Habit): ResultData<HabitUID> =
         withContext(Dispatchers.IO){
             try {
-                val response = service.createHabit(newHabit = mapper.habitToHabitItem(habit))
+                val response = service.createHabit(newHabit = mapper.createHabitToHabitItem(habit))
                 if (response.isSuccessful){
                     dao.insertHabit(mapper.insertHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
                     return@withContext ResultData.Success(mapper.habitUIDResponseToHabitUID(response.body()!!))

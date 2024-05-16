@@ -12,7 +12,9 @@ import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.local.GetHabitsUseCase
 import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
 import com.example.habittracker.domain.usecase.remote.CreateHabitRemoteUseCase
+import com.example.habittracker.domain.usecase.remote.GetHabitByUIDUseCase
 import com.example.habittracker.domain.usecase.remote.GetHabitsRemoteUseCase
+import com.example.habittracker.domain.usecase.remote.UpdateHabitRemoteUseCase
 import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModelFactory
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
@@ -36,13 +38,17 @@ class BaseApplication : Application()
     private val updateHabitUseCase by lazy { UpdateHabitUseCase(repository) }
     private val getHabitItemUseCase by lazy { GetHabitItemUseCase(repository) }
     private val createHabitRemoteUseCase by lazy { CreateHabitRemoteUseCase(repository) }
+    private val updateHabitRemoteUseCase by lazy { UpdateHabitRemoteUseCase(repository) }
+    private val getHabitByUIDUseCase by lazy { GetHabitByUIDUseCase(repository) }
 
 
     val habitProcessingViewModelFactory by lazy { HabitProcessingViewModelFactory(
         createHabitUseCase = createHabitUseCase,
         updateHabitUseCase = updateHabitUseCase,
         getHabitItemUseCase = getHabitItemUseCase,
-        createHabitRemoteUseCase = createHabitRemoteUseCase
+        createHabitRemoteUseCase = createHabitRemoteUseCase,
+        updateHabitRemoteUseCase = updateHabitRemoteUseCase,
+        getHabitByUIDUseCase = getHabitByUIDUseCase
     ) }
 
     private val habitsViewModel by lazy { HabitsViewModel(

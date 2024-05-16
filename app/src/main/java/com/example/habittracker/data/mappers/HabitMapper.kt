@@ -16,25 +16,23 @@ class HabitMapper
     fun habitsResponseToHabits(habitsResponse : HabitResponse) : List<Habit>{
         val habits = mutableListOf<Habit>()
         habitsResponse.forEach {response ->
-            val habit = getSelectedHabitPeriod(response.frequency)?.let { period ->
-                Habit(
-                    uid = response.uid,
-                    title = response.title,
-                    description = response.description,
-                    type = HabitType.createByType(response.type),
-                    habitPriority = HabitPriority.createByPriority(response.priority),
-                    numberExecutions = response.count,
-                    period = period,
-                    color = response.color,
-                    dateCreation = response.date
-                )
-            }
-            habit?.let { habits.add(it) }
+            val habit = Habit(
+                uid = response.uid,
+                title = response.title,
+                description = response.description,
+                type = HabitType.createByType(response.type),
+                habitPriority = HabitPriority.createByPriority(response.priority),
+                numberExecutions = response.count,
+                period = HabitRepetitionPeriod.createByPeriod(response.frequency),
+                color = response.color,
+                dateCreation = response.date
+            )
+            habits.add(habit)
         }
         return habits
     }
 
-    fun habitToHabitItem(habit : Habit) : HabitItem {
+    fun createHabitToHabitItem(habit : Habit) : HabitItem {
         return HabitItem(
             uid = habit.uid,
             title = habit.title,
@@ -42,9 +40,24 @@ class HabitMapper
             type = 0,
             priority = 0,
             count = habit.numberExecutions,
-            frequency = 2131951823,
+            frequency = 0, //TODO
             color = habit.color,
             date = habit.dateCreation,
+            done_dates = emptyList()
+        )
+    }
+
+    fun updateHabitToHabitItem(habit : Habit) : HabitItem {
+        return HabitItem(
+            uid = habit.uid,
+            title = habit.title,
+            description = habit.description,
+            type = 0,
+            priority = 0,
+            count = habit.numberExecutions,
+            frequency = 0, //TODO
+            color = habit.color,
+            date = (System.currentTimeMillis()/1000).toInt(),
             done_dates = emptyList()
         )
     }
@@ -67,10 +80,25 @@ class HabitMapper
         return HabitUID(uid = habitUID.uid)
     }
 
+    fun habitToHabitEntityRemote(entity: HabitEntity) : Habit{
+        return Habit(
+            id = entity.id,
+            title = entity.title,
+            description = entity.description,
+            type = HabitType.createByType(entity.type),
+            habitPriority = HabitPriority.createByPriority(entity.habitPriority),
+            numberExecutions = entity.numberExecutions,
+            period = HabitRepetitionPeriod.createByPeriod(entity.period),
+            color = entity.color,
+            dateCreation = entity.dateCreation,
+            uid = entity.uid
+        )
+    }
+
     //TODO:HabitMapperLocal
     fun updateHabitToHabitEntity(habit: Habit) : HabitEntity{
         return HabitEntity(
-            id = habit.uid.toLong(),
+            id = habit.id,
             title = habit.title,
             description = habit.description,
             type = habit.type.type,

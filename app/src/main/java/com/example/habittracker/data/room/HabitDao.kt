@@ -19,6 +19,9 @@ interface HabitDao
     @Query("SELECT * FROM habits WHERE id = :habitId")
     fun getHabitById(habitId : String) : Flow<HabitEntity>
 
+    @Query("SELECT * FROM habits WHERE uid = :uid")
+    fun getHabitByUID(uid : String) : Flow<HabitEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabit(habit : HabitEntity)
 
@@ -34,6 +37,10 @@ interface HabitDao
 
     fun getDistinctHabitById(habitId : String):
             Flow<HabitEntity> = getHabitById(habitId = habitId)
+        .distinctUntilChanged()
+
+    fun getDistinctHabitByUID(uid : String):
+            Flow<HabitEntity> = getHabitByUID(uid = uid)
         .distinctUntilChanged()
 
     /*@Query("SELECT * FROM habits WHERE id = :id")

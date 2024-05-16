@@ -53,7 +53,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadHabitRemoteList()
+        viewModel.loadHabitRemoteList() //TODO
     }
 
     private fun setOnClickListenerFabAddHabit() {

@@ -13,7 +13,7 @@ class HabitsApiImpl(retrofit: Retrofit) : HabitsApi {
         return apiService.getAllHabits()
     }
 
-    override suspend fun editHabit(habit: HabitItem) {
+    override suspend fun editHabit(habit: HabitItem) : Response<HabitUIDResponse>{
         return apiService.editHabit(habit = habit)
     }
 

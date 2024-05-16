@@ -54,5 +54,14 @@ enum class HabitType(val type : Int){
 
 enum class HabitRepetitionPeriod(val period: Int){
     REGULAR(R.string.text_regular),
-    ONE_TIME(R.string.text_on_time)
+    ONE_TIME(R.string.text_on_time);
+
+    companion object{
+        fun createByPeriod(ordinal: Int) : HabitRepetitionPeriod{
+            return when(ordinal){
+                0 -> REGULAR
+                else -> ONE_TIME
+            }
+        }
+    }
 }

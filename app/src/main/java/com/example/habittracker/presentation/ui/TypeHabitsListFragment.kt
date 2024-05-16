@@ -16,7 +16,6 @@ import com.example.habittracker.presentation.adapter.HabitsAdapter
 import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
-import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
 
 class TypeHabitsListFragment
     : BaseFragment<FragmentTypeHabitsListBinding>()
@@ -76,14 +75,15 @@ class TypeHabitsListFragment
 
     private fun habitClickListener() {
         adapter.onHabitListClickListener = {habit ->
-            openEditHabit(habit)
+            if (!habit.uid.isNullOrEmpty()){
+                openEditHabitByUID(habit)
+            }
         }
     }
 
     private fun setHabitsRecyclerView(habitList : List<Habit>) = with(binding) {
         handleEmptyListMessageVisibility(habitList = habitList)
         adapter.submitList(habitList)
-        adapter.notifyDataSetChanged()
         rvHabits.adapter = adapter
     }
 
@@ -91,10 +91,10 @@ class TypeHabitsListFragment
         tvTextNoHabits.isVisible = habitList.isEmpty()
     }
 
-    private fun openEditHabit(habit: Habit) {
+    private fun openEditHabitByUID(habit: Habit) {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
-        bundle.putString(HABIT_ID, habit.uid)
+        bundle.putString(HABIT_UID, habit.uid) //TODO
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
@@ -107,7 +107,7 @@ class TypeHabitsListFragment
     companion object{
         private const val MODE_EDIT = "mode_edit"
         private const val SCREEN_MODE = "screen_mode"
-        private const val HABIT_ID = "update_habit"
+        private const val HABIT_UID = "update_habit"
         private const val TYPE_HABITS = "type_habits"
     }
 }

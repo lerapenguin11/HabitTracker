@@ -11,8 +11,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.example.habittracker.domain.model.HabitPriority
 import com.example.habittracker.R
@@ -25,18 +23,13 @@ import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.view.dialog.ExecutionPeriodHabitDialog
 import com.example.habittracker.presentation.view.dialog.HabitTypeDialog
 import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModel
-import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModelFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.time.delay
 
 class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     HabitTypeDialog.Host, ExecutionPeriodHabitDialog.Host {
     private var screenMode : String? = null
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
-    private var habitId : String? = null
+    private var habitUId : String? = null
     private val viewModel : HabitProcessingViewModel by viewModels{
         (requireActivity().application as BaseApplication).habitProcessingViewModelFactory
     }
@@ -47,7 +40,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         super.onCreate(savedInstanceState)
         arguments?.let { bundle ->
             screenMode = bundle.getString(SCREEN_MODE)
-            habitId = bundle.getString(HABIT_ID)
+            habitUId = bundle.getString(HABIT_UID)
         }
     }
 
@@ -91,13 +84,14 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun launchUpdateHabit(habit : Habit) {
-        viewModel.updateHabit(habit = habit)
+        //viewModel.updateHabit(habit = habit)
+        viewModel.remoteUpdateHabit(habit = habit)
         view?.findNavController()?.navigateUp()
     }
 
     private fun launchAddHabit(habit : Habit) {
         //viewModel.createHabit(habit = habit)
-        viewModel.testCreateHabit(habit = habit)
+        viewModel.remoteCreateHabit(habit = habit)
         view?.findNavController()?.navigateUp()
     }
 
@@ -118,8 +112,9 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun observeHabitData() = with(viewModel) {
-        habitId?.let {
-            loadHabitItem(habitId = habitId!!)
+        habitUId?.let {
+            //loadHabitItem(habitId = habitId!!)
+            loadHabitItemByUID(habitUID = habitUId!!)
             habitItem.observe(viewLifecycleOwner) { habit ->
                 setHabitData(habit)
             }
@@ -131,10 +126,10 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             binding.tiEtNameHabit.setText(habit.title)
             binding.tiEtDescHabit.setText(habit.description)
             binding.tvArrayPriority.setText(habit.habitPriority.priority)
-            binding.tvArrayExecutions.setText(habit.numberExecutions)
+            binding.tvArrayExecutions.setText(habit.numberExecutions.toString())
             binding.tiEtTypeHabit.setText(habit.type.type)
             binding.tiEtFrequency.setText(habit.period.period)
-            itemArrayPriority = requireContext().getString(habit.habitPriority.priority)
+            //itemArrayPriority = requireContext().getString(habit.habitPriority.priority)
             itemArrayExecutions = habit.numberExecutions.toString()
         }
         btSaveHabit.isEnabled = true
@@ -151,7 +146,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 numberExecutions = tvArrayExecutions.text.toString().toInt(),
                 period = HabitRepetitionPeriod.REGULAR,
                 color = color,
-                dateCreation = getDateCreationHabit().toInt() //TODO
+                dateCreation = 1715797471 //getDateCreationHabit().toInt() //TODO
             )
         }
 
@@ -164,10 +159,10 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun getIdHabit(): String {
-        return if (habitId == null){
+        return if (habitUId == null){
             Habit.UNDEFINED_ID
         } else{
-            habitId!!
+            habitUId!!
         }
     }
 
@@ -269,7 +264,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         private const val MODE_EDIT = "mode_edit"
         private const val MODE_ADD = "mode_add"
         private const val SCREEN_MODE = "screen_mode"
-        private const val HABIT_ID = "update_habit"
+        private const val HABIT_UID = "update_habit"
     }
 
     override fun typeSelection(text: String) =
