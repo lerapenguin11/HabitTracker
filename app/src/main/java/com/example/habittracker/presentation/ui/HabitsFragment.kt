@@ -1,10 +1,14 @@
 package com.example.habittracker.presentation.ui
 
+import RoundedTransformation
+import android.graphics.Canvas
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
@@ -19,6 +23,9 @@ import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
+import com.squareup.picasso.Picasso
+import com.squareup.picasso.Transformation
+
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private val viewModel : HabitsViewModel by activityViewModels {
@@ -39,6 +46,31 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
+        setAvatar()
+    }
+
+    private fun setAvatar() {
+        binding.btOpenNavigation.setOnClickListener {
+            binding.amogus.openDrawer(Gravity.LEFT)
+        }
+        val headerLayout = binding.navigationView.getHeaderView(0)
+
+        val avatarImageView = headerLayout.findViewById<ImageView>(R.id.avatar_image)
+
+        val imageViewDimensionSize = 300
+
+        avatarImageView.maxHeight = imageViewDimensionSize
+        avatarImageView.maxWidth = imageViewDimensionSize
+        avatarImageView.minimumHeight = imageViewDimensionSize
+        avatarImageView.minimumWidth = imageViewDimensionSize
+
+        Picasso.with(context)
+            .load("https://placehold.co/600x400.png")
+            .resize(imageViewDimensionSize, imageViewDimensionSize)
+            .error(R.drawable.ic_clear)
+            .placeholder(R.drawable.loading)
+            .transform(RoundedTransformation(150, 4))
+            .into(avatarImageView)
     }
 
     private fun initBottomSheet() {

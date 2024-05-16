@@ -148,6 +148,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:menu="@menu/menu_navigation_view"
+        app:headerLayout="@layout/header_layout"
         app:itemTextAppearance="@font/roboto_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
