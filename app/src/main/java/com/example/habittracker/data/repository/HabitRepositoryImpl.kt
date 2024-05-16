@@ -8,9 +8,11 @@ import com.example.habittracker.data.room.HabitDao
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitUID
 import com.example.habittracker.domain.repository.HabitsRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HabitRepositoryImpl(
@@ -20,6 +22,7 @@ class HabitRepositoryImpl(
     private val service : HabitsApi
 ) : HabitsRepository {
 
+    //TODO: доделать выгрузку
     override fun getHabits(): Flow<List<Habit>> {
         val allHabits = dao.getDistinctAllHabits()
         return allHabits

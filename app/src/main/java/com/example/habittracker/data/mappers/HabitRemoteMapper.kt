@@ -1,5 +1,6 @@
 package com.example.habittracker.data.mappers
 
+import com.example.habittracker.data.entity.HabitEntity
 import com.example.habittracker.data.modelResponse.HabitItem
 import com.example.habittracker.data.modelResponse.HabitResponse
 import com.example.habittracker.domain.model.Habit

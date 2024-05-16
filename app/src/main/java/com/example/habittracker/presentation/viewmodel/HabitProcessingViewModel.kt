@@ -44,6 +44,7 @@ class HabitProcessingViewModel(
             }
 
             is ResultData.Error -> {
+                createHabit(habit)
                 Log.e("ADD HABIT ERROR: ", response.exception.toString())
             }
         }
@@ -56,6 +57,7 @@ class HabitProcessingViewModel(
                 Log.d("ADD HABIT: ", response.data.toString())
             }
             is ResultData.Error ->{
+                updateHabit(habit)
                 Log.e("UPDATE HABIT ERROR: ", response.exception.toString())
             }
         }
