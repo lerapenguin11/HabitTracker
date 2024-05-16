@@ -22,10 +22,10 @@ data class Habit(
     }
 }
 
-enum class HabitPriority(val priority : Int){
-    HIGH(R.string.text_high),
-    MEDIUM(R.string.text_medium),
-    LOW(R.string.text_low);
+enum class HabitPriority(val priority : String){
+    HIGH("Высокий"),
+    MEDIUM("Средний"),
+    LOW("Низкий");
 
     companion object {
         fun codeByPriority(ordinal: Int): HabitPriority {
@@ -43,12 +43,20 @@ enum class HabitPriority(val priority : Int){
                 HIGH -> 2
             }
         }
+
+        fun lineByPriority(ordinal: String) : HabitPriority{
+            return when(ordinal){
+                MEDIUM.priority -> MEDIUM
+                LOW.priority -> LOW
+                else -> {HIGH}
+            }
+        }
     }
 }
 
-enum class HabitType(val type : Int){
-    USEFUL(R.string.text_useful),
-    HARMFUL(R.string.text_harmful);
+enum class HabitType(val type : String){
+    USEFUL("Полезная"),
+    HARMFUL("Вредная");
 
     companion object {
         fun codeByType(ordinal: Int): HabitType {
@@ -64,12 +72,19 @@ enum class HabitType(val type : Int){
                 USEFUL -> 1
             }
         }
+
+        fun lineByType(ordinal: String) : HabitType{
+            return when(ordinal){
+                HARMFUL.type -> HARMFUL
+                else -> {USEFUL}
+            }
+        }
     }
 }
 
-enum class HabitRepetitionPeriod(val period: Int){
-    REGULAR(R.string.text_regular),
-    ONE_TIME(R.string.text_on_time);
+enum class HabitRepetitionPeriod(val period: String){
+    REGULAR("Регулярная"),
+    ONE_TIME("Разовая");
 
     companion object{
         fun codeByPeriod(ordinal: Int) : HabitRepetitionPeriod{
@@ -83,6 +98,13 @@ enum class HabitRepetitionPeriod(val period: Int){
             return when(ordinal){
                 REGULAR -> 0
                 ONE_TIME -> 1
+            }
+        }
+
+        fun lineByPeriod(ordinal: String) : HabitRepetitionPeriod{
+            return when(ordinal){
+                REGULAR.period -> REGULAR
+                else -> {ONE_TIME}
             }
         }
     }

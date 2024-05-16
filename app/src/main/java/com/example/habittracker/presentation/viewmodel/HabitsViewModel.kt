@@ -39,8 +39,9 @@ class HabitsViewModel(
 
     val loading = MutableLiveData<Boolean>(true)
 
+    val test = MutableStateFlow<List<Habit>>(emptyList())
+
     init {
-        //loadHabitRemoteList()
         listenerFilteredUsefulHabits()
         listenerFilteredHarmfulHabits()
     }
@@ -48,13 +49,37 @@ class HabitsViewModel(
     fun loadHabitRemoteList() = viewModelScope.launch {
         when(val habitResult = getHabitsRemoteUseCase.invoke()){
             is ResultData.Success -> {
-              _usefulHabits.value = habitResult.data
+              //_usefulHabits.value = habitResult.data
+                test.value = habitResult.data
+                load()
             }
             is ResultData.Error -> {
                 loadHabitLocalList()
             }
         }
         loading.value = false
+    }
+
+    private fun load() {
+        combine(test){ allHabits ->
+            Pair(
+                withContext(Dispatchers.Default){
+                    allHabits.flatMap {
+                            habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
+
+                },
+                withContext(Dispatchers.Default){
+                    allHabits.flatMap {
+                            habits -> habits.filter { habit -> habit.type == HabitType.HARMFUL } }
+                }
+            )
+        }
+            .distinctUntilChanged()
+            .onEach { (useful, harmful) ->
+                _usefulHabits.value = useful
+                _harmfulHabits.value = harmful
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun listenerFilteredHarmfulHabits() {
@@ -113,7 +138,7 @@ class HabitsViewModel(
         return filteredAllHabits
     }
 
-    private fun List<Habit>.filterByFrequency(valueFilter: Int): MutableList<Habit> {
+    private fun List<Habit>.filterByFrequency(valueFilter: String): MutableList<Habit> {
         val filteredAllHabits: MutableList<Habit> = this.filter{
             it.period.period == valueFilter
         }.toMutableList()
@@ -188,7 +213,7 @@ class HabitsViewModel(
         filters.value = newFilter
     }
 
-    fun searchByFrequency(frequency : Int){
+    fun searchByFrequency(frequency : String){
         val currentFilter = filters.value
         val newFilter = FilterParameters(
             habitFrequency = frequency,

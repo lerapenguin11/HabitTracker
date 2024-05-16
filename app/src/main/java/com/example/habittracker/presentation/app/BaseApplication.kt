@@ -55,7 +55,7 @@ class BaseApplication : Application()
     val habitsViewModelFactory by lazy {
         HabitsViewModelFactory(
             getHabitsUseCase,
-            getHabitsRemoteUseCase,)
+            getHabitsRemoteUseCase)
     }
 
     override fun onCreate() {

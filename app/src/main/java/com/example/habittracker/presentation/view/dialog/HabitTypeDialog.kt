@@ -14,9 +14,8 @@ internal class HabitTypeDialog : DialogFragment()
         fun typeSelection(text: String)
     }
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val singleItems = arrayOf(
-            requireContext().getString(HabitType.HARMFUL.type),
-            requireContext().getString(HabitType.USEFUL.type))
+        val singleItems = arrayOf(HabitType.HARMFUL.type,
+            HabitType.USEFUL.type)
         val checkedItem = intArrayOf(checkedTypeNumber)
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlayAppMaterialAlertDialog)
             .setTitle(resources.getString(R.string.text_choose_type_habit))

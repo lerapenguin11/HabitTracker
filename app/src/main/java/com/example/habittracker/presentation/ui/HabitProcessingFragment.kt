@@ -137,32 +137,38 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun createHabitProcessing() : Habit =
         with(binding){
+            val habitPriority = tvArrayPriority.text.toString()
+            val type = tiEtTypeHabit.text.toString()
+            val period = tiEtFrequency.text.toString()
             return Habit(
                 uid = getIdHabit(),
                 title = tiEtNameHabit.text.toString(),
                 description = tiEtDescHabit.text.toString(),
-                type = HabitType.USEFUL,
-                habitPriority = HabitPriority.HIGH,
+                type = HabitType.lineByType(type),
+                habitPriority = HabitPriority.lineByPriority(habitPriority),
                 numberExecutions = tvArrayExecutions.text.toString().toInt(),
-                period = HabitRepetitionPeriod.REGULAR,
+                period = HabitRepetitionPeriod.lineByPeriod(period),
                 color = color,
-                dateCreation = 1715797471 //getDateCreationHabit().toInt() //TODO
+                dateCreation = (System.currentTimeMillis()/1000).toInt()
             )
         }
 
     private fun updateHabitProcessing() : Habit =
         with(binding){
+            val habitPriority = tvArrayPriority.text.toString()
+            val type = tiEtTypeHabit.text.toString()
+            val period = tiEtFrequency.text.toString()
             return Habit(
                 id = viewModel.habitItem.value?.id,
                 uid = getIdHabit(),
                 title = tiEtNameHabit.text.toString(),
                 description = tiEtDescHabit.text.toString(),
-                type = HabitType.USEFUL,
-                habitPriority = HabitPriority.HIGH,
+                type = HabitType.lineByType(type),
+                habitPriority = HabitPriority.lineByPriority(habitPriority),
                 numberExecutions = tvArrayExecutions.text.toString().toInt(),
-                period = HabitRepetitionPeriod.REGULAR,
+                period = HabitRepetitionPeriod.lineByPeriod(period),
                 color = color,
-                dateCreation = 1715797471 //getDateCreationHabit().toInt() //TODO
+                dateCreation = getDateCreationHabit().toInt()
             )
         }
 
@@ -179,31 +185,6 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             Habit.UNDEFINED_ID
         } else{
             habitUId!!
-        }
-    }
-
-    private fun getSelectedHabitPriority() : HabitPriority?{
-        return when(binding.tvArrayPriority.text.toString()){
-            requireContext().getString(HabitPriority.HIGH.priority) -> HabitPriority.HIGH
-            requireContext().getString(HabitPriority.LOW.priority) -> HabitPriority.LOW
-            requireContext().getString(HabitPriority.MEDIUM.priority) -> HabitPriority.MEDIUM
-            else -> null
-        }
-    }
-
-    private fun getSelectedHabitPeriod(): HabitRepetitionPeriod? {
-        return when(binding.tiEtFrequency.text.toString()){
-            requireContext().getString(HabitRepetitionPeriod.REGULAR.period) -> HabitRepetitionPeriod.REGULAR
-            requireContext().getString(HabitRepetitionPeriod.ONE_TIME.period) -> HabitRepetitionPeriod.ONE_TIME
-            else -> null
-        }
-    }
-
-    private fun getSelectedHabitType() : HabitType? {
-        return when(binding.tiEtTypeHabit.text.toString()){
-            requireContext().getString(HabitType.USEFUL.type) -> HabitType.USEFUL
-            requireContext().getString(HabitType.HARMFUL.type) -> HabitType.HARMFUL
-            else -> null
         }
     }
 

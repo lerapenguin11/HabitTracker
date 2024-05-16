@@ -168,13 +168,10 @@ class ModalBottomSheet : Fragment()
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {
                 val filter = p0.toString()
-
-                val textOneTime = requireContext().getString(HabitRepetitionPeriod.ONE_TIME.period)
-                val textRegular = requireContext().getString(HabitRepetitionPeriod.REGULAR.period)
                 when(filter){
-                    textOneTime ->{
+                    HabitRepetitionPeriod.ONE_TIME.period ->{
                         viewModel.searchByFrequency(HabitRepetitionPeriod.ONE_TIME.period)}
-                    textRegular ->{
+                    HabitRepetitionPeriod.REGULAR.period ->{
                         viewModel.searchByFrequency(HabitRepetitionPeriod.REGULAR.period)
                     }
                 }
