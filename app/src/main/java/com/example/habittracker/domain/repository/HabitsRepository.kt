@@ -18,4 +18,6 @@ interface HabitsRepository
     suspend fun createHabitRemote(habit : Habit) : ResultData<HabitUID>
     fun getHabitItem(habitId : String) : Flow<Habit>
     fun getHabitItemByUID(uid : String) : Flow<Habit>
+
+    //TODO: не делить на local, remote(useCase, repo)
 }
