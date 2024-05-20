@@ -1,7 +1,6 @@
 package com.example.habittracker.presentation.ui
 
-import RoundedTransformation
-import android.graphics.Canvas
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -14,6 +13,8 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitsBinding
 import com.example.habittracker.presentation.BaseFragment
@@ -21,10 +22,9 @@ import com.example.habittracker.presentation.adapter.TabAdapter
 import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
+import com.example.habittracker.utils.AVATAR_URL
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
-import com.squareup.picasso.Picasso
-import com.squareup.picasso.Transformation
 
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
@@ -46,30 +46,28 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
+        setOnClickListenerBtDrawer()
         setAvatar()
     }
 
-    private fun setAvatar() {
+    @SuppressLint("RtlHardcoded")
+    private fun setOnClickListenerBtDrawer() {
         binding.btOpenNavigation.setOnClickListener {
-            binding.amogus.openDrawer(Gravity.LEFT)
+            binding.drawerLayout.openDrawer(Gravity.LEFT)
         }
-        val headerLayout = binding.navigationView.getHeaderView(0)
+    }
 
+    private fun setAvatar() {
+        val headerLayout = binding.navigationView.getHeaderView(0)
         val avatarImageView = headerLayout.findViewById<ImageView>(R.id.avatar_image)
 
-        val imageViewDimensionSize = 300
-
-        avatarImageView.maxHeight = imageViewDimensionSize
-        avatarImageView.maxWidth = imageViewDimensionSize
-        avatarImageView.minimumHeight = imageViewDimensionSize
-        avatarImageView.minimumWidth = imageViewDimensionSize
-
-        Picasso.with(context)
-            .load("https://placehold.co/600x400.png")
-            .resize(imageViewDimensionSize, imageViewDimensionSize)
-            .error(R.drawable.ic_clear)
+        Glide.with(requireContext())
+            .load(AVATAR_URL)
+            .override(200, 200)
             .placeholder(R.drawable.loading)
-            .transform(RoundedTransformation(150, 4))
+            .error(R.drawable.ic_clear)
+            .centerCrop()
+            .transform(CircleCrop())
             .into(avatarImageView)
     }
 
