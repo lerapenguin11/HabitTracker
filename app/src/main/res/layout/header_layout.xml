@@ -12,5 +12,6 @@
         android:layout_gravity="start"
         android:layout_marginTop="50dp"
         android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
         android:id="@+id/avatar_image" />
 </LinearLayout>

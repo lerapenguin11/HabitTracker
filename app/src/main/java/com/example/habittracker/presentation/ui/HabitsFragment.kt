@@ -63,11 +63,11 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
         Glide.with(requireContext())
             .load(AVATAR_URL)
-            .override(200, 200)
             .placeholder(R.drawable.ic_avatar_loading)
             .error(R.drawable.ic_avatar_error)
             .centerCrop()
             .transform(CircleCrop())
+            .override(250, 250)
             .into(avatarImageView)
     }
 
