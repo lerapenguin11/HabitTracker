@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 //TODO habits_domain
 interface HabitsRepository
 {
-    fun getHabits() : Flow<List<Habit>>
-    suspend fun getHabitsRemote() : ResultData<List<Habit>>
+    fun getHabitsFromDatabase() : Flow<List<Habit>>
+    suspend fun getHabitsFromServer() : ResultData<List<Habit>>
 
     //TODO habit_processing_domain
     suspend fun updateHabit(habit : Habit)

@@ -42,7 +42,6 @@ class HabitProcessingViewModel(
                 Log.d("ADD HABIT: ", response.data.toString())
                 _newHabitUID.value = response.data
             }
-
             is ResultData.Error -> {
                 createHabit(habit)
                 Log.e("ADD HABIT ERROR: ", response.exception.toString())

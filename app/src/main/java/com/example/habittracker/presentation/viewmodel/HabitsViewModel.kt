@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habittracker.core.network.ResultData
+import com.example.habittracker.core.utils.ConnectivityObserver
+import com.example.habittracker.core.utils.NetworkConnectivityObserver
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
-import com.example.habittracker.domain.usecase.local.GetHabitsUseCase
-import com.example.habittracker.domain.usecase.remote.GetHabitsRemoteUseCase
+import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.presentation.model.FilterParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +21,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HabitsViewModel(
-    private val getHabitsUseCase: GetHabitsUseCase,
-    private val getHabitsRemoteUseCase: GetHabitsRemoteUseCase
+    private val nct : NetworkConnectivityObserver,
+    private val getHabitsUseCase: GetHabitsUseCase
 )
     : ViewModel(){
     private val _filterByDate = MutableLiveData(false)
@@ -41,29 +42,41 @@ class HabitsViewModel(
 
     val test = MutableStateFlow<List<Habit>>(emptyList())
 
+    private val _networkStatus = MutableLiveData(ConnectivityObserver.Status.UNAVAILABLE)
+    val networkStatus: LiveData<ConnectivityObserver.Status> = _networkStatus
+
     init {
+        observeStatus()
         listenerFilteredUsefulHabits()
         listenerFilteredHarmfulHabits()
     }
 
-    fun loadHabitRemoteList() = viewModelScope.launch {
-        when(val habitResult = getHabitsRemoteUseCase.invoke()){
-            is ResultData.Success -> {
-              //_usefulHabits.value = habitResult.data
-                test.value = habitResult.data
-                load()
-            }
-            is ResultData.Error -> {
-                loadHabitLocalList()
+    private fun observeStatus() {
+        viewModelScope.launch {
+            nct.observerStatus().collect {
+                _networkStatus.value = it
             }
         }
-        loading.value = false
+    }
+
+    fun loadHabitRemoteList(status : ConnectivityObserver.Status) = viewModelScope.launch {
+        getHabitsUseCase.getHabits(status = status).collect { habitResult->
+            when(habitResult){
+                is ResultData.Success -> {
+                    test.value = habitResult.data
+                    load()
+                }
+                is ResultData.Error -> {
+                }
+            }
+            loading.value = false
+        }
     }
 
     private fun load() {
-        combine(test){ allHabits ->
-            Pair(
-                withContext(Dispatchers.Default){
+                    combine(test){ allHabits ->
+                        Pair(
+                            withContext(Dispatchers.Default){
                     allHabits.flatMap {
                             habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
 
@@ -98,28 +111,6 @@ class HabitsViewModel(
         }
             .onEach {
                 _filteredUsefulHabits.postValue(it)
-            }
-            .launchIn(viewModelScope)
-    }
-
-    private fun loadHabitLocalList() {
-        combine(getHabitsUseCase()){ allHabits ->
-            Pair(
-                withContext(Dispatchers.Default){
-                    allHabits.flatMap {
-                            habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
-
-                },
-                withContext(Dispatchers.Default){
-                    allHabits.flatMap {
-                            habits -> habits.filter { habit -> habit.type == HabitType.HARMFUL } }
-                }
-            )
-        }
-            .distinctUntilChanged()
-            .onEach { (useful, harmful) ->
-                _usefulHabits.value = useful
-                _harmfulHabits.value = harmful
             }
             .launchIn(viewModelScope)
     }

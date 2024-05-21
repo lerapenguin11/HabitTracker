@@ -22,7 +22,8 @@ import com.example.habittracker.presentation.adapter.TabAdapter
 import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
-import com.example.habittracker.utils.AVATAR_URL
+import com.example.habittracker.core.utils.AVATAR_URL
+import com.example.habittracker.core.utils.ConnectivityObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -83,7 +84,16 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadHabitRemoteList() //TODO
+        with(viewModel){
+            networkStatus.observe(viewLifecycleOwner) { status ->
+                when(status){
+                    ConnectivityObserver.Status.AVAILABLE ->{loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.UNAVAILABLE ->{loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.LOST -> { loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.LOSING ->{loadHabitRemoteList(status)}
+                }
+            }
+        }
     }
 
     private fun setOnClickListenerFabAddHabit() {
