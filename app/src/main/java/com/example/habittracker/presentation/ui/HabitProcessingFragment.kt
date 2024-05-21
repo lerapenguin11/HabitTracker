@@ -11,9 +11,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.example.habittracker.domain.model.HabitPriority
 import com.example.habittracker.R
+import com.example.habittracker.core.utils.ConnectivityObserver
 import com.example.habittracker.databinding.FragmentHabitProcessingBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.domain.model.Habit
@@ -30,6 +32,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
     private var habitUId : String? = null
+    private var status = ConnectivityObserver.Status.UNAVAILABLE
     private val viewModel : HabitProcessingViewModel by viewModels{
         (requireActivity().application as BaseApplication).habitProcessingViewModelFactory
     }
@@ -83,15 +86,24 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        checkNetworkStatus()
+    }
+
+    private fun checkNetworkStatus() = with(viewModel){
+        networkStatus.observe(viewLifecycleOwner, Observer {
+            status = it
+        })
+    }
+
     private fun launchUpdateHabit(habit : Habit) {
-        //viewModel.updateHabit(habit = habit)
         viewModel.remoteUpdateHabit(habit = habit)
         view?.findNavController()?.navigateUp()
     }
 
     private fun launchAddHabit(habit : Habit) {
-        //viewModel.createHabit(habit = habit)
-        viewModel.remoteCreateHabit(habit = habit)
+        viewModel.remoteCreateHabit(habit = habit, status)
         view?.findNavController()?.navigateUp()
     }
 

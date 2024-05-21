@@ -6,12 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.habittracker.core.network.ResultData
+import com.example.habittracker.core.utils.ConnectivityObserver
+import com.example.habittracker.core.utils.NetworkConnectivityObserver
 import com.example.habittracker.domain.model.Habit
-import com.example.habittracker.domain.model.HabitUID
-import com.example.habittracker.domain.usecase.local.CreateHabitUseCase
+import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
-import com.example.habittracker.domain.usecase.remote.CreateHabitRemoteUseCase
 import com.example.habittracker.domain.usecase.remote.GetHabitByUIDUseCase
 import com.example.habittracker.domain.usecase.remote.UpdateHabitRemoteUseCase
 import kotlinx.coroutines.flow.launchIn
@@ -19,35 +19,35 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class HabitProcessingViewModel(
-    private val createHabitUseCase : CreateHabitUseCase,
     private val updateHabitUseCase : UpdateHabitUseCase,
     private val getHabitItemUseCase : GetHabitItemUseCase,
-    private val createHabitRemoteUseCase: CreateHabitRemoteUseCase,
     private val updateHabitRemoteUseCase: UpdateHabitRemoteUseCase,
-    private val getHabitByUIDUseCase: GetHabitByUIDUseCase
+    private val getHabitByUIDUseCase: GetHabitByUIDUseCase,
+    private val createHabitUseCase: CreateHabitUseCase,
+    private val nct : NetworkConnectivityObserver
 )
     : ViewModel()
 {
     private var _habitItem = MutableLiveData<Habit>()
     val habitItem : LiveData<Habit> get() = _habitItem
 
-    private val _newHabitUID = MutableLiveData<HabitUID?>()
-    val newHabitUID : MutableLiveData<HabitUID?> get() = _newHabitUID
+    private val _networkStatus = MutableLiveData(ConnectivityObserver.Status.UNAVAILABLE)
+    val networkStatus: LiveData<ConnectivityObserver.Status> = _networkStatus
 
-    val test = MutableLiveData<Boolean>(true)
+    init {
+        observeStatus()
+    }
 
-    fun remoteCreateHabit(habit: Habit) = viewModelScope.launch {
-        when (val response = createHabitRemoteUseCase(newHabit = habit)) {
-            is ResultData.Success -> {
-                Log.d("ADD HABIT: ", response.data.toString())
-                _newHabitUID.value = response.data
-            }
-            is ResultData.Error -> {
-                createHabit(habit)
-                Log.e("ADD HABIT ERROR: ", response.exception.toString())
+    private fun observeStatus() {
+        viewModelScope.launch {
+            nct.observerStatus().collect {
+                _networkStatus.value = it
             }
         }
-        test.value = false
+    }
+
+    fun remoteCreateHabit(habit: Habit, status: ConnectivityObserver.Status) = viewModelScope.launch {
+        createHabitUseCase.createHabit(newHabit = habit, status = status)
     }
 
     fun remoteUpdateHabit(habit: Habit) = viewModelScope.launch {
@@ -76,9 +76,5 @@ class HabitProcessingViewModel(
 
     fun updateHabit(habit : Habit) = viewModelScope.launch {
         updateHabitUseCase(habit = habit)
-    }
-
-    fun createHabit(habit : Habit) = viewModelScope.launch {
-        createHabitUseCase(newHabit = habit)
     }
 }

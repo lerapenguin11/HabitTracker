@@ -1,6 +1,7 @@
 package com.example.habittracker.data.repository
 
 import com.example.habittracker.core.network.ResultData
+import com.example.habittracker.core.utils.makeRetryingApiCall
 import com.example.habittracker.data.api.HabitsApi
 import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.data.mappers.HabitRemoteMapper
@@ -33,7 +34,7 @@ class HabitRepositoryImpl(
     override suspend fun getHabitsFromServer(): ResultData<List<Habit>> =
         withContext(Dispatchers.IO){
             try {
-                val response = service.getAllHabits()
+                val response = makeRetryingApiCall{service.getAllHabits()}
                 if (response.isSuccessful) {
                     return@withContext ResultData.Success(remoteMapper.habitsResponseToHabits(response.body()!!))
                 } else {
@@ -82,7 +83,7 @@ class HabitRepositoryImpl(
     override suspend fun createHabitRemote(habit: Habit): ResultData<HabitUID> =
         withContext(Dispatchers.IO){
             try {
-                val response = service.createHabit(newHabit = remoteMapper.createHabitToHabitItem(habit))
+                val response = makeRetryingApiCall{service.createHabit(newHabit = remoteMapper.createHabitToHabitItem(habit))}
                 if (response.isSuccessful){
                     dao.insertHabit(localMapper.insertHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
                     return@withContext ResultData.Success(localMapper.habitUIDResponseToHabitUID(response.body()!!))

@@ -42,7 +42,7 @@ class HabitsViewModel(
 
     val test = MutableStateFlow<List<Habit>>(emptyList())
 
-    private val _networkStatus = MutableLiveData(ConnectivityObserver.Status.UNAVAILABLE)
+    private val _networkStatus = MutableLiveData(ConnectivityObserver.Status.AVAILABLE)
     val networkStatus: LiveData<ConnectivityObserver.Status> = _networkStatus
 
     init {
@@ -74,9 +74,9 @@ class HabitsViewModel(
     }
 
     private fun load() {
-                    combine(test){ allHabits ->
-                        Pair(
-                            withContext(Dispatchers.Default){
+        combine(test){ allHabits ->
+            Pair(
+                withContext(Dispatchers.Default){
                     allHabits.flatMap {
                             habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
 
