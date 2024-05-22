@@ -10,6 +10,7 @@ import com.example.habittracker.core.utils.ConnectivityObserver
 import com.example.habittracker.core.utils.NetworkConnectivityObserver
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
+import com.example.habittracker.domain.usecase.TestGetHabitByIdUseCase
 import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
 import com.example.habittracker.domain.usecase.remote.GetHabitByUIDUseCase
@@ -24,7 +25,8 @@ class HabitProcessingViewModel(
     private val updateHabitRemoteUseCase: UpdateHabitRemoteUseCase,
     private val getHabitByUIDUseCase: GetHabitByUIDUseCase,
     private val createHabitUseCase: CreateHabitUseCase,
-    private val nct : NetworkConnectivityObserver
+    private val nct : NetworkConnectivityObserver,
+    private val testGetHabitByIdUseCase: TestGetHabitByIdUseCase
 )
     : ViewModel()
 {
@@ -62,15 +64,9 @@ class HabitProcessingViewModel(
         }
     }
 
-    fun loadHabitItemByUID(habitUID : String){
-        getHabitByUIDUseCase(habitUID = habitUID)
-            .onEach { _habitItem.value  = it }
-            .launchIn(viewModelScope)
-    }
-
-    fun loadHabitItem(habitId : String) {
-        getHabitItemUseCase(habitId = habitId)
-            .onEach { _habitItem.value = it}
+    fun loadHabitItemByUID(habitUID : String?, habitId : Long?){
+        testGetHabitByIdUseCase.getHabitById(uid = habitUID, id = habitId)
+            .onEach { _habitItem.value = it }
             .launchIn(viewModelScope)
     }
 

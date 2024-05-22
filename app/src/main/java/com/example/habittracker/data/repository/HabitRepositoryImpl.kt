@@ -46,7 +46,7 @@ class HabitRepositoryImpl(
     }
 
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
-    override fun getHabitItem(habitId: String): Flow<Habit>  {
+    override fun getHabitItem(habitId: Long): Flow<Habit>  {
         val habit = dao.getDistinctHabitById(habitId = habitId)
         return habit.map { localMapper.habitEntityToHabit(entity = it) }
     }

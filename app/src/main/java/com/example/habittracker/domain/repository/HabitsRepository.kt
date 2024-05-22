@@ -16,7 +16,7 @@ interface HabitsRepository
     suspend fun updateHabitRemote(habit: Habit) : ResultData<HabitUID>
     suspend fun createHabit(newHabit: Habit)
     suspend fun createHabitRemote(habit : Habit) : ResultData<HabitUID>
-    fun getHabitItem(habitId : String) : Flow<Habit>
+    fun getHabitItem(habitId : Long) : Flow<Habit>
     fun getHabitItemByUID(uid : String) : Flow<Habit>
 
     //TODO: не делить на local, remote(useCase, repo)

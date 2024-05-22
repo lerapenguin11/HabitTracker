@@ -32,6 +32,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var itemArrayPriority : String? = null
     private var itemArrayExecutions : String? = null
     private var habitUId : String? = null
+    private var habitId : Long? = null
     private var status = ConnectivityObserver.Status.UNAVAILABLE
     private val viewModel : HabitProcessingViewModel by viewModels{
         (requireActivity().application as BaseApplication).habitProcessingViewModelFactory
@@ -44,6 +45,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         arguments?.let { bundle ->
             screenMode = bundle.getString(SCREEN_MODE)
             habitUId = bundle.getString(HABIT_UID)
+            habitId = bundle.getLong(HABIT_ID)
         }
     }
 
@@ -125,10 +127,16 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun observeHabitData() = with(viewModel) {
         habitUId?.let {
-            //loadHabitItem(habitId = habitId!!)
-            loadHabitItemByUID(habitUID = habitUId!!)
+            loadHabitItemByUID(habitUID = habitUId, habitId = habitId)
             habitItem.observe(viewLifecycleOwner) { habit ->
                 setHabitData(habit)
+            }
+        }
+        habitId?.let {
+            //TODO
+            loadHabitItemByUID(habitUID = habitUId, habitId = habitId)
+            habitItem.observe(viewLifecycleOwner){habit ->
+                setHabitData(habit = habit)
             }
         }
     }
@@ -274,6 +282,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         private const val MODE_ADD = "mode_add"
         private const val SCREEN_MODE = "screen_mode"
         private const val HABIT_UID = "update_habit"
+        private const val HABIT_ID = "id"
     }
 
     override fun typeSelection(text: String) =

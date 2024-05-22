@@ -77,8 +77,18 @@ class TypeHabitsListFragment
         adapter.onHabitListClickListener = {habit ->
             if (!habit.uid.isNullOrEmpty()){
                 openEditHabitByUID(habit)
+            } else{
+                openEditHabitByID(habit)
             }
         }
+    }
+
+    private fun openEditHabitByID(habit: Habit) {
+        val bundle = Bundle()
+        bundle.putString(SCREEN_MODE, MODE_EDIT)
+        bundle.putLong(HABIT_ID, habit.id!!)
+        view?.findNavController()?.navigate(
+            R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
 
     private fun setHabitsRecyclerView(habitList : List<Habit>) = with(binding) {
@@ -94,7 +104,7 @@ class TypeHabitsListFragment
     private fun openEditHabitByUID(habit: Habit) {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
-        bundle.putString(HABIT_UID, habit.uid) //TODO
+        bundle.putString(HABIT_UID, habit.uid)
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
@@ -108,6 +118,7 @@ class TypeHabitsListFragment
         private const val MODE_EDIT = "mode_edit"
         private const val SCREEN_MODE = "screen_mode"
         private const val HABIT_UID = "update_habit"
+        private const val HABIT_ID = "id"
         private const val TYPE_HABITS = "type_habits"
     }
 }
