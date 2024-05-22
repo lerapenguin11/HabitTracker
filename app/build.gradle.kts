@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id(libs.plugins.androidApplication.get().pluginId)
     id(libs.plugins.kotlinAndroid.get().pluginId)
@@ -19,13 +21,29 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures {
+        aidl = true
+    }
+
+    buildFeatures {
+        buildConfig = true
+    }
+
     buildTypes {
+        val properties = Properties()
+        properties.load(project.rootProject.file("local.properties").inputStream())
         release {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            buildConfigField("String", "API_URL", "\"https://droid-test-server.doubletapp.ru/api/\"")
+            buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY")}\"")
+        }
+        debug {
+            buildConfigField("String", "API_URL", "\"https://droid-test-server.doubletapp.ru/api/\"")
+            buildConfigField("String", "API_KEY", "\"${properties.getProperty("API_KEY")}\"")
         }
     }
     compileOptions {
@@ -53,6 +71,16 @@ dependencies {
     kapt(libs.android.room.compiler)
     implementation(libs.bundles.kotlin.coroutines.all)
     implementation(libs.bundles.coroutine.lifecycle.scope.all)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.okhttp)
+    implementation(libs.converter.scalars)
+    implementation(libs.converter.moshi)
+    implementation(libs.moshi.kotlin)
+    implementation(libs.moshi.adapters)
+    implementation(libs.logging.interceptor)
+    implementation(libs.kotlin.coroutines.adapter)
+    implementation(libs.glide)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)

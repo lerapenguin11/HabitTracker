@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentTypeHabitsListBinding
@@ -15,7 +16,6 @@ import com.example.habittracker.presentation.adapter.HabitsAdapter
 import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
 import com.example.habittracker.presentation.viewmodel.HabitsViewModel
-import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
 
 class TypeHabitsListFragment
     : BaseFragment<FragmentTypeHabitsListBinding>()
@@ -23,9 +23,7 @@ class TypeHabitsListFragment
     private val adapter = HabitsAdapter()
     private var habitType : String? = null
     private val viewModel : HabitsViewModel by activityViewModels {
-        HabitsViewModelFactory(
-            (requireActivity().application as BaseApplication).getHabitsUseCase
-        )
+        (requireActivity().application as BaseApplication).habitsViewModelFactory
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,9 +55,13 @@ class TypeHabitsListFragment
 
     private fun observeHabitsUseful(){
         with(viewModel){
-            filteredUsefulHabits.observe(viewLifecycleOwner) {
-                setHabitsRecyclerView(it)
-            }
+            loading.observe(viewLifecycleOwner, Observer {
+                if (!it){
+                    filteredUsefulHabits.observe(viewLifecycleOwner) {
+                        setHabitsRecyclerView(it)
+                    }
+                }
+            })
         }
     }
 
@@ -73,8 +75,20 @@ class TypeHabitsListFragment
 
     private fun habitClickListener() {
         adapter.onHabitListClickListener = {habit ->
-            openEditHabit(habit)
+            if (!habit.uid.isNullOrEmpty()){
+                openEditHabitByUID(habit)
+            } else{
+                openEditHabitByID(habit)
+            }
         }
+    }
+
+    private fun openEditHabitByID(habit: Habit) {
+        val bundle = Bundle()
+        bundle.putString(SCREEN_MODE, MODE_EDIT)
+        bundle.putLong(HABIT_ID, habit.id!!)
+        view?.findNavController()?.navigate(
+            R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
 
     private fun setHabitsRecyclerView(habitList : List<Habit>) = with(binding) {
@@ -87,10 +101,10 @@ class TypeHabitsListFragment
         tvTextNoHabits.isVisible = habitList.isEmpty()
     }
 
-    private fun openEditHabit(habit: Habit) {
+    private fun openEditHabitByUID(habit: Habit) {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_EDIT)
-        bundle.putInt(HABIT_ID, habit.id)
+        bundle.putString(HABIT_UID, habit.uid)
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
@@ -103,7 +117,8 @@ class TypeHabitsListFragment
     companion object{
         private const val MODE_EDIT = "mode_edit"
         private const val SCREEN_MODE = "screen_mode"
-        private const val HABIT_ID = "update_habit"
+        private const val HABIT_UID = "update_habit"
+        private const val HABIT_ID = "id"
         private const val TYPE_HABITS = "type_habits"
     }
 }

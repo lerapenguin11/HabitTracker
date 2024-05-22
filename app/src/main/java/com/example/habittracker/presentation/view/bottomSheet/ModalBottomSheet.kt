@@ -26,9 +26,7 @@ class ModalBottomSheet : Fragment()
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
     private val viewModel : HabitsViewModel by activityViewModels {
-        HabitsViewModelFactory(
-            (requireActivity().application as BaseApplication).getHabitsUseCase
-        )
+        (requireActivity().application as BaseApplication).habitsViewModelFactory
     }
 
     override fun onCreateView(
@@ -170,7 +168,13 @@ class ModalBottomSheet : Fragment()
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {
                 val filter = p0.toString()
-                viewModel.searchByFrequency(filter)
+                when(filter){
+                    HabitRepetitionPeriod.ONE_TIME.period ->{
+                        viewModel.searchByFrequency(HabitRepetitionPeriod.ONE_TIME.period)}
+                    HabitRepetitionPeriod.REGULAR.period ->{
+                        viewModel.searchByFrequency(HabitRepetitionPeriod.REGULAR.period)
+                    }
+                }
             }
         })
     }

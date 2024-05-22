@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.habittracker.core.network.ResultData
+import com.example.habittracker.core.utils.ConnectivityObserver
+import com.example.habittracker.core.utils.NetworkConnectivityObserver
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitType
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
@@ -12,13 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HabitsViewModel(
+    private val nct : NetworkConnectivityObserver,
     private val getHabitsUseCase: GetHabitsUseCase
 )
     : ViewModel(){
@@ -35,10 +38,60 @@ class HabitsViewModel(
     private val _filteredHarmfulHabits = MutableLiveData<List<Habit>>(emptyList())
     val filteredHarmfulHabits : LiveData<List<Habit>> = _filteredHarmfulHabits
 
+    private val _loading = MutableLiveData(true)
+    val loading : LiveData<Boolean> = _loading
+
+    private val habitList = MutableStateFlow<List<Habit>>(emptyList())
+
+    private val _networkStatus = MutableLiveData<ConnectivityObserver.Status>(null)
+    val networkStatus: LiveData<ConnectivityObserver.Status> = _networkStatus
+
     init {
-        loadHabitList()
+        observeStatus()
         listenerFilteredUsefulHabits()
         listenerFilteredHarmfulHabits()
+    }
+
+    private fun observeStatus() {
+        nct.observerStatus()
+            .onEach { _networkStatus.value = it }
+            .launchIn(viewModelScope)
+    }
+
+    fun loadHabitRemoteList(status : ConnectivityObserver.Status) = viewModelScope.launch {
+        getHabitsUseCase.getHabits(status = status).collect { habitResult->
+            when(habitResult){
+                is ResultData.Success -> {
+                    habitList.value = habitResult.data
+                    load()
+                }
+                is ResultData.Error -> {
+                }
+            }
+            _loading.value = false
+        }
+    }
+
+    private fun load() {
+        combine(habitList){ allHabits ->
+            Pair(
+                withContext(Dispatchers.Default){
+                    allHabits.flatMap {
+                            habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
+
+                },
+                withContext(Dispatchers.Default){
+                    allHabits.flatMap {
+                            habits -> habits.filter { habit -> habit.type == HabitType.HARMFUL } }
+                }
+            )
+        }
+            .distinctUntilChanged()
+            .onEach { (useful, harmful) ->
+                _usefulHabits.value = useful
+                _harmfulHabits.value = harmful
+            }
+            .launchIn(viewModelScope)
     }
 
     private fun listenerFilteredHarmfulHabits() {
@@ -57,28 +110,6 @@ class HabitsViewModel(
         }
             .onEach {
                 _filteredUsefulHabits.postValue(it)
-            }
-            .launchIn(viewModelScope)
-    }
-
-    private fun loadHabitList() {
-        combine(getHabitsUseCase()){ allHabits ->
-            Pair(
-                withContext(Dispatchers.Default){
-                    allHabits.flatMap {
-                            habits -> habits.filter { habit -> habit.type == HabitType.USEFUL } }
-
-                },
-                withContext(Dispatchers.Default){
-                    allHabits.flatMap {
-                            habits -> habits.filter { habit -> habit.type == HabitType.HARMFUL } }
-                }
-            )
-        }
-            .distinctUntilChanged()
-            .onEach { (useful, harmful) ->
-                _usefulHabits.value = useful
-                _harmfulHabits.value = harmful
             }
             .launchIn(viewModelScope)
     }
@@ -175,7 +206,7 @@ class HabitsViewModel(
     fun searchByFrequency(frequency : String){
         val currentFilter = filters.value
         val newFilter = FilterParameters(
-            habitFrequency = if (frequency != CONST_LINE) frequency else null,
+            habitFrequency = frequency,
             habitDescription = currentFilter.habitDescription,
             habitTitle = currentFilter.habitTitle,
             oldDate = currentFilter.oldDate,

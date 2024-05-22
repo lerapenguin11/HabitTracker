@@ -1,10 +1,21 @@
 package com.example.habittracker.domain.usecase
 
-import com.example.habittracker.domain.repository.HabitsRepository
+import com.example.habittracker.core.utils.ConnectivityObserver
 import com.example.habittracker.domain.model.Habit
+import com.example.habittracker.domain.repository.HabitsRepository
+import kotlinx.coroutines.flow.flow
 
-//TODO habit_processing_domain
-class CreateHabitUseCase(private val repository: HabitsRepository)
-{
-    suspend operator fun invoke(newHabit: Habit) = repository.createHabit(newHabit = newHabit)
+class CreateHabitUseCase(private val repository: HabitsRepository) {
+
+    suspend fun createHabit(newHabit: Habit, status: ConnectivityObserver.Status) {
+        when (status) {
+            ConnectivityObserver.Status.AVAILABLE -> {
+                val result = repository.createHabitFromServer(habit = newHabit)
+                flow { emit(result) }
+            }
+            else -> {
+                repository.createHabitFromDatabase(newHabit = newHabit)
+            }
+        }
+    }
 }

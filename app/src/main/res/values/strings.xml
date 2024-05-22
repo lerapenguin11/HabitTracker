@@ -34,4 +34,14 @@
     <string name="text_search_desc_habit">Поиск по описанию привычки</string>
     <string name="text_apply">Применить</string>
     <string name="text_cancel">Сбросить</string>
+
+    <string name="text_high">Высокий</string>
+    <string name="text_medium">Средний</string>
+    <string name="text_low">Низкий</string>
+
+    <string name="text_useful">Полезная</string>
+    <string name="text_harmful">Вредная</string>
+
+    <string name="text_regular">Регулярная</string>
+    <string name="text_on_time">Разовая</string>
 </resources>

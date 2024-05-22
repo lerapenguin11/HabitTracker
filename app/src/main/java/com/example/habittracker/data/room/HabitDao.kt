@@ -17,7 +17,10 @@ interface HabitDao
     fun getAllHabits() : Flow<List<HabitEntity>>
 
     @Query("SELECT * FROM habits WHERE id = :habitId")
-    fun getHabitById(habitId : Int) : Flow<HabitEntity>
+    fun getHabitById(habitId : Long) : Flow<HabitEntity>
+
+    @Query("SELECT * FROM habits WHERE uid = :uid")
+    fun getHabitByUID(uid : String) : Flow<HabitEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertHabit(habit : HabitEntity)
@@ -28,16 +31,24 @@ interface HabitDao
     @Delete
     suspend fun deleteHabit(habit : HabitEntity)
 
+    @Query("SELECT * FROM habits WHERE syncStatus = 'PENDING_UPLOAD'")
+    fun getPendingUploadHabits(): List<HabitEntity>
+
+    @Query("SELECT * FROM habits WHERE syncStatus = 'PENDING_DOWNLOAD'")
+    fun getPendingDownloadHabits(): List<HabitEntity>
+
+    @Query("DELETE FROM habits")
+    suspend fun clearAll()
+
     fun getDistinctAllHabits():
             Flow<List<HabitEntity>> = getAllHabits()
         .distinctUntilChanged()
 
-    fun getDistinctHabitById(habitId : Int):
+    fun getDistinctHabitById(habitId : Long):
             Flow<HabitEntity> = getHabitById(habitId = habitId)
         .distinctUntilChanged()
 
-    /*@Query("SELECT * FROM habits WHERE id = :id")
-    private fun getUserById(id: String): Flow<HabitEntity>
-
-    */
+    fun getDistinctHabitByUID(uid : String):
+            Flow<HabitEntity> = getHabitByUID(uid = uid)
+        .distinctUntilChanged()
 }

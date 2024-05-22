@@ -1,23 +1,37 @@
 package com.example.habittracker.presentation.ui
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.habittracker.R
 import com.example.habittracker.databinding.FragmentHabitsBinding
 import com.example.habittracker.presentation.BaseFragment
 import com.example.habittracker.presentation.adapter.TabAdapter
+import com.example.habittracker.presentation.app.BaseApplication
 import com.example.habittracker.presentation.model.TabHabitType
+import com.example.habittracker.presentation.viewmodel.HabitsViewModel
+import com.example.habittracker.core.utils.AVATAR_URL
+import com.example.habittracker.core.utils.ConnectivityObserver
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 
+
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
+    private val viewModel : HabitsViewModel by activityViewModels {
+        (requireActivity().application as BaseApplication).habitsViewModelFactory
+    }
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -29,10 +43,43 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        with(viewModel){
+            networkStatus.observe(viewLifecycleOwner) { status ->
+                when(status){
+                    ConnectivityObserver.Status.AVAILABLE ->{loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.UNAVAILABLE ->{loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.LOST -> { loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.LOSING ->{loadHabitRemoteList(status)}
+                }
+            }
+        }
         initBottomSheet()
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
+        setOnClickListenerBtDrawer()
+        setAvatar()
+    }
+
+    @SuppressLint("RtlHardcoded")
+    private fun setOnClickListenerBtDrawer() {
+        binding.btOpenNavigation.setOnClickListener {
+            binding.drawerLayout.openDrawer(Gravity.LEFT)
+        }
+    }
+
+    private fun setAvatar() {
+        val headerLayout = binding.navigationView.getHeaderView(0)
+        val avatarImageView = headerLayout.findViewById<ImageView>(R.id.avatar_image)
+
+        Glide.with(requireContext())
+            .load(AVATAR_URL)
+            .placeholder(R.drawable.ic_avatar_loading)
+            .error(R.drawable.ic_avatar_error)
+            .centerCrop()
+            .transform(CircleCrop())
+            .override(250, 250)
+            .into(avatarImageView)
     }
 
     private fun initBottomSheet() {
@@ -43,6 +90,11 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         binding.bottomSheet.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
     }
 
     private fun setOnClickListenerFabAddHabit() {
@@ -95,7 +147,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private fun openAddHabit() {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_ADD)
-        view?.findNavController()?.saveState()
+        //view?.findNavController()?.saveState()
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
