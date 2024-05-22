@@ -4,11 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
 import com.example.habittracker.R
 import com.example.habittracker.data.entity.HabitEntity
-import com.example.habittracker.data.entity.convector.HabitConvector
 
 @Database(entities = [HabitEntity::class], version = 13, exportSchema = false)
 abstract class HabitDatabase : RoomDatabase() {
