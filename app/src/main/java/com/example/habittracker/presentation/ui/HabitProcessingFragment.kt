@@ -127,14 +127,14 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun observeHabitData() = with(viewModel) {
         habitUId?.let {
-            loadHabitItemByUID(habitUID = habitUId, habitId = habitId)
+            loadHabitItemById(habitUID = habitUId, habitId = habitId)
             habitItem.observe(viewLifecycleOwner) { habit ->
                 setHabitData(habit)
             }
         }
         habitId?.let {
             //TODO
-            loadHabitItemByUID(habitUID = habitUId, habitId = habitId)
+            loadHabitItemById(habitUID = habitUId, habitId = habitId)
             habitItem.observe(viewLifecycleOwner){habit ->
                 setHabitData(habit = habit)
             }

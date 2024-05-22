@@ -64,7 +64,7 @@ class HabitRepositoryImpl(
     override suspend fun updateHabitRemote(habit: Habit): ResultData<HabitUID> =
         withContext(Dispatchers.IO){
             try {
-                val response = service.editHabit(habit = remoteMapper.updateHabitToHabitItem(habit))
+                val response = makeRetryingApiCall{service.editHabit(habit = remoteMapper.updateHabitToHabitItem(habit))}
                 if (response.isSuccessful){
                     dao.updateHabit(localMapper.updateHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
                     return@withContext ResultData.Success(localMapper.habitUIDResponseToHabitUID(response.body()!!))

@@ -11,9 +11,7 @@ import com.example.habittracker.core.utils.NetworkConnectivityObserver
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.TestGetHabitByIdUseCase
-import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
-import com.example.habittracker.domain.usecase.remote.GetHabitByUIDUseCase
 import com.example.habittracker.domain.usecase.remote.UpdateHabitRemoteUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,9 +19,7 @@ import kotlinx.coroutines.launch
 
 class HabitProcessingViewModel(
     private val updateHabitUseCase : UpdateHabitUseCase,
-    private val getHabitItemUseCase : GetHabitItemUseCase,
     private val updateHabitRemoteUseCase: UpdateHabitRemoteUseCase,
-    private val getHabitByUIDUseCase: GetHabitByUIDUseCase,
     private val createHabitUseCase: CreateHabitUseCase,
     private val nct : NetworkConnectivityObserver,
     private val testGetHabitByIdUseCase: TestGetHabitByIdUseCase
@@ -64,7 +60,7 @@ class HabitProcessingViewModel(
         }
     }
 
-    fun loadHabitItemByUID(habitUID : String?, habitId : Long?){
+    fun loadHabitItemById(habitUID : String?, habitId : Long?){
         testGetHabitByIdUseCase.getHabitById(uid = habitUID, id = habitId)
             .onEach { _habitItem.value = it }
             .launchIn(viewModelScope)

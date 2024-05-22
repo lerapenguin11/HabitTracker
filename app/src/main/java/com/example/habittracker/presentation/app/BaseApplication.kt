@@ -11,9 +11,7 @@ import com.example.habittracker.data.room.HabitDatabase
 import com.example.habittracker.domain.usecase.GetHabitsUseCase
 import com.example.habittracker.domain.usecase.CreateHabitUseCase
 import com.example.habittracker.domain.usecase.TestGetHabitByIdUseCase
-import com.example.habittracker.domain.usecase.local.GetHabitItemUseCase
 import com.example.habittracker.domain.usecase.local.UpdateHabitUseCase
-import com.example.habittracker.domain.usecase.remote.GetHabitByUIDUseCase
 import com.example.habittracker.domain.usecase.remote.UpdateHabitRemoteUseCase
 import com.example.habittracker.presentation.viewmodel.HabitProcessingViewModelFactory
 import com.example.habittracker.presentation.viewmodel.HabitsViewModelFactory
@@ -34,9 +32,7 @@ class BaseApplication : Application()
     private lateinit var mInstance: BaseApplication
 
     private val updateHabitUseCase by lazy { UpdateHabitUseCase(repository) }
-    private val getHabitItemUseCase by lazy { GetHabitItemUseCase(repository) }
     private val updateHabitRemoteUseCase by lazy { UpdateHabitRemoteUseCase(repository) }
-    private val getHabitByUIDUseCase by lazy { GetHabitByUIDUseCase(repository) }
     private val getHabitsUseCase by lazy { GetHabitsUseCase(repository) }
     private val createHabitUseCase by lazy { CreateHabitUseCase(repository) }
     private val testGetHabitByIdUseCase by lazy { TestGetHabitByIdUseCase(repository) }
@@ -44,9 +40,7 @@ class BaseApplication : Application()
 
     val habitProcessingViewModelFactory by lazy { HabitProcessingViewModelFactory(
         updateHabitUseCase = updateHabitUseCase,
-        getHabitItemUseCase = getHabitItemUseCase,
         updateHabitRemoteUseCase = updateHabitRemoteUseCase,
-        getHabitByUIDUseCase = getHabitByUIDUseCase,
         createHabitUseCase = createHabitUseCase,
         nct = networkConnectivityObserver,
         testGetHabitByIdUseCase = testGetHabitByIdUseCase
