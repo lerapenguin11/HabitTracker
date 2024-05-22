@@ -1,6 +1,8 @@
 package com.example.habittracker.data.mappers
 
 import com.example.habittracker.data.entity.HabitEntity
+import com.example.habittracker.data.entity.SyncStatus
+import com.example.habittracker.data.modelResponse.HabitItem
 import com.example.habittracker.data.modelResponse.HabitUIDResponse
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitPriority
@@ -10,11 +12,6 @@ import com.example.habittracker.domain.model.HabitUID
 
 class HabitMapper
 {
-    //TODO:HabitMapperRemote
-
-
-
-
     fun insertHabitToHabitEntityRemoteTest(habit: Habit, uid : String) : HabitEntity{
         return HabitEntity(
             title = habit.title,
@@ -25,7 +22,8 @@ class HabitMapper
             period = HabitRepetitionPeriod.periodByCode(habit.period),
             color = habit.color,
             dateCreation = habit.dateCreation,
-            uid = uid
+            uid = uid,
+            syncStatus = SyncStatus.SYNCED
         )
     }
 
@@ -40,7 +38,8 @@ class HabitMapper
             color = habit.color,
             dateCreation = habit.dateCreation,
             uid = uid,
-            id = habit.id
+            id = habit.id,
+            syncStatus = SyncStatus.SYNCED
         )
     }
 
@@ -64,7 +63,7 @@ class HabitMapper
     }
 
     //TODO:HabitMapperLocal
-    fun updateHabitToHabitEntity(habit: Habit) : HabitEntity{
+    fun updateHabitToHabitEntityNotSync(habit: Habit) : HabitEntity{
         return HabitEntity(
             id = habit.id,
             title = habit.title,
@@ -75,7 +74,8 @@ class HabitMapper
             period = HabitRepetitionPeriod.periodByCode(habit.period),
             color = habit.color,
             dateCreation = habit.dateCreation,
-            uid = habit.uid
+            uid = habit.uid,
+            syncStatus = SyncStatus.PENDING_DOWNLOAD
         )
     }
 
@@ -89,7 +89,8 @@ class HabitMapper
             period = HabitRepetitionPeriod.periodByCode(habit.period),
             color = habit.color,
             dateCreation = habit.dateCreation,
-            uid = habit.uid
+            uid = habit.uid,
+            syncStatus = SyncStatus.PENDING_UPLOAD
         )
     }
 

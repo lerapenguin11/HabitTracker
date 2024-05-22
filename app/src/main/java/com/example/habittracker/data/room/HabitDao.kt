@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.habittracker.data.entity.HabitEntity
+import com.example.habittracker.data.entity.SyncStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 
@@ -30,6 +31,15 @@ interface HabitDao
 
     @Delete
     suspend fun deleteHabit(habit : HabitEntity)
+
+    @Query("SELECT * FROM habits WHERE syncStatus = 'PENDING_UPLOAD'")
+    fun getPendingUploadHabits(): List<HabitEntity>
+
+    @Query("SELECT * FROM habits WHERE syncStatus = 'PENDING_DOWNLOAD'")
+    fun getPendingDownloadHabits(): List<HabitEntity>
+
+    @Query("DELETE FROM habits")
+    suspend fun clearAll()
 
     fun getDistinctAllHabits():
             Flow<List<HabitEntity>> = getAllHabits()

@@ -3,12 +3,14 @@ package com.example.habittracker.data.repository
 import com.example.habittracker.core.network.ResultData
 import com.example.habittracker.core.utils.makeRetryingApiCall
 import com.example.habittracker.data.api.HabitsApi
+import com.example.habittracker.data.entity.SyncStatus
 import com.example.habittracker.data.mappers.HabitMapper
 import com.example.habittracker.data.mappers.HabitRemoteMapper
 import com.example.habittracker.data.room.HabitDao
 import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.model.HabitUID
 import com.example.habittracker.domain.repository.HabitsRepository
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -20,6 +22,9 @@ class HabitRepositoryImpl(
     private val remoteMapper: HabitRemoteMapper,
     private val service : HabitsApi
 ) : HabitsRepository {
+
+    val coroutineExceptionHandler = CoroutineExceptionHandler {
+            _, throwable -> throwable.printStackTrace() }
 
     //TODO: доделать выгрузку
     override fun getHabitsFromDatabase(): Flow<List<Habit>> {
@@ -36,6 +41,9 @@ class HabitRepositoryImpl(
             try {
                 val response = makeRetryingApiCall{service.getAllHabits()}
                 if (response.isSuccessful) {
+                    syncUploadHabitsCreate()
+                    syncUploadHabitsUpdate()
+                    syncServerFromDatabase()
                     return@withContext ResultData.Success(remoteMapper.habitsResponseToHabits(response.body()!!))
                 } else {
                     return@withContext ResultData.Error(Exception(response.message()))
@@ -57,7 +65,7 @@ class HabitRepositoryImpl(
     }
 
     override suspend fun updateHabitFromDatabase(habit: Habit) = withContext(Dispatchers.IO) {
-        dao.updateHabit(localMapper.updateHabitToHabitEntity(habit = habit))
+        dao.updateHabit(localMapper.updateHabitToHabitEntityNotSync(habit = habit))
     }
 
     //TODO: обновление привычки
@@ -66,7 +74,10 @@ class HabitRepositoryImpl(
             try {
                 val response = makeRetryingApiCall{service.editHabit(habit = remoteMapper.updateHabitToHabitItem(habit))}
                 if (response.isSuccessful){
-                    dao.updateHabit(localMapper.updateHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
+                    dao.updateHabit(
+                        localMapper.updateHabitToHabitEntityRemoteTest
+                            (habit = habit, uid = response.body()!!.uid)
+                        .copy(syncStatus = SyncStatus.SYNCED))
                     return@withContext ResultData.Success(localMapper.habitUIDResponseToHabitUID(response.body()!!))
                 }else{
                     return@withContext ResultData.Error(Exception(response.message()))
@@ -77,7 +88,8 @@ class HabitRepositoryImpl(
     }
 
     override suspend fun createHabitFromDatabase(newHabit: Habit) = withContext(Dispatchers.IO) {
-        dao.insertHabit(localMapper.insertHabitToHabitEntity(habit = newHabit))
+        dao.insertHabit(localMapper.insertHabitToHabitEntity(habit = newHabit)
+            .copy(syncStatus = SyncStatus.PENDING_UPLOAD))
     }
 
     override suspend fun createHabitFromServer(habit: Habit): ResultData<HabitUID> =
@@ -85,7 +97,10 @@ class HabitRepositoryImpl(
             try {
                 val response = makeRetryingApiCall{service.createHabit(newHabit = remoteMapper.createHabitToHabitItem(habit))}
                 if (response.isSuccessful){
-                    dao.insertHabit(localMapper.insertHabitToHabitEntityRemoteTest(habit = habit, uid = response.body()!!.uid))
+                    dao.insertHabit(
+                        localMapper.insertHabitToHabitEntityRemoteTest(
+                            habit = habit, uid = response.body()!!.uid)
+                            .copy(syncStatus = SyncStatus.SYNCED))
                     return@withContext ResultData.Success(localMapper.habitUIDResponseToHabitUID(response.body()!!))
                 }else{
                     return@withContext ResultData.Error(Exception(response.message()))
@@ -95,4 +110,28 @@ class HabitRepositoryImpl(
             }
         }
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
+
+    private suspend fun syncUploadHabitsCreate() = withContext(Dispatchers.IO){
+        val pendingHabits = dao.getPendingUploadHabits()
+        pendingHabits.forEach {habit ->
+            service.createHabit(remoteMapper.habitEntityToHabitItem(habit))
+            dao.updateHabit(habit.copy(syncStatus = SyncStatus.SYNCED))
+        }
+    }
+
+    private suspend fun syncUploadHabitsUpdate() = withContext(Dispatchers.IO){
+        val pendingHabits = dao.getPendingDownloadHabits()
+        pendingHabits.forEach { habit ->
+            service.editHabit(remoteMapper.habitEntityToHabitItem(habit))
+            dao.updateHabit(habit.copy(syncStatus = SyncStatus.SYNCED))
+        }
+    }
+
+    private suspend fun syncServerFromDatabase() = withContext(Dispatchers.IO){
+        val habitResponse = service.getAllHabits().body()
+        dao.clearAll()
+        habitResponse?.forEach {
+            dao.insertHabit(remoteMapper.habitItemToHabitEntity(habit = it))
+        }
+    }
 }

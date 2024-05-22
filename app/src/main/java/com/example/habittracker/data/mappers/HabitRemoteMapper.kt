@@ -1,6 +1,7 @@
 package com.example.habittracker.data.mappers
 
 import com.example.habittracker.data.entity.HabitEntity
+import com.example.habittracker.data.entity.SyncStatus
 import com.example.habittracker.data.modelResponse.HabitItem
 import com.example.habittracker.data.modelResponse.HabitResponse
 import com.example.habittracker.domain.model.Habit
@@ -27,6 +28,36 @@ class HabitRemoteMapper
             habits.add(habit)
         }
         return habits
+    }
+
+    fun habitEntityToHabitItem(entity: HabitEntity) : HabitItem {
+        return HabitItem(
+            uid = entity.uid,
+            title = entity.title,
+            description = entity.description,
+            type = entity.type,
+            priority = entity.period,
+            count = entity.numberExecutions,
+            frequency = entity.habitPriority,
+            color = entity.color,
+            date = (System.currentTimeMillis()/1000).toInt(),
+            done_dates = emptyList()
+        )
+    }
+
+    fun habitItemToHabitEntity(habit : HabitItem) : HabitEntity{
+        return HabitEntity(
+            title = habit.title,
+            description = habit.description,
+            type = habit.type,
+            habitPriority = habit.priority,
+            numberExecutions = habit.count,
+            period = habit.frequency,
+            color = habit.color,
+            dateCreation = habit.date,
+            uid = habit.uid,
+            syncStatus = SyncStatus.SYNCED
+        )
     }
 
     fun createHabitToHabitItem(habit : Habit) : HabitItem {
