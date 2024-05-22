@@ -12,10 +12,10 @@ interface HabitsRepository
     suspend fun getHabitsFromServer() : ResultData<List<Habit>>
 
     //TODO habit_processing_domain
-    suspend fun updateHabit(habit : Habit)
-    suspend fun updateHabitRemote(habit: Habit) : ResultData<HabitUID>
-    suspend fun createHabit(newHabit: Habit)
-    suspend fun createHabitRemote(habit : Habit) : ResultData<HabitUID>
+    suspend fun updateHabitFromDatabase(habit : Habit)
+    suspend fun updateHabitFromServer(habit: Habit) : ResultData<HabitUID>
+    suspend fun createHabitFromDatabase(newHabit: Habit)
+    suspend fun createHabitFromServer(habit : Habit) : ResultData<HabitUID>
     fun getHabitItem(habitId : Long) : Flow<Habit>
     fun getHabitItemByUID(uid : String) : Flow<Habit>
 

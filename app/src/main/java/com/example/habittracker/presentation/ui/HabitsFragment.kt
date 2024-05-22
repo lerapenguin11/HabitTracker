@@ -43,6 +43,16 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        with(viewModel){
+            networkStatus.observe(viewLifecycleOwner) { status ->
+                when(status){
+                    ConnectivityObserver.Status.AVAILABLE ->{loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.UNAVAILABLE ->{loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.LOST -> { loadHabitRemoteList(status)}
+                    ConnectivityObserver.Status.LOSING ->{loadHabitRemoteList(status)}
+                }
+            }
+        }
         initBottomSheet()
         navigateNavigationView()
         setUpTabLayout()
@@ -84,16 +94,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     override fun onResume() {
         super.onResume()
-        with(viewModel){
-            networkStatus.observe(viewLifecycleOwner) { status ->
-                when(status){
-                    ConnectivityObserver.Status.AVAILABLE ->{loadHabitRemoteList(status)}
-                    ConnectivityObserver.Status.UNAVAILABLE ->{loadHabitRemoteList(status)}
-                    ConnectivityObserver.Status.LOST -> { loadHabitRemoteList(status)}
-                    ConnectivityObserver.Status.LOSING ->{loadHabitRemoteList(status)}
-                }
-            }
-        }
+
     }
 
     private fun setOnClickListenerFabAddHabit() {

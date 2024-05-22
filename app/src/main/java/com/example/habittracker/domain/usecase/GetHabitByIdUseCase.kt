@@ -4,7 +4,7 @@ import com.example.habittracker.domain.model.Habit
 import com.example.habittracker.domain.repository.HabitsRepository
 import kotlinx.coroutines.flow.Flow
 
-class TestGetHabitByIdUseCase(private val repository : HabitsRepository) {
+class GetHabitByIdUseCase(private val repository : HabitsRepository) {
 
     fun getHabitById(uid : String?, id : Long?) : Flow<Habit> {
         return if (uid.isNullOrEmpty()){

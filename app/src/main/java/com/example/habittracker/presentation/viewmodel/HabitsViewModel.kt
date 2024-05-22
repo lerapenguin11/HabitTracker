@@ -38,11 +38,12 @@ class HabitsViewModel(
     private val _filteredHarmfulHabits = MutableLiveData<List<Habit>>(emptyList())
     val filteredHarmfulHabits : LiveData<List<Habit>> = _filteredHarmfulHabits
 
-    val loading = MutableLiveData<Boolean>(true)
+    private val _loading = MutableLiveData(true)
+    val loading : LiveData<Boolean> = _loading
 
-    val test = MutableStateFlow<List<Habit>>(emptyList())
+    private val habitList = MutableStateFlow<List<Habit>>(emptyList())
 
-    private val _networkStatus = MutableLiveData(ConnectivityObserver.Status.UNAVAILABLE)
+    private val _networkStatus = MutableLiveData<ConnectivityObserver.Status>(null)
     val networkStatus: LiveData<ConnectivityObserver.Status> = _networkStatus
 
     init {
@@ -52,29 +53,27 @@ class HabitsViewModel(
     }
 
     private fun observeStatus() {
-        viewModelScope.launch {
-            nct.observerStatus().collect {
-                _networkStatus.value = it
-            }
-        }
+        nct.observerStatus()
+            .onEach { _networkStatus.value = it }
+            .launchIn(viewModelScope)
     }
 
     fun loadHabitRemoteList(status : ConnectivityObserver.Status) = viewModelScope.launch {
         getHabitsUseCase.getHabits(status = status).collect { habitResult->
             when(habitResult){
                 is ResultData.Success -> {
-                    test.value = habitResult.data
+                    habitList.value = habitResult.data
                     load()
                 }
                 is ResultData.Error -> {
                 }
             }
-            loading.value = false
+            _loading.value = false
         }
     }
 
     private fun load() {
-        combine(test){ allHabits ->
+        combine(habitList){ allHabits ->
             Pair(
                 withContext(Dispatchers.Default){
                     allHabits.flatMap {

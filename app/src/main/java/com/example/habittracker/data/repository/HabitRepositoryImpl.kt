@@ -56,12 +56,12 @@ class HabitRepositoryImpl(
         return habit.map { localMapper.habitToHabitEntityRemote( it) }
     }
 
-    override suspend fun updateHabit(habit: Habit) = withContext(Dispatchers.IO) {
+    override suspend fun updateHabitFromDatabase(habit: Habit) = withContext(Dispatchers.IO) {
         dao.updateHabit(localMapper.updateHabitToHabitEntity(habit = habit))
     }
 
     //TODO: обновление привычки
-    override suspend fun updateHabitRemote(habit: Habit): ResultData<HabitUID> =
+    override suspend fun updateHabitFromServer(habit: Habit): ResultData<HabitUID> =
         withContext(Dispatchers.IO){
             try {
                 val response = makeRetryingApiCall{service.editHabit(habit = remoteMapper.updateHabitToHabitItem(habit))}
@@ -76,11 +76,11 @@ class HabitRepositoryImpl(
             }
     }
 
-    override suspend fun createHabit(newHabit: Habit) = withContext(Dispatchers.IO) {
+    override suspend fun createHabitFromDatabase(newHabit: Habit) = withContext(Dispatchers.IO) {
         dao.insertHabit(localMapper.insertHabitToHabitEntity(habit = newHabit))
     }
 
-    override suspend fun createHabitRemote(habit: Habit): ResultData<HabitUID> =
+    override suspend fun createHabitFromServer(habit: Habit): ResultData<HabitUID> =
         withContext(Dispatchers.IO){
             try {
                 val response = makeRetryingApiCall{service.createHabit(newHabit = remoteMapper.createHabitToHabitItem(habit))}

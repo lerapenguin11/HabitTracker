@@ -100,7 +100,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     }
 
     private fun launchUpdateHabit(habit : Habit) {
-        viewModel.remoteUpdateHabit(habit = habit)
+        viewModel.remoteUpdateHabit(habit = habit, status = status)
         view?.findNavController()?.navigateUp()
     }
 
