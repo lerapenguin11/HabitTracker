@@ -22,7 +22,7 @@ suspend fun <T> makeRetryingApiCall(
         } catch (e: Exception) {
             retryCount++
             Log.e("RetryRequest", "Thread ID: ${Thread.currentThread().id}", e)
-            delay(retryDelayMillis)
+            delay(retryDelayMillis)//TODO: добавить интерсептер
         }
     }
     throw RuntimeException("Maximum number of retries reached. Unable to complete the request.")
