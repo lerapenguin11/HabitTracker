@@ -59,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature_habit:habit_presentation"))
 
     implementation(libs.android.core.ktx)
     implementation(libs.android.appcompat)

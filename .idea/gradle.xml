@@ -10,6 +10,12 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/base_ui" />
+            <option value="$PROJECT_DIR$/core" />
+            <option value="$PROJECT_DIR$/feature_habit" />
+            <option value="$PROJECT_DIR$/feature_habit/habit_data" />
+            <option value="$PROJECT_DIR$/feature_habit/habit_domain" />
+            <option value="$PROJECT_DIR$/feature_habit/habit_presentation" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
