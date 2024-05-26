@@ -24,6 +24,7 @@ moshi = "1.15.0"
 coroutines_adapter = "0.9.2"
 glide = "4.16.0"
 org-jetbrains-kotlin-jvm = "1.9.10"
+daggerVersion = "2.38.1"
 
 [libraries]
 android-core-ktx = {module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx"}
@@ -52,6 +53,8 @@ moshi-adapters = {module = "com.squareup.moshi:moshi-adapters", version.ref = "m
 logging-interceptor = {module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okHttp"}
 kotlin-coroutines-adapter = {module = "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter", version.ref = "coroutines_adapter"}
 glide = {module = "com.github.bumptech.glide:glide", version.ref = "glide"}
+dagger = {module = "com.google.dagger:dagger", version.ref = "daggerVersion"}
+dagger-compiler = {module= "com.google.dagger:dagger-compiler", version.ref = "daggerVersion"}
 
 
 [plugins]

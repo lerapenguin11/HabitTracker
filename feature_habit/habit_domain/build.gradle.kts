@@ -41,6 +41,8 @@ dependencies {
     implementation(libs.android.core.ktx)
     implementation(libs.android.appcompat)
     implementation(libs.android.material)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)

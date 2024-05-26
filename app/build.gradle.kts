@@ -82,6 +82,8 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.kotlin.coroutines.adapter)
     implementation(libs.glide)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)
