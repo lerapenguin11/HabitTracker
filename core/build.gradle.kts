@@ -4,7 +4,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
-    id(libs.plugins.kotlin.kapt.get().pluginId)
+    id("kotlin-kapt")
 }
 
 android {
@@ -70,6 +70,8 @@ dependencies {
     implementation(libs.android.room.runtime)
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.android.room.compiler)
+    implementation(libs.dagger)
+    annotationProcessor(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)

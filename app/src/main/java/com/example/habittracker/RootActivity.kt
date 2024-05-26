@@ -1,4 +1,4 @@
-package com.example.habittracker.presentation
+package com.example.habittracker
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

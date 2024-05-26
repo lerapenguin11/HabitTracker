@@ -2,7 +2,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlinAndroid)
-    id(libs.plugins.kotlin.kapt.get().pluginId)
+    id("kotlin-kapt")
 }
 
 android {
@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.bundles.coroutine.lifecycle.scope.all)
     implementation(libs.glide)
     implementation(libs.dagger)
-    kapt(libs.dagger.compiler)
+    annotationProcessor(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)
