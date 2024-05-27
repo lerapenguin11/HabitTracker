@@ -42,7 +42,7 @@ class HabitMapper
         )
     }
 
-    fun habitUIDResponseToHabitUID(habitUID: HabitUIDResponse) : HabitUID {
+    fun habitUIDResponseToHabitUID(habitUID: HabitUIDResponse) : HabitUID{
         return HabitUID(uid = habitUID.uid)
     }
 

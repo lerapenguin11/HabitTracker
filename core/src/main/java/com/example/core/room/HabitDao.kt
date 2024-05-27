@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.example.core.room.entity.HabitEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 
 @Dao
 interface HabitDao

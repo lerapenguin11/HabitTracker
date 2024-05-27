@@ -157,6 +157,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             }
         }
     }
+
     private fun setHabitData(habit : Habit?) = with(binding) {
         habit?.let {
             binding.tiEtNameHabit.setText(habit.title)
@@ -310,5 +311,5 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     override fun selectionExecutionPeriod(text: String) =
         with(binding){
             tiEtFrequency.setText(text)
-    }
+        }
 }

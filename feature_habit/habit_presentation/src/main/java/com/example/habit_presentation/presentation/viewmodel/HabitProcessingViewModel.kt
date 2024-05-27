@@ -48,6 +48,15 @@ class HabitProcessingViewModel(
 
     fun remoteUpdateHabit(habit: Habit, status: ConnectivityObserver.Status) = viewModelScope.launch {
         updateHabitUseCase.updateHabit(habit = habit, status = status)
+        /*when(val response = updateHabitRemoteUseCase(habit = habit)){
+            is ResultData.Success ->{
+                Log.d("ADD HABIT: ", response.data.toString())
+            }
+            is ResultData.Error ->{
+                updateHabit(habit)
+                Log.e("UPDATE HABIT ERROR: ", response.exception.toString())
+            }
+        }*/
     }
 
     fun loadHabitItemById(habitUID : String?, habitId : Long?){

@@ -11,10 +11,16 @@ import com.example.habit_domain.model.Habit
 import com.example.habit_domain.model.HabitUID
 import com.example.habit_domain.repository.HabitsRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 
 class HabitRepositoryImpl(
@@ -27,14 +33,14 @@ class HabitRepositoryImpl(
     val coroutineExceptionHandler = CoroutineExceptionHandler {
             _, throwable -> throwable.printStackTrace() }
 
-    //TODO: доделать выгрузку
+    //TODO: пофиксить обновление
     override fun getHabitsFromDatabase(): Flow<List<Habit>> {
         val allHabits = dao.getDistinctAllHabits()
         return allHabits
             .map {
-                element ->
-            localMapper.habitsEntityToHabits(element)
-        }
+                    element ->
+                localMapper.habitsEntityToHabits(element)
+            }
     }
 
     override suspend fun getHabitsFromServer(): ResultData<List<Habit>> =
@@ -52,7 +58,7 @@ class HabitRepositoryImpl(
             } catch (e: Exception) {
                 return@withContext ResultData.Error(e)
             }
-    }
+        }
 
     //-------TODO: вынести в HabitProcessingRepositoryImpl------
     override fun getHabitItem(habitId: Long): Flow<Habit>  {
@@ -78,7 +84,7 @@ class HabitRepositoryImpl(
                     dao.updateHabit(
                         localMapper.updateHabitToHabitEntityRemoteTest
                             (habit = habit, uid = response.body()!!.uid)
-                        .copy(syncStatus = SyncStatus.SYNCED))
+                            .copy(syncStatus = SyncStatus.SYNCED))
                     return@withContext ResultData.Success(localMapper.habitUIDResponseToHabitUID(response.body()!!))
                 }else{
                     return@withContext ResultData.Error(Exception(response.message()))
@@ -86,7 +92,7 @@ class HabitRepositoryImpl(
             }catch (e: Exception) {
                 return@withContext ResultData.Error(e)
             }
-    }
+        }
 
     override suspend fun createHabitFromDatabase(newHabit: Habit) = withContext(Dispatchers.IO) {
         dao.insertHabit(localMapper.insertHabitToHabitEntity(habit = newHabit)
