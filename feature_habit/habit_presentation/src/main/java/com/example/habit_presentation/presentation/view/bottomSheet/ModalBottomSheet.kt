@@ -1,6 +1,7 @@
 package com.example.habit_presentation.presentation.view.bottomSheet
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,18 +14,36 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.example.habit_domain.model.HabitRepetitionPeriod
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.LayoutModalBottomSheetBinding
+import com.example.habit_presentation.di.ArticlesComponentViewModel
+import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
 import com.google.android.material.card.MaterialCardView
+import dagger.Lazy
+import javax.inject.Inject
 
 class ModalBottomSheet : Fragment()
 {
     private var _binding : LayoutModalBottomSheetBinding? = null
     private val binding get() = _binding!!
-    /*private val viewModel : HabitsViewModel by activityViewModels {
-        (requireActivity().application as BaseApplication).habitsViewModelFactory
-    }*/
+
+    @Inject
+    internal lateinit var viewModelFactory: Lazy<HabitsViewModel.Factory>
+
+    private val viewModel: HabitsViewModel by activityViewModels {
+        viewModelFactory.get()
+    }
+
+    override fun onAttach(context: Context) {
+        ViewModelProvider(requireActivity())
+            .get<ArticlesComponentViewModel>()
+            .newDetailsComponent
+            .injectModalBottomSheet(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,7 +63,7 @@ class ModalBottomSheet : Fragment()
         setObserverOnDescriptionFilter()
         setObserverOnExecutionsFilter()
         openHabitExecutionsList()
-        //setObserveOnFilterByDate()
+        setObserveOnFilterByDate()
     }
 
     private fun setOnClickListerBtFilterDate() = with(binding) {
@@ -53,7 +72,7 @@ class ModalBottomSheet : Fragment()
                 btNotFiltered = filterOldDate,
                 iconFiltered = icFilterNewDate,
                 iconNotFiltered = icFilterOldDate)
-            //viewModel.searchByNewDate()
+            viewModel.searchByNewDate()
             btCancelFilter.isEnabled = true
         }
         filterOldDate.setOnClickListener {
@@ -63,7 +82,7 @@ class ModalBottomSheet : Fragment()
                 iconFiltered = icFilterOldDate,
                 iconNotFiltered = icFilterNewDate
             )
-            //viewModel.searchByOldDate()
+            viewModel.searchByOldDate()
             btCancelFilter.isEnabled = true
         }
     }
@@ -96,7 +115,7 @@ class ModalBottomSheet : Fragment()
             filterNameHabit.text = null
             tiEtSearchDescHabit.text = null
             tvArrayExecutions.text = null
-            //viewModel.cancelFilter()
+            viewModel.cancelFilter()
         }
     }
 
@@ -117,7 +136,7 @@ class ModalBottomSheet : Fragment()
         }
     }
 
-   /* private fun setObserveOnFilterByDate() = with(viewModel){
+    private fun setObserveOnFilterByDate() = with(viewModel){
        filterByDate.observe(viewLifecycleOwner) {
            if (it == true) {
                binding.btCancelFilter.isEnabled = true
@@ -125,7 +144,7 @@ class ModalBottomSheet : Fragment()
                applyDefaultFilteringButtonsStyle()
            }
        }
-    }*/
+    }
 
     private fun applyDefaultFilteringButtonsStyle() = with(binding) {
         filterNewDate.strokeColor = ContextCompat.getColor(requireContext(), R.color.md_theme_light_outline)
@@ -142,7 +161,7 @@ class ModalBottomSheet : Fragment()
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val filter = p0.toString()
-                //viewModel.searchByName(filter)
+                viewModel.searchByName(filter)
             }
         })
     }
@@ -153,7 +172,7 @@ class ModalBottomSheet : Fragment()
             override fun afterTextChanged(p0: Editable?) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val filter = p0.toString()
-                //viewModel.searchByDescription(filter)
+                viewModel.searchByDescription(filter)
             }
         })
     }
@@ -164,13 +183,12 @@ class ModalBottomSheet : Fragment()
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
             override fun afterTextChanged(p0: Editable?) {
-                val filter = p0.toString()
-                when(filter){
-                    /*HabitRepetitionPeriod.ONE_TIME.period ->{
+                when(p0.toString()){
+                    HabitRepetitionPeriod.ONE_TIME.period ->{
                         viewModel.searchByFrequency(HabitRepetitionPeriod.ONE_TIME.period)}
                     HabitRepetitionPeriod.REGULAR.period ->{
                         viewModel.searchByFrequency(HabitRepetitionPeriod.REGULAR.period)
-                    }*/
+                    }
                 }
             }
         })

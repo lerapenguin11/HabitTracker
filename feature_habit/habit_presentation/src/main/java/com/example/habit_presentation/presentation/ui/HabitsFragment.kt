@@ -12,7 +12,6 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.navigation.findNavController
@@ -28,11 +27,9 @@ import com.example.habit_presentation.presentation.BaseFragment
 import com.example.habit_presentation.presentation.adapter.TabAdapter
 import com.example.habit_presentation.presentation.model.TabHabitType
 import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
-import com.example.habit_presentation.presentation.viewmodel.HabitsViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
 import dagger.Lazy
-import dagger.internal.Provider
 import javax.inject.Inject
 
 
@@ -41,24 +38,17 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     @Inject
     internal lateinit var articleViewModelFactory: Lazy<HabitsViewModel.Factory>
 
-    private val viewModel: HabitsViewModel by viewModels {
+    private val viewModel: HabitsViewModel by activityViewModels {
         articleViewModelFactory.get()
     }
 
     override fun onAttach(context: Context) {
-        ViewModelProvider(this).get<ArticlesComponentViewModel>().newDetailsComponent.inject(this)
+        ViewModelProvider(requireActivity())
+            .get<ArticlesComponentViewModel>()
+            .newDetailsComponent
+            .injectHabits(this)
         super.onAttach(context)
     }
-
-    /*override fun onAttach(context: Context) {
-        (requireActivity().application as )
-            .appComponent
-            .habitListSubComponent()
-            .build()
-            .inject(this)
-
-        super.onAttach(context)
-    }*/
 
     override fun createBinding(
         inflater: LayoutInflater,

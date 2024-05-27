@@ -14,7 +14,8 @@ class GetHabitsUseCase(private val repository: HabitsRepository) {
             Flow<ResultData<List<Habit>>> {
         return when(status){
             ConnectivityObserver.Status.AVAILABLE -> {
-                val result = repository.getHabitsFromServer()
+                val result =
+                    repository.getHabitsFromServer()
                 flow { emit(result) }
             }
             ConnectivityObserver.Status.LOSING -> {

@@ -1,27 +1,46 @@
 package com.example.habit_presentation.presentation.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import com.example.habit_domain.model.Habit
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentTypeHabitsListBinding
+import com.example.habit_presentation.di.ArticlesComponentViewModel
 import com.example.habit_presentation.presentation.BaseFragment
 import com.example.habit_presentation.presentation.adapter.HabitsAdapter
+import com.example.habit_presentation.presentation.model.TabHabitType
+import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
+import dagger.Lazy
+import javax.inject.Inject
 
 class TypeHabitsListFragment
     : BaseFragment<FragmentTypeHabitsListBinding>()
 {
     private val adapter = HabitsAdapter()
     private var habitType : String? = null
-    /*private val viewModel : HabitsViewModel by activityViewModels {
-        (requireActivity().application as BaseApplication).habitsViewModelFactory
-    }*/
+
+    @Inject
+    internal lateinit var viewModelFactory: Lazy<HabitsViewModel.Factory>
+
+    private val viewModel: HabitsViewModel by activityViewModels {
+        viewModelFactory.get()
+    }
+
+    override fun onAttach(context: Context) {
+        ViewModelProvider(requireActivity())
+            .get<ArticlesComponentViewModel>()
+            .newDetailsComponent
+            .injectTypeHabits(this)
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,35 +58,35 @@ class TypeHabitsListFragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //launchTypeHabit()
+        launchTypeHabit()
         habitClickListener()
     }
 
-    /*private fun launchTypeHabit() {
+    private fun launchTypeHabit() {
         when(habitType){
             TabHabitType.USEFUL.type -> observeHabitsUseful()
             TabHabitType.HARMFUL.type -> observeHabitsHarmful()
         }
-    }*/
+    }
 
     private fun observeHabitsUseful(){
-       /* with(viewModel){
-            loading.observe(viewLifecycleOwner, Observer {
-                if (!it){
+        with(viewModel){
+            loading.observe(viewLifecycleOwner) {
+                if (!it) {
                     filteredUsefulHabits.observe(viewLifecycleOwner) {
                         setHabitsRecyclerView(it)
                     }
                 }
-            })
-        }*/
+            }
+        }
     }
 
     private fun observeHabitsHarmful(){
-        /*with(viewModel){
+        with(viewModel){
             filteredHarmfulHabits.observe(viewLifecycleOwner) {
                 setHabitsRecyclerView(it)
             }
-        }*/
+        }
     }
 
     private fun habitClickListener() {

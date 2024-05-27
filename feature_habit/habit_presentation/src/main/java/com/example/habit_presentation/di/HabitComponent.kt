@@ -1,28 +1,24 @@
 package com.example.habit_presentation.di
 
-import android.content.Context
 import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.example.core.Feature
-import com.example.core.network.di.CacheModule
-import com.example.core.network.di.NetworkComponent
-import com.example.core.network.di.NetworkModule
-import com.example.core.utils.NetworkConnectivityModule
 import com.example.core.utils.NetworkConnectivityObserver
-import com.example.habit_data.di.HabitDataComponent
 import com.example.habit_domain.usecase.GetHabitsUseCase
 import com.example.habit_presentation.presentation.ui.HabitsFragment
-import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
+import com.example.habit_presentation.presentation.ui.TypeHabitsListFragment
+import com.example.habit_presentation.presentation.view.bottomSheet.ModalBottomSheet
 import dagger.Component
-import dagger.Module
-import dagger.Provides
 import kotlin.properties.Delegates.notNull
 
 @[Feature Component(dependencies = [HabitsDeps::class])]
 interface HabitComponent {
 
-    fun inject(fragment: HabitsFragment)
+    fun injectHabits(fragment: HabitsFragment)
+
+    fun injectTypeHabits(fragment: TypeHabitsListFragment)
+
+    fun injectModalBottomSheet(fragment : ModalBottomSheet)
 
     @Component.Builder
     interface Builder {
