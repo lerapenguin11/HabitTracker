@@ -6,6 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.core.R
 import com.example.core.room.entity.HabitEntity
+import dagger.Module
+import dagger.Provides
 
 @Database(entities = [HabitEntity::class], version = 13, exportSchema = false)
 abstract class HabitDatabase : RoomDatabase() {

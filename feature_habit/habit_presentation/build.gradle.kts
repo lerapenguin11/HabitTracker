@@ -40,6 +40,7 @@ android {
 dependencies {
     implementation(project(":core"))
     implementation(project(":feature_habit:habit_domain"))
+    implementation(project(":feature_habit:habit_data"))
 
     implementation(libs.android.core.ktx)
     implementation(libs.android.appcompat)
@@ -49,7 +50,7 @@ dependencies {
     implementation(libs.bundles.coroutine.lifecycle.scope.all)
     implementation(libs.glide)
     implementation(libs.dagger)
-    annotationProcessor(libs.dagger.compiler)
+    kapt(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)

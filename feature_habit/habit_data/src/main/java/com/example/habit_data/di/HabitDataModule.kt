@@ -3,20 +3,25 @@ package com.example.habit_data.di
 import android.content.Context
 import com.example.core.room.HabitDao
 import com.example.core.room.HabitDatabase
+import com.example.core.utils.NetworkConnectivityObserver
 import com.example.habit_data.api.HabitsApi
 import com.example.habit_data.mappers.HabitMapper
 import com.example.habit_data.mappers.HabitRemoteMapper
 import com.example.habit_data.repository.HabitRepositoryImpl
 import com.example.habit_domain.repository.HabitsRepository
+import com.example.habit_domain.usecase.CreateHabitUseCase
+import com.example.habit_domain.usecase.GetHabitByIdUseCase
+import com.example.habit_domain.usecase.GetHabitsUseCase
+import com.example.habit_domain.usecase.UpdateHabitUseCase
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
-class HabitDataModule(private val context: Context) {
+object HabitDataModule {
 
-    @Provides
+    /*@Provides
     @Singleton
     fun provideHabitsDatabase(): HabitDatabase {
         return HabitDatabase.getInstance(context)
@@ -25,7 +30,17 @@ class HabitDataModule(private val context: Context) {
     @Provides
     fun provideHabitsDao(appDatabase: HabitDatabase): HabitDao {
         return appDatabase.getHabitDao()
+    }*/
+
+    @Provides
+    fun provideContextNetworkConnectivityObserver(context: Context) : NetworkConnectivityObserver{
+        return NetworkConnectivityObserver(context)
     }
+
+    /*@Provides
+    fun provideHabitApiService(retrofit: Retrofit): HabitsApi {
+        return retrofit.create(HabitsApi::class.java)
+    }*/
 
     @Provides
     fun provideHabitApiService(retrofit: Retrofit): HabitsApi {
@@ -49,5 +64,25 @@ class HabitDataModule(private val context: Context) {
             HabitsRepository {
         return HabitRepositoryImpl(dao = dao, localMapper = localMapper,
             remoteMapper = remoteMapper, service = service)
+    }
+
+    @Provides
+    fun provideCreateHabitUseCase(repository : HabitsRepository) : CreateHabitUseCase {
+        return CreateHabitUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetHabitByIdUseCase(repository: HabitsRepository) : GetHabitByIdUseCase {
+        return GetHabitByIdUseCase(repository)
+    }
+
+    @Provides
+    fun provideGetHabitsUseCase(repository: HabitsRepository) : GetHabitsUseCase {
+        return GetHabitsUseCase(repository)
+    }
+
+    @Provides
+    fun provideUpdateHabitUseCase(repository: HabitsRepository) : UpdateHabitUseCase {
+        return UpdateHabitUseCase(repository)
     }
 }

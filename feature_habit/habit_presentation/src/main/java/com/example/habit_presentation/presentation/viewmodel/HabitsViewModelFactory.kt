@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.core.utils.NetworkConnectivityObserver
 import com.example.habit_domain.usecase.GetHabitsUseCase
+import javax.inject.Inject
 
 class HabitsViewModelFactory(
     private val nct : NetworkConnectivityObserver,

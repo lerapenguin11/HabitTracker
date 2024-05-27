@@ -1,4 +1,4 @@
-package com.example.core.network
+package com.example.core.network.di
 
 import com.example.core.BuildConfig
 import com.example.core.network.interceptor.HeadersHabitInterceptor
@@ -12,9 +12,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import javax.inject.Singleton
 
 @Module
-class NetworkModule
+object NetworkModule
 {
     private val moshi by lazy {
         val moshiBuilder = Moshi.Builder()

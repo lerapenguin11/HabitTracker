@@ -3,6 +3,7 @@ package com.example.habit_presentation.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.core.network.ResultData
 import com.example.core.utils.ConnectivityObserver
@@ -11,6 +12,7 @@ import com.example.habit_domain.model.Habit
 import com.example.habit_domain.model.HabitType
 import com.example.habit_domain.usecase.GetHabitsUseCase
 import com.example.habit_presentation.presentation.model.FilterParameters
+import dagger.internal.Provider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -19,12 +21,14 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class HabitsViewModel(
     private val nct : NetworkConnectivityObserver,
     private val getHabitsUseCase: GetHabitsUseCase
 )
     : ViewModel(){
+
     private val _filterByDate = MutableLiveData(false)
     val filterByDate : LiveData<Boolean> = _filterByDate
 
@@ -242,5 +246,17 @@ class HabitsViewModel(
 
     companion object{
         private const val CONST_LINE = ""
+    }
+
+    class Factory @Inject constructor(
+        private val nct : NetworkConnectivityObserver,
+        private val getHabitsUseCase: GetHabitsUseCase
+    ) : ViewModelProvider.Factory {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            require(modelClass == HabitsViewModel::class.java)
+            return HabitsViewModel(nct, getHabitsUseCase) as T
+        }
     }
 }

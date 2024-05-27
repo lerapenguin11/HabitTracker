@@ -1,6 +1,7 @@
 package com.example.habit_presentation.presentation.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
@@ -11,24 +12,54 @@ import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.core.utils.AVATAR_URL
+import com.example.core.utils.ConnectivityObserver
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentHabitsBinding
+import com.example.habit_presentation.di.ArticlesComponentViewModel
 import com.example.habit_presentation.presentation.BaseFragment
 import com.example.habit_presentation.presentation.adapter.TabAdapter
 import com.example.habit_presentation.presentation.model.TabHabitType
+import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
+import com.example.habit_presentation.presentation.viewmodel.HabitsViewModelFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
+import dagger.Lazy
+import dagger.internal.Provider
+import javax.inject.Inject
 
 
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
-    /*private val viewModel : HabitsViewModel by activityViewModels {
-        (requireActivity().application as BaseApplication).habitsViewModelFactory
+
+    @Inject
+    internal lateinit var articleViewModelFactory: Lazy<HabitsViewModel.Factory>
+
+    private val viewModel: HabitsViewModel by viewModels {
+        articleViewModelFactory.get()
+    }
+
+    override fun onAttach(context: Context) {
+        ViewModelProvider(this).get<ArticlesComponentViewModel>().newDetailsComponent.inject(this)
+        super.onAttach(context)
+    }
+
+    /*override fun onAttach(context: Context) {
+        (requireActivity().application as )
+            .appComponent
+            .habitListSubComponent()
+            .build()
+            .inject(this)
+
+        super.onAttach(context)
     }*/
+
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -39,7 +70,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*with(viewModel){
+        with(viewModel){
             networkStatus.observe(viewLifecycleOwner) { status ->
                 when(status){
                     ConnectivityObserver.Status.AVAILABLE ->{loadHabitRemoteList(status)}
@@ -48,7 +79,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
                     ConnectivityObserver.Status.LOSING ->{loadHabitRemoteList(status)}
                 }
             }
-        }*/
+        }
         initBottomSheet()
         navigateNavigationView()
         setUpTabLayout()
@@ -115,12 +146,12 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     private fun setUpTabLayout() {
         val tabAdapter = TabAdapter(requireActivity())
-        /*newInstanceTabType(TabHabitType.USEFUL.type).let {
+        newInstanceTabType(TabHabitType.USEFUL.type).let {
             tabAdapter.addFragment(it)
         }
         newInstanceTabType(TabHabitType.HARMFUL.type).let {
             tabAdapter.addFragment(it)
-        }*/
+        }
         binding.viewPager.adapter = tabAdapter
         initTabLayoutMediator()
     }
@@ -155,7 +186,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
          private fun newInstanceTabType(tabType : String) : TypeHabitsListFragment{
              val fragment = TypeHabitsListFragment()
-            /*fragment.arguments = bundleOf(TYPE_HABITS to tabType)*/
+            fragment.arguments = bundleOf(TYPE_HABITS to tabType)
             return fragment
         }
     }

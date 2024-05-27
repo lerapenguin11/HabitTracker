@@ -71,7 +71,7 @@ dependencies {
     //noinspection KaptUsageInsteadOfKsp
     kapt(libs.android.room.compiler)
     implementation(libs.dagger)
-    annotationProcessor(libs.dagger.compiler)
+    kapt(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)
