@@ -4,7 +4,11 @@ import androidx.annotation.RestrictTo
 import androidx.lifecycle.ViewModel
 import com.example.core.Feature
 import com.example.core.utils.NetworkConnectivityObserver
+import com.example.habit_domain.usecase.CreateHabitUseCase
+import com.example.habit_domain.usecase.GetHabitByIdUseCase
 import com.example.habit_domain.usecase.GetHabitsUseCase
+import com.example.habit_domain.usecase.UpdateHabitUseCase
+import com.example.habit_presentation.presentation.ui.HabitProcessingFragment
 import com.example.habit_presentation.presentation.ui.HabitsFragment
 import com.example.habit_presentation.presentation.ui.TypeHabitsListFragment
 import com.example.habit_presentation.presentation.view.bottomSheet.ModalBottomSheet
@@ -20,6 +24,8 @@ interface HabitComponent {
 
     fun injectModalBottomSheet(fragment : ModalBottomSheet)
 
+    fun injectHabitProcessingFragment(fragment : HabitProcessingFragment)
+
     @Component.Builder
     interface Builder {
 
@@ -32,6 +38,9 @@ interface HabitsDeps {
 
     val getHabitsUseCase : GetHabitsUseCase
     val ntc : NetworkConnectivityObserver
+    val createHabitUseCase: CreateHabitUseCase
+    val getHabitByIdUseCase: GetHabitByIdUseCase
+    val updateHabitUseCase: UpdateHabitUseCase
 }
 
 interface ArticlesDepsProvider {

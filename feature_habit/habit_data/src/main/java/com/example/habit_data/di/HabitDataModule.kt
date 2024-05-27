@@ -21,26 +21,10 @@ import javax.inject.Singleton
 @Module
 object HabitDataModule {
 
-    /*@Provides
-    @Singleton
-    fun provideHabitsDatabase(): HabitDatabase {
-        return HabitDatabase.getInstance(context)
-    }
-
-    @Provides
-    fun provideHabitsDao(appDatabase: HabitDatabase): HabitDao {
-        return appDatabase.getHabitDao()
-    }*/
-
     @Provides
     fun provideContextNetworkConnectivityObserver(context: Context) : NetworkConnectivityObserver{
         return NetworkConnectivityObserver(context)
     }
-
-    /*@Provides
-    fun provideHabitApiService(retrofit: Retrofit): HabitsApi {
-        return retrofit.create(HabitsApi::class.java)
-    }*/
 
     @Provides
     fun provideHabitApiService(retrofit: Retrofit): HabitsApi {

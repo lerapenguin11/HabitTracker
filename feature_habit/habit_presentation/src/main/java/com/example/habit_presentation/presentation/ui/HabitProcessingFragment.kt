@@ -1,6 +1,7 @@
 package com.example.habit_presentation.presentation.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,8 +11,11 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.res.ResourcesCompat
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.findNavController
 import com.example.core.utils.ConnectivityObserver
 import com.example.habit_domain.model.Habit
@@ -20,9 +24,13 @@ import com.example.habit_domain.model.HabitRepetitionPeriod
 import com.example.habit_domain.model.HabitType
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentHabitProcessingBinding
+import com.example.habit_presentation.di.ArticlesComponentViewModel
 import com.example.habit_presentation.presentation.BaseFragment
 import com.example.habit_presentation.presentation.view.dialog.ExecutionPeriodHabitDialog
 import com.example.habit_presentation.presentation.view.dialog.HabitTypeDialog
+import com.example.habit_presentation.presentation.viewmodel.HabitProcessingViewModel
+import dagger.Lazy
+import javax.inject.Inject
 
 class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     HabitTypeDialog.Host, ExecutionPeriodHabitDialog.Host {
@@ -32,11 +40,22 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private var habitUId : String? = null
     private var habitId : Long? = null
     private var status = ConnectivityObserver.Status.UNAVAILABLE
-    /*private val viewModel : HabitProcessingViewModel by viewModels{
-        (requireActivity().application as BaseApplication).habitProcessingViewModelFactory
-    }*/
+    @Inject
+    internal lateinit var viewModelFactory: Lazy<HabitProcessingViewModel.Factory>
+
+    private val viewModel: HabitProcessingViewModel by activityViewModels {
+        viewModelFactory.get()
+    }
 
     private var color : Int = 0
+
+    override fun onAttach(context: Context) {
+        ViewModelProvider(requireActivity())
+            .get<ArticlesComponentViewModel>()
+            .newDetailsComponent
+            .injectHabitProcessingFragment(this)
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,7 +80,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         initTextInputListeners()
         openHabitPriorityModal()
         openHabitRepetitionsNumberModal()
-        //saveHabit()
+        saveHabit()
     }
 
     private fun setOnClickListener() {
@@ -77,21 +96,21 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         }
     }
 
-    /*private fun saveHabit() {
+    private fun saveHabit() {
         binding.btSaveHabit.setOnClickListener {
             when(screenMode){
                 MODE_ADD -> launchAddHabit(createHabitProcessing())
                 MODE_EDIT -> launchUpdateHabit(updateHabitProcessing())
             }
         }
-    }*/
+    }
 
     override fun onResume() {
         super.onResume()
-        //checkNetworkStatus()
+        checkNetworkStatus()
     }
 
-    /*private fun checkNetworkStatus() = with(viewModel){
+    private fun checkNetworkStatus() = with(viewModel){
         networkStatus.observe(viewLifecycleOwner, Observer {
             status = it
         })
@@ -105,7 +124,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
     private fun launchAddHabit(habit : Habit) {
         viewModel.remoteCreateHabit(habit = habit, status)
         view?.findNavController()?.navigateUp()
-    }*/
+    }
 
     private fun handleAction() {
         when (screenMode) {
@@ -120,10 +139,10 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     private fun launchEditMode() {
         binding.tvTitle.setText(R.string.text_update_habit)
-        //observeHabitData()
+        observeHabitData()
     }
 
-   /* private fun observeHabitData() = with(viewModel) {
+    private fun observeHabitData() = with(viewModel) {
         habitUId?.let {
             loadHabitItemById(habitUID = habitUId, habitId = habitId)
             habitItem.observe(viewLifecycleOwner) { habit ->
@@ -138,7 +157,6 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             }
         }
     }
-*/
     private fun setHabitData(habit : Habit?) = with(binding) {
         habit?.let {
             binding.tiEtNameHabit.setText(habit.title)
@@ -171,7 +189,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             )
         }
 
-    /*private fun updateHabitProcessing() : Habit =
+    private fun updateHabitProcessing() : Habit =
         with(binding){
             val habitPriority = tvArrayPriority.text.toString()
             val type = tiEtTypeHabit.text.toString()
@@ -188,15 +206,15 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 color = color,
                 dateCreation = getDateCreationHabit().toInt()
             )
-        }*/
+        }
 
-   /* private fun getDateCreationHabit() : Long {
+    private fun getDateCreationHabit() : Long {
         return if (viewModel.habitItem.value?.dateCreation == null){
             System.currentTimeMillis()
         } else{
             viewModel.habitItem.value!!.dateCreation.toLong()
         }
-    }*/
+    }
 
     private fun getIdHabit(): String {
         return if (habitUId == null){

@@ -3,6 +3,7 @@ package com.example.habit_presentation.presentation.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.core.utils.ConnectivityObserver
 import com.example.core.utils.NetworkConnectivityObserver
@@ -13,6 +14,7 @@ import com.example.habit_domain.usecase.UpdateHabitUseCase
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 class HabitProcessingViewModel(
     private val createHabitUseCase: CreateHabitUseCase,
@@ -46,20 +48,29 @@ class HabitProcessingViewModel(
 
     fun remoteUpdateHabit(habit: Habit, status: ConnectivityObserver.Status) = viewModelScope.launch {
         updateHabitUseCase.updateHabit(habit = habit, status = status)
-        /*when(val response = updateHabitRemoteUseCase(habit = habit)){
-            is ResultData.Success ->{
-                Log.d("ADD HABIT: ", response.data.toString())
-            }
-            is ResultData.Error ->{
-                updateHabit(habit)
-                Log.e("UPDATE HABIT ERROR: ", response.exception.toString())
-            }
-        }*/
     }
 
     fun loadHabitItemById(habitUID : String?, habitId : Long?){
         getHabitByIdUseCase.getHabitById(uid = habitUID, id = habitId)
             .onEach { _habitItem.value = it }
             .launchIn(viewModelScope)
+    }
+
+    class Factory @Inject constructor(
+        private val createHabitUseCase: CreateHabitUseCase,
+        private val nct : NetworkConnectivityObserver,
+        private val getHabitByIdUseCase: GetHabitByIdUseCase,
+        private val updateHabitUseCase: UpdateHabitUseCase
+    ) : ViewModelProvider.Factory {
+
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            require(modelClass == HabitProcessingViewModel::class.java)
+            return HabitProcessingViewModel(
+                createHabitUseCase = createHabitUseCase,
+                nct = nct,
+                getHabitByIdUseCase = getHabitByIdUseCase,
+                updateHabitUseCase = updateHabitUseCase) as T
+        }
     }
 }

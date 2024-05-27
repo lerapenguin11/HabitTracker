@@ -12,6 +12,7 @@ import com.example.habit_domain.model.HabitUID
 import com.example.habit_domain.repository.HabitsRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext

@@ -36,10 +36,10 @@ import javax.inject.Inject
 class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     @Inject
-    internal lateinit var articleViewModelFactory: Lazy<HabitsViewModel.Factory>
+    internal lateinit var viewModelFactory: Lazy<HabitsViewModel.Factory>
 
     private val viewModel: HabitsViewModel by activityViewModels {
-        articleViewModelFactory.get()
+        viewModelFactory.get()
     }
 
     override fun onAttach(context: Context) {
