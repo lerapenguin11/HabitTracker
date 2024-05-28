@@ -23,13 +23,32 @@
         android:paddingStart="22dp"
         android:paddingBottom="19dp">
 
-        <TextView
-            android:id="@+id/tv_title_habit"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="Бросить пить"
-            android:includeFontPadding="false"
-            style="@style/TextTitleCardHabits"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_title_habit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="Бросить пить"
+                android:layout_gravity="center_vertical|start"
+                android:layout_weight="1"
+                android:includeFontPadding="false"
+                style="@style/TextTitleCardHabits"/>
+
+            <Button
+                android:id="@+id/bt_habit_gone"
+                style="?attr/materialIconButtonFilledTonalStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:clickable="true"
+                android:contentDescription="@string/text_habit_gone"
+                app:icon="@drawable/ic_check_habit"
+                app:iconTint="#246C2D" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_desc_habit"
@@ -45,6 +64,13 @@
             android:layout_marginBottom="6dp"
             tools:ignore="UnusedAttribute"
             tools:text="Контроль над ситуацией и собой — базовая потребность, которая необходима человеку для выживания. Почему же часто «ну еще один бокальчик» оказывается сильнее чувства самосохранения? И как же все таки перестать пить алкоголь и избавиться от алкогольной." />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#40A4A4A4"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"/>
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/chipGroup"
@@ -81,5 +107,22 @@
                 app:chipIconVisible="true"
                 tools:text="1 раз в день | постоянная"/>
         </com.google.android.material.chip.ChipGroup>
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/linear_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            app:trackColor="#72796F"
+            app:indicatorColor="#246C2D"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:trackCornerRadius="8dp"
+            app:showDelay="10"
+            app:minHideDelay="5"
+            app:indeterminateAnimationType="disjoint"
+            app:indicatorDirectionLinear="leftToRight"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
