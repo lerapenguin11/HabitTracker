@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.core.room.entity.HabitEntity
+import com.example.core.room.entity.SyncStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -50,6 +51,6 @@ interface HabitDao
         .distinctUntilChanged()
 
     fun getDistinctHabitByUID(uid : String):
-            Flow<HabitEntity> = getHabitByUID(uid = uid)
+            Flow<HabitEntity?> = getHabitByUID(uid = uid)
         .distinctUntilChanged()
 }

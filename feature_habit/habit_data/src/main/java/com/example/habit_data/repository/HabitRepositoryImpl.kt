@@ -7,13 +7,17 @@ import com.example.core.utils.makeRetryingApiCall
 import com.example.habit_data.api.HabitsApi
 import com.example.habit_data.mappers.HabitMapper
 import com.example.habit_data.mappers.HabitRemoteMapper
+import com.example.habit_data.modelResponse.HabitResponse
 import com.example.habit_domain.model.Habit
 import com.example.habit_domain.model.HabitUID
 import com.example.habit_domain.repository.HabitsRepository
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class HabitRepositoryImpl(
@@ -26,7 +30,6 @@ class HabitRepositoryImpl(
     val coroutineExceptionHandler = CoroutineExceptionHandler {
             _, throwable -> throwable.printStackTrace() }
 
-    //TODO: пофиксить обновление
     override fun getHabitsFromDatabase(): Flow<List<Habit>> {
         val allHabits = dao.getDistinctAllHabits()
         return allHabits
@@ -37,13 +40,13 @@ class HabitRepositoryImpl(
     }
 
     override suspend fun getHabitsFromServer(): ResultData<List<Habit>> =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO + coroutineExceptionHandler){
             try {
                 val response = makeRetryingApiCall{service.getAllHabits()}
                 if (response.isSuccessful) {
                     syncUploadHabitsCreate()
                     syncUploadHabitsUpdate()
-                    syncServerFromDatabase()
+                    syncServerFromDatabase(response.body()!!)
                     return@withContext ResultData.Success(remoteMapper.habitsResponseToHabits(response.body()!!))
                 } else {
                     return@withContext ResultData.Error(Exception(response.message()))
@@ -53,7 +56,6 @@ class HabitRepositoryImpl(
             }
         }
 
-    //-------TODO: вынести в HabitProcessingRepositoryImpl------
     override fun getHabitItem(habitId: Long): Flow<Habit>  {
         val habit = dao.getDistinctHabitById(habitId = habitId)
         return habit.map { localMapper.habitEntityToHabit(entity = it) }
@@ -61,7 +63,11 @@ class HabitRepositoryImpl(
 
     override fun getHabitItemByUID(uid: String): Flow<Habit> {
         val habit = dao.getDistinctHabitByUID(uid = uid)
-        return habit.map { localMapper.habitToHabitEntityRemote( it) }
+        return habit
+            .filterNotNull()
+            .map {
+            localMapper.habitToHabitEntityRemote(it)
+        }
     }
 
     override suspend fun performHabitFromServer(habit: Habit) = withContext(Dispatchers.IO){
@@ -77,7 +83,6 @@ class HabitRepositoryImpl(
         dao.updateHabit(localMapper.updateHabitToHabitEntityNotSync(habit = habit))
     }
 
-    //TODO: обновление привычки
     override suspend fun updateHabitFromServer(habit: Habit): ResultData<HabitUID> =
         withContext(Dispatchers.IO){
             try {
@@ -96,13 +101,13 @@ class HabitRepositoryImpl(
             }
         }
 
-    override suspend fun createHabitFromDatabase(newHabit: Habit) = withContext(Dispatchers.IO) {
+    override suspend fun createHabitFromDatabase(newHabit: Habit) = withContext(Dispatchers.IO + coroutineExceptionHandler) {
         dao.insertHabit(localMapper.insertHabitToHabitEntity(habit = newHabit)
             .copy(syncStatus = SyncStatus.PENDING_UPLOAD))
     }
 
     override suspend fun createHabitFromServer(habit: Habit): ResultData<HabitUID> =
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO + coroutineExceptionHandler){
             try {
                 val response = makeRetryingApiCall{service.createHabit(newHabit = remoteMapper.createHabitToHabitItem(habit))}
                 if (response.isSuccessful){
@@ -118,9 +123,8 @@ class HabitRepositoryImpl(
                 return@withContext ResultData.Error(e)
             }
         }
-    //-------TODO: вынести в HabitProcessingRepositoryImpl------
 
-    private suspend fun syncUploadHabitsCreate() = withContext(Dispatchers.IO){
+    private suspend fun syncUploadHabitsCreate() = withContext(Dispatchers.IO + coroutineExceptionHandler){
         val pendingHabits = dao.getPendingUploadHabits()
         pendingHabits.forEach {habit ->
             service.createHabit(remoteMapper.habitEntityToHabitItem(habit))
@@ -128,7 +132,7 @@ class HabitRepositoryImpl(
         }
     }
 
-    private suspend fun syncUploadHabitsUpdate() = withContext(Dispatchers.IO){
+    private suspend fun syncUploadHabitsUpdate() = withContext(Dispatchers.IO + coroutineExceptionHandler){
         val pendingHabits = dao.getPendingDownloadHabits()
         pendingHabits.forEach { habit ->
             service.editHabit(remoteMapper.habitEntityToHabitItemUpdateServer(habit))
@@ -136,10 +140,9 @@ class HabitRepositoryImpl(
         }
     }
 
-    private suspend fun syncServerFromDatabase() = withContext(Dispatchers.IO){
-        val habitResponse = service.getAllHabits().body()
+    private suspend fun syncServerFromDatabase(habitResponse: HabitResponse) = withContext(Dispatchers.IO) {
         dao.clearAll()
-        habitResponse?.forEach {
+        habitResponse.forEach {
             dao.insertHabit(remoteMapper.habitItemToHabitEntity(habit = it))
         }
     }

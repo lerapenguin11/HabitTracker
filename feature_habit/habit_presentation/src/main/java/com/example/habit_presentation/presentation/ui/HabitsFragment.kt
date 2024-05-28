@@ -60,7 +60,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkNetworkStatus()
         initBottomSheet()
         navigateNavigationView()
         setUpTabLayout()
@@ -81,6 +80,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
             }
         }
     }
+
 
     @SuppressLint("RtlHardcoded")
     private fun setOnClickListenerBtDrawer() {
@@ -115,7 +115,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
 
     override fun onResume() {
         super.onResume()
-
+        checkNetworkStatus()
     }
 
     private fun setOnClickListenerFabAddHabit() {
