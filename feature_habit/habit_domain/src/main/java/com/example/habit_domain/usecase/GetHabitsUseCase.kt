@@ -7,7 +7,6 @@ import com.example.habit_domain.repository.HabitsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
 class GetHabitsUseCase(private val repository: HabitsRepository) {
     suspend fun getHabits(status : ConnectivityObserver.Status):

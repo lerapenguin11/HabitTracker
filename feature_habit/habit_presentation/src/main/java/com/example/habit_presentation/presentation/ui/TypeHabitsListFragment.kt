@@ -5,11 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.RecyclerView
+import com.example.core.utils.ConnectivityObserver
 import com.example.habit_domain.model.Habit
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentTypeHabitsListBinding
@@ -18,7 +22,9 @@ import com.example.habit_presentation.presentation.BaseFragment
 import com.example.habit_presentation.presentation.adapter.HabitsAdapter
 import com.example.habit_presentation.presentation.model.TabHabitType
 import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.Lazy
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class TypeHabitsListFragment
@@ -39,6 +45,7 @@ class TypeHabitsListFragment
             .get<ArticlesComponentViewModel>()
             .newDetailsComponent
             .injectTypeHabits(this)
+
         super.onAttach(context)
     }
 
@@ -60,6 +67,82 @@ class TypeHabitsListFragment
         super.onViewCreated(view, savedInstanceState)
         launchTypeHabit()
         habitClickListener()
+        habitDoneClickListener()
+    }
+
+    private fun habitDoneClickListener() = with(viewModel){
+        adapter.onHabitDoneClickListener = {habit, position ->
+            val viewHolder = binding.rvHabits.findViewHolderForAdapterPosition(position)
+            inactiveButtonHabitGone(viewHolder)
+            networkStatus.observe(viewLifecycleOwner) {status ->
+                when(habitType){
+                    TabHabitType.USEFUL.type -> { checkUsefulHabitDone(habit, status, viewHolder) }
+                    TabHabitType.HARMFUL.type -> { checkHarmfulHabitDone(habit, status, viewHolder) }
+                }
+            }
+        }
+    }
+
+    private fun activeButtonHabitGone(viewHolder: RecyclerView.ViewHolder?) {
+        if (viewHolder is HabitsAdapter.HabitViewHolder) {
+            viewHolder.binding.btHabitGone.isEnabled = true
+        }
+    }
+
+    private fun inactiveButtonHabitGone(viewHolder: RecyclerView.ViewHolder?) {
+        if (viewHolder is HabitsAdapter.HabitViewHolder) {
+            viewHolder.binding.btHabitGone.isEnabled = false
+        }
+    }
+
+    private fun checkHarmfulHabitDone( //TODO: сделать рефакторинг
+        habit: Habit,
+        status: ConnectivityObserver.Status?,
+        viewHolder: RecyclerView.ViewHolder?
+    ) {
+        if (habit.done_dates.size == habit.numberExecutions){
+            activeButtonHabitGone(viewHolder)
+            showSnackbar(getString(R.string.text_harmful_habit_done_stop))
+        }else {
+            lifecycleScope.launch {
+                if (viewModel.habitDone(habit, status!!)){
+                    activeButtonHabitGone(viewHolder)
+                    viewModel.loadHabitList(status)
+                    val originalText = getString(R.string.text_remains_execute)
+                    val additionalText = habit.numberExecutions - habit.done_dates.size - 1
+                    showSnackbar("$originalText $additionalText")
+                }
+            }
+        }
+    }
+
+    private fun checkUsefulHabitDone(
+        habit: Habit,
+        status: ConnectivityObserver.Status?,
+        viewHolder: RecyclerView.ViewHolder?
+    ) {
+        if (habit.done_dates.size == habit.numberExecutions){
+            activeButtonHabitGone(viewHolder)
+            showSnackbar(getString(R.string.text_habit_done))
+        } else if (habit.done_dates.size < Math.ceil(habit.numberExecutions.toDouble()/2)) {
+            lifecycleScope.launch {
+                if (viewModel.habitDone(habit, status!!)){
+                    activeButtonHabitGone(viewHolder)
+                    viewModel.loadHabitList(status)
+                    val originalText = getString(R.string.text_remains_execute)
+                    val additionalText = habit.numberExecutions - habit.done_dates.size - 1
+                    showSnackbar("$originalText $additionalText")
+                }
+            }
+        } else{
+            lifecycleScope.launch {
+                if ( viewModel.habitDone(habit, status!!)){
+                    activeButtonHabitGone(viewHolder)
+                    viewModel.loadHabitList(status)
+                    showSnackbar(getString(R.string.text_you_breathtaking))
+                }
+            }
+        }
     }
 
     private fun launchTypeHabit() {
@@ -123,6 +206,13 @@ class TypeHabitsListFragment
         bundle.putString(HABIT_UID, habit.uid)
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
+    }
+
+    fun showSnackbar(text: String) {
+        Snackbar.make(requireView(), text, Snackbar.LENGTH_LONG)
+            .setBackgroundTint(ContextCompat.getColor(requireContext(), R.color.md_theme_dark_onSecondaryContainer))
+            .setTextColor(ContextCompat.getColor(requireContext(), R.color.md_theme_dark_surface))
+            .show()
     }
 
     override fun onDestroyView() {

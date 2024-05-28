@@ -9,9 +9,30 @@ import com.example.habit_domain.model.Habit
 import com.example.habit_domain.model.HabitPriority
 import com.example.habit_domain.model.HabitRepetitionPeriod
 import com.example.habit_domain.model.HabitType
+import java.util.Calendar
 
 class HabitRemoteMapper
 {
+
+    private fun filterDoneDate(doneDates: List<Int>) : List<Int>{
+        val currentCalendar = Calendar.getInstance()
+
+        val currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH)
+        val currentMonth = currentCalendar.get(Calendar.MONTH) + 1
+        val currentYear = currentCalendar.get(Calendar.YEAR)
+
+        val dateFilter = doneDates.filter { doneDate ->
+            currentCalendar.timeInMillis = doneDate.toLong() * 1000
+
+            val day = currentCalendar.get(Calendar.DAY_OF_MONTH)
+            val month = currentCalendar.get(Calendar.MONTH) + 1
+            val year = currentCalendar.get(Calendar.YEAR)
+            day == currentDay && month == currentMonth && year == currentYear
+        }
+
+        return  dateFilter
+    }
+
     fun habitToHabitDoneEntitySync(habit: Habit) : HabitEntity{
         var doneHabitList = habit.done_dates.toMutableList()
         val doneDate = (System.currentTimeMillis()/1000).toInt()
@@ -58,7 +79,7 @@ class HabitRemoteMapper
             date = (System.currentTimeMillis()/1000).toInt()
         )
     }
-    fun habitsResponseToHabits(habitsResponse : HabitResponse) : List<Habit>{
+    fun habitsResponseToHabits(habitsResponse : HabitResponse) : List<Habit>{ //TODO
         val habits = mutableListOf<Habit>()
         habitsResponse.forEach {response ->
             val habit = Habit(
@@ -71,7 +92,7 @@ class HabitRemoteMapper
                 period = HabitRepetitionPeriod.codeByPeriod(response.frequency),
                 color = response.color,
                 dateCreation = response.date,
-                done_dates = response.done_dates
+                done_dates = filterDoneDate(response.done_dates)
             )
             habits.add(habit)
         }

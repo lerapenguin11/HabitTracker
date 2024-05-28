@@ -60,22 +60,26 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(viewModel){
-            networkStatus.observe(viewLifecycleOwner) { status ->
-                when(status){
-                    ConnectivityObserver.Status.AVAILABLE ->{loadHabitRemoteList(status)}
-                    ConnectivityObserver.Status.UNAVAILABLE ->{loadHabitRemoteList(status)}
-                    ConnectivityObserver.Status.LOST -> { loadHabitRemoteList(status)}
-                    ConnectivityObserver.Status.LOSING ->{loadHabitRemoteList(status)}
-                }
-            }
-        }
+        checkNetworkStatus()
         initBottomSheet()
         navigateNavigationView()
         setUpTabLayout()
         setOnClickListenerFabAddHabit()
         setOnClickListenerBtDrawer()
         setAvatar()
+    }
+
+    private fun checkNetworkStatus() {
+        with(viewModel){
+            networkStatus.observe(viewLifecycleOwner) { status ->
+                when(status){
+                    ConnectivityObserver.Status.AVAILABLE ->{loadHabitList(status)}
+                    ConnectivityObserver.Status.UNAVAILABLE ->{loadHabitList(status)}
+                    ConnectivityObserver.Status.LOST -> { loadHabitList(status)}
+                    ConnectivityObserver.Status.LOSING ->{loadHabitList(status)}
+                }
+            }
+        }
     }
 
     @SuppressLint("RtlHardcoded")

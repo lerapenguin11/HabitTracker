@@ -8,6 +8,7 @@ import com.example.habit_domain.model.HabitPriority
 import com.example.habit_domain.model.HabitRepetitionPeriod
 import com.example.habit_domain.model.HabitType
 import com.example.habit_domain.model.HabitUID
+import java.util.Calendar
 
 class HabitMapper
 {
@@ -126,10 +127,29 @@ class HabitMapper
                 color = entity.color,
                 dateCreation = entity.dateCreation,
                 id = entity.id,
-                done_dates = entity.done_dates
+                done_dates = filterDoneDate(entity.done_dates)
             )
             habits.add(habit)
         }
         return habits
+    }
+
+    private fun filterDoneDate(doneDates: List<Int>) : List<Int>{
+        val currentCalendar = Calendar.getInstance()
+
+        val currentDay = currentCalendar.get(Calendar.DAY_OF_MONTH)
+        val currentMonth = currentCalendar.get(Calendar.MONTH) + 1
+        val currentYear = currentCalendar.get(Calendar.YEAR)
+
+        val dateFilter = doneDates.filter { doneDate ->
+            currentCalendar.timeInMillis = doneDate.toLong() * 1000
+
+            val day = currentCalendar.get(Calendar.DAY_OF_MONTH)
+            val month = currentCalendar.get(Calendar.MONTH) + 1
+            val year = currentCalendar.get(Calendar.YEAR)
+            day == currentDay && month == currentMonth && year == currentYear
+        }
+
+        return  dateFilter
     }
 }

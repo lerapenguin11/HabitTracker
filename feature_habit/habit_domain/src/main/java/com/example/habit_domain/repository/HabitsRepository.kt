@@ -3,8 +3,6 @@ package com.example.habit_domain.repository
 import com.example.core.network.ResultData
 import com.example.habit_domain.model.Habit
 import com.example.habit_domain.model.HabitUID
-import dagger.Module
-import dagger.Provides
 import kotlinx.coroutines.flow.Flow
 
 interface HabitsRepository

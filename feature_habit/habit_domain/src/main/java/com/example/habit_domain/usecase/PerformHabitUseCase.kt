@@ -1,10 +1,8 @@
 package com.example.habit_domain.usecase
 
-import com.example.core.network.ResultData
 import com.example.core.utils.ConnectivityObserver
 import com.example.habit_domain.model.Habit
 import com.example.habit_domain.repository.HabitsRepository
-import kotlinx.coroutines.flow.flow
 
 class PerformHabitUseCase(private val repository: HabitsRepository) {
 

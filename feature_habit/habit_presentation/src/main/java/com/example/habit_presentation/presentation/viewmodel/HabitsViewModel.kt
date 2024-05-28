@@ -13,8 +13,8 @@ import com.example.habit_domain.model.HabitType
 import com.example.habit_domain.usecase.GetHabitsUseCase
 import com.example.habit_domain.usecase.PerformHabitUseCase
 import com.example.habit_presentation.presentation.model.FilterParameters
-import dagger.internal.Provider
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -64,12 +64,25 @@ class HabitsViewModel(
             .launchIn(viewModelScope)
     }
 
-    fun loadHabitRemoteList(status : ConnectivityObserver.Status) = viewModelScope.launch {
+    suspend fun habitDone(habit: Habit, status: ConnectivityObserver.Status) : Boolean{
+        viewModelScope.async {
+            performHabitUseCase.performHabit(habit = habit, status = status)
+        }.await()
+        return true
+    }
+    suspend fun test(habit: Habit, status: ConnectivityObserver.Status): Boolean {
+        viewModelScope.async {
+            performHabitUseCase.performHabit(habit = habit, status = status)
+        }.await()
+        return true
+    }
+
+    fun loadHabitList(status : ConnectivityObserver.Status) = viewModelScope.launch {
         getHabitsUseCase.getHabits(status = status).collect { habitResult->
             when(habitResult){
                 is ResultData.Success -> {
                     habitList.value = habitResult.data
-                    load()
+                    filterHabitsType()
                 }
                 is ResultData.Error -> {
                 }
@@ -78,7 +91,7 @@ class HabitsViewModel(
         }
     }
 
-    private fun load() {
+    private fun filterHabitsType() {
         combine(habitList){ allHabits ->
             Pair(
                 withContext(Dispatchers.Default){

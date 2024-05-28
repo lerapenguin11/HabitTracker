@@ -45,4 +45,9 @@
     <string name="text_regular">Регулярная</string>
     <string name="text_on_time">Разовая</string>
     <string name="text_habit_gone">Выполнить!</string>
+    
+    <string name="text_habit_done">Цель на сегодня достигнута! 🎯</string>
+    <string name="text_remains_execute">Стоит выполнить еще</string>
+    <string name="text_you_breathtaking">You are breathtaking! ✨</string>
+    <string name="text_harmful_habit_done_stop">На сегодня достаточно! 🚬</string>
 </resources>

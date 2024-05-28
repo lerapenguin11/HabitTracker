@@ -1,18 +1,20 @@
 package com.example.habit_presentation.presentation.adapter
 
 import android.annotation.SuppressLint
-import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.habit_domain.model.Habit
 import com.example.habit_presentation.databinding.ItemHabitsBinding
 import com.example.habit_presentation.presentation.adapter.itemDiffCallback.HabitItemDiffCallback
 
 internal class HabitsAdapter(
-    var onHabitListClickListener : ((Habit) -> Unit)? = null
+    var onHabitListClickListener : ((Habit) -> Unit)? = null,
+    var onHabitDoneClickListener : ((Habit, Int) -> Unit)? = null
 )
     : ListAdapter<Habit, HabitsAdapter.HabitViewHolder>(HabitItemDiffCallback())
 {
@@ -22,19 +24,22 @@ internal class HabitsAdapter(
                 false)
         return HabitViewHolder(itemBinding)
     }
-    
+
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         val habit = getItem(position)
         holder.bind(habit)
     }
 
     inner class HabitViewHolder(
-        private val binding : ItemHabitsBinding)
+        val binding : ItemHabitsBinding)
         : RecyclerView.ViewHolder(binding.root)
     {
         init {
             itemView.setOnClickListener {
                 onHabitListClickListener?.invoke(getItem(adapterPosition))
+            }
+            binding.btHabitGone.setOnClickListener {
+                onHabitDoneClickListener?.invoke(getItem(adapterPosition), position)
             }
         }
 
