@@ -11,6 +11,7 @@ import com.example.core.utils.NetworkConnectivityObserver
 import com.example.habit_domain.model.Habit
 import com.example.habit_domain.model.HabitType
 import com.example.habit_domain.usecase.GetHabitsUseCase
+import com.example.habit_domain.usecase.PerformHabitUseCase
 import com.example.habit_presentation.presentation.model.FilterParameters
 import dagger.internal.Provider
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +26,8 @@ import javax.inject.Inject
 
 class HabitsViewModel(
     private val nct : NetworkConnectivityObserver,
-    private val getHabitsUseCase: GetHabitsUseCase
+    private val getHabitsUseCase: GetHabitsUseCase,
+    private val performHabitUseCase: PerformHabitUseCase
 )
     : ViewModel(){
 
@@ -250,13 +252,14 @@ class HabitsViewModel(
 
     class Factory @Inject constructor(
         private val nct : NetworkConnectivityObserver,
-        private val getHabitsUseCase: GetHabitsUseCase
+        private val getHabitsUseCase: GetHabitsUseCase,
+        private val performHabitUseCase: PerformHabitUseCase
     ) : ViewModelProvider.Factory {
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             require(modelClass == HabitsViewModel::class.java)
-            return HabitsViewModel(nct, getHabitsUseCase) as T
+            return HabitsViewModel(nct, getHabitsUseCase, performHabitUseCase) as T
         }
     }
 }

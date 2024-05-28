@@ -22,8 +22,7 @@ internal class HabitsAdapter(
                 false)
         return HabitViewHolder(itemBinding)
     }
-
-    @RequiresApi(Build.VERSION_CODES.O)
+    
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         val habit = getItem(position)
         holder.bind(habit)
@@ -38,7 +37,7 @@ internal class HabitsAdapter(
                 onHabitListClickListener?.invoke(getItem(adapterPosition))
             }
         }
-        @RequiresApi(Build.VERSION_CODES.O)
+
         @SuppressLint("SetTextI18n")
         fun bind(habit : Habit) {
             binding.tvTitleHabit.text = habit.title
@@ -48,8 +47,8 @@ internal class HabitsAdapter(
             binding.chipFrequency.text = "${habit.numberExecutions} " +
                     "${checkingNumberExclusion(habit.numberExecutions.toString())} | ${habit.period.period}"
 
-            binding.linearProgressBar.min = if (habit.done_dates.isEmpty()){ 0 } else{habit.done_dates.size}
-
+            binding.linearProgressBar.max = habit.numberExecutions
+            binding.linearProgressBar.progress = habit.done_dates.size
             //binding.habitCard.setCardBackgroundColor(habit.color)
         }
 

@@ -18,10 +18,10 @@ class GetHabitsUseCase(private val repository: HabitsRepository) {
                     repository.getHabitsFromServer()
                 flow { emit(result) }
             }
-            ConnectivityObserver.Status.LOSING -> {
+            /*ConnectivityObserver.Status.LOSING -> {
                 val result = repository.getHabitsFromServer()
                 flow { emit(result) }
-            }
+            }*/
             else -> {
                 repository.getHabitsFromDatabase().map { ResultData.Success(it) }
             }

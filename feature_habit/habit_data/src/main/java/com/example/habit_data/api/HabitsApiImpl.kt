@@ -1,5 +1,6 @@
 package com.example.habit_data.api
 
+import com.example.habit_data.modelResponse.HabitDoneResponse
 import com.example.habit_data.modelResponse.HabitItem
 import com.example.habit_data.modelResponse.HabitResponse
 import com.example.habit_data.modelResponse.HabitUIDResponse
@@ -23,5 +24,9 @@ class HabitsApiImpl(retrofit: Retrofit) : HabitsApi {
 
     override suspend fun deleteHabit(uid: String) {
         return apiService.deleteHabit(uid = uid)
+    }
+
+    override suspend fun doneHabit(habitDoneResponse: HabitDoneResponse) {
+        return apiService.doneHabit(habitDoneResponse = habitDoneResponse)
     }
 }

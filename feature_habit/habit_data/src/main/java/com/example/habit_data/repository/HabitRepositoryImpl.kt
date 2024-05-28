@@ -71,6 +71,15 @@ class HabitRepositoryImpl(
         return habit.map { localMapper.habitToHabitEntityRemote( it) }
     }
 
+    override suspend fun performHabitFromServer(habit: Habit) = withContext(Dispatchers.IO){
+        service.doneHabit(remoteMapper.habitToHabitDoneResponse(habit.uid))
+        dao.updateHabit(remoteMapper.habitToHabitDoneEntitySync(habit))
+    }
+
+    override suspend fun performHabitFromDatabase(habit: Habit) = withContext(Dispatchers.IO){
+        dao.updateHabit(remoteMapper.habitToHabitDoneEntityNotSync(habit))
+    }
+
     override suspend fun updateHabitFromDatabase(habit: Habit) = withContext(Dispatchers.IO) {
         dao.updateHabit(localMapper.updateHabitToHabitEntityNotSync(habit = habit))
     }

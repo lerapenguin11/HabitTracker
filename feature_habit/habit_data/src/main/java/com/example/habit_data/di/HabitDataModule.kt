@@ -12,6 +12,7 @@ import com.example.habit_domain.repository.HabitsRepository
 import com.example.habit_domain.usecase.CreateHabitUseCase
 import com.example.habit_domain.usecase.GetHabitByIdUseCase
 import com.example.habit_domain.usecase.GetHabitsUseCase
+import com.example.habit_domain.usecase.PerformHabitUseCase
 import com.example.habit_domain.usecase.UpdateHabitUseCase
 import dagger.Module
 import dagger.Provides
@@ -68,5 +69,10 @@ object HabitDataModule {
     @Provides
     fun provideUpdateHabitUseCase(repository: HabitsRepository) : UpdateHabitUseCase {
         return UpdateHabitUseCase(repository)
+    }
+
+    @Provides
+    fun providePerformHabitUseCase(repository: HabitsRepository) : PerformHabitUseCase{
+        return PerformHabitUseCase(repository)
     }
 }

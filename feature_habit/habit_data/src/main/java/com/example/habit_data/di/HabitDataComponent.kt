@@ -12,6 +12,7 @@ import com.example.habit_domain.repository.HabitsRepository
 import com.example.habit_domain.usecase.CreateHabitUseCase
 import com.example.habit_domain.usecase.GetHabitByIdUseCase
 import com.example.habit_domain.usecase.GetHabitsUseCase
+import com.example.habit_domain.usecase.PerformHabitUseCase
 import com.example.habit_domain.usecase.UpdateHabitUseCase
 import dagger.Component
 
@@ -28,6 +29,8 @@ interface HabitDataComponent : HabitDomain{
     fun provideGetHabitByIdUseCase() : GetHabitByIdUseCase
 
     fun provideUpdateHabitUseCase() : UpdateHabitUseCase
+
+    fun providePerformHabitUseCase() : PerformHabitUseCase
 
     fun provideContext() : Context
 

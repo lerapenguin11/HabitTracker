@@ -2,6 +2,7 @@ package com.example.habit_data.mappers
 
 import com.example.core.room.entity.HabitEntity
 import com.example.core.room.entity.SyncStatus
+import com.example.habit_data.modelResponse.HabitDoneResponse
 import com.example.habit_data.modelResponse.HabitItem
 import com.example.habit_data.modelResponse.HabitResponse
 import com.example.habit_domain.model.Habit
@@ -11,6 +12,52 @@ import com.example.habit_domain.model.HabitType
 
 class HabitRemoteMapper
 {
+    fun habitToHabitDoneEntitySync(habit: Habit) : HabitEntity{
+        var doneHabitList = habit.done_dates.toMutableList()
+        val doneDate = (System.currentTimeMillis()/1000).toInt()
+        doneHabitList.add(doneDate)
+        return HabitEntity(
+            id = habit.id,
+            title = habit.title,
+            description = habit.description,
+            type = HabitType.typeByCode(habit.type),
+            habitPriority = HabitPriority.priorityByCode(habit.habitPriority),
+            numberExecutions = habit.numberExecutions,
+            period = HabitRepetitionPeriod.periodByCode(habit.period),
+            color = habit.color,
+            dateCreation = habit.dateCreation,
+            uid = habit.uid,
+            syncStatus = SyncStatus.SYNCED,
+            done_dates = doneHabitList
+        )
+    }
+
+    fun habitToHabitDoneEntityNotSync(habit: Habit) : HabitEntity{
+        var doneHabitList = habit.done_dates.toMutableList()
+        val doneDate = (System.currentTimeMillis()/1000).toInt()
+        doneHabitList.add(doneDate)
+        return HabitEntity(
+            id = habit.id,
+            title = habit.title,
+            description = habit.description,
+            type = HabitType.typeByCode(habit.type),
+            habitPriority = HabitPriority.priorityByCode(habit.habitPriority),
+            numberExecutions = habit.numberExecutions,
+            period = HabitRepetitionPeriod.periodByCode(habit.period),
+            color = habit.color,
+            dateCreation = habit.dateCreation,
+            uid = habit.uid,
+            syncStatus = SyncStatus.PENDING_DOWNLOAD,
+            done_dates = doneHabitList
+        )
+    }
+
+    fun habitToHabitDoneResponse(uid : String) : HabitDoneResponse{
+        return HabitDoneResponse(
+            habit_uid = uid,
+            date = (System.currentTimeMillis()/1000).toInt()
+        )
+    }
     fun habitsResponseToHabits(habitsResponse : HabitResponse) : List<Habit>{
         val habits = mutableListOf<Habit>()
         habitsResponse.forEach {response ->

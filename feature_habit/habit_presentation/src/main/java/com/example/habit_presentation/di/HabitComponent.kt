@@ -7,6 +7,7 @@ import com.example.core.utils.NetworkConnectivityObserver
 import com.example.habit_domain.usecase.CreateHabitUseCase
 import com.example.habit_domain.usecase.GetHabitByIdUseCase
 import com.example.habit_domain.usecase.GetHabitsUseCase
+import com.example.habit_domain.usecase.PerformHabitUseCase
 import com.example.habit_domain.usecase.UpdateHabitUseCase
 import com.example.habit_presentation.presentation.ui.HabitProcessingFragment
 import com.example.habit_presentation.presentation.ui.HabitsFragment
@@ -41,6 +42,7 @@ interface HabitsDeps {
     val createHabitUseCase: CreateHabitUseCase
     val getHabitByIdUseCase: GetHabitByIdUseCase
     val updateHabitUseCase: UpdateHabitUseCase
+    val performHabitUseCase : PerformHabitUseCase
 }
 
 interface ArticlesDepsProvider {
