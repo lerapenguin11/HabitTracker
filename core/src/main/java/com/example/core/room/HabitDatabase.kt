@@ -4,12 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.core.R
 import com.example.core.room.entity.HabitEntity
-import dagger.Module
-import dagger.Provides
+import com.example.core.room.typeConverter.HabitEntityTypeConverter
 
-@Database(entities = [HabitEntity::class], version = 13, exportSchema = false)
+@Database(entities = [HabitEntity::class], version = 14, exportSchema = false)
+@TypeConverters(HabitEntityTypeConverter::class)
 abstract class HabitDatabase : RoomDatabase() {
 
     abstract fun getHabitDao(): HabitDao

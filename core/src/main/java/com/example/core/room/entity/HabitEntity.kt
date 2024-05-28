@@ -19,7 +19,8 @@ data class HabitEntity(
     val color : Int,
     val dateCreation : Int,
     val uid : String,
-    val syncStatus: SyncStatus
+    val syncStatus: SyncStatus,
+    val done_dates: List<Int>
 )
 enum class SyncStatus {
     SYNCED,

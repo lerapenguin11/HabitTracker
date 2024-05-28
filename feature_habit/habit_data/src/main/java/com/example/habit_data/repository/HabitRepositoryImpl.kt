@@ -129,7 +129,7 @@ class HabitRepositoryImpl(
     private suspend fun syncUploadHabitsUpdate() = withContext(Dispatchers.IO){
         val pendingHabits = dao.getPendingDownloadHabits()
         pendingHabits.forEach { habit ->
-            service.editHabit(remoteMapper.habitEntityToHabitItem(habit))
+            service.editHabit(remoteMapper.habitEntityToHabitItemUpdateServer(habit))
             dao.updateHabit(habit.copy(syncStatus = SyncStatus.SYNCED))
         }
     }

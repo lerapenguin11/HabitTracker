@@ -23,7 +23,8 @@ class HabitRemoteMapper
                 numberExecutions = response.count,
                 period = HabitRepetitionPeriod.codeByPeriod(response.frequency),
                 color = response.color,
-                dateCreation = response.date
+                dateCreation = response.date,
+                done_dates = response.done_dates
             )
             habits.add(habit)
         }
@@ -45,6 +46,21 @@ class HabitRemoteMapper
         )
     }
 
+    fun habitEntityToHabitItemUpdateServer(entity: HabitEntity) : HabitItem {
+        return HabitItem(
+            uid = entity.uid,
+            title = entity.title,
+            description = entity.description,
+            type = entity.type,
+            priority = entity.period,
+            count = entity.numberExecutions,
+            frequency = entity.habitPriority,
+            color = entity.color,
+            date = (System.currentTimeMillis()/1000).toInt(),
+            done_dates = entity.done_dates
+        )
+    }
+
     fun habitItemToHabitEntity(habit : HabitItem) : HabitEntity{
         return HabitEntity(
             title = habit.title,
@@ -56,7 +72,8 @@ class HabitRemoteMapper
             color = habit.color,
             dateCreation = habit.date,
             uid = habit.uid,
-            syncStatus = SyncStatus.SYNCED
+            syncStatus = SyncStatus.SYNCED,
+            done_dates = habit.done_dates
         )
     }
 

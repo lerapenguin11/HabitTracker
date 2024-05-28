@@ -186,7 +186,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 numberExecutions = tvArrayExecutions.text.toString().toInt(),
                 period = HabitRepetitionPeriod.lineByPeriod(period),
                 color = color,
-                dateCreation = (System.currentTimeMillis()/1000).toInt()
+                dateCreation = (System.currentTimeMillis()/1000).toInt(),
+                done_dates = emptyList()
             )
         }
 
@@ -205,7 +206,8 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                 numberExecutions = tvArrayExecutions.text.toString().toInt(),
                 period = HabitRepetitionPeriod.lineByPeriod(period),
                 color = color,
-                dateCreation = getDateCreationHabit().toInt()
+                dateCreation = getDateCreationHabit().toInt(),
+                done_dates = viewModel.habitItem.value!!.done_dates
             )
         }
 

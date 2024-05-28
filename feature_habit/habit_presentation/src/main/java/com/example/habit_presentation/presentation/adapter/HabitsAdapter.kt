@@ -1,8 +1,10 @@
 package com.example.habit_presentation.presentation.adapter
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.habit_domain.model.Habit
@@ -21,6 +23,7 @@ internal class HabitsAdapter(
         return HabitViewHolder(itemBinding)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: HabitViewHolder, position: Int) {
         val habit = getItem(position)
         holder.bind(habit)
@@ -35,6 +38,7 @@ internal class HabitsAdapter(
                 onHabitListClickListener?.invoke(getItem(adapterPosition))
             }
         }
+        @RequiresApi(Build.VERSION_CODES.O)
         @SuppressLint("SetTextI18n")
         fun bind(habit : Habit) {
             binding.tvTitleHabit.text = habit.title
@@ -43,6 +47,8 @@ internal class HabitsAdapter(
             binding.chipPriority.text = habit.habitPriority.priority.toString()
             binding.chipFrequency.text = "${habit.numberExecutions} " +
                     "${checkingNumberExclusion(habit.numberExecutions.toString())} | ${habit.period.period}"
+
+            binding.linearProgressBar.min = if (habit.done_dates.isEmpty()){ 0 } else{habit.done_dates.size}
 
             //binding.habitCard.setCardBackgroundColor(habit.color)
         }

@@ -22,7 +22,8 @@ class HabitMapper
             color = habit.color,
             dateCreation = habit.dateCreation,
             uid = uid,
-            syncStatus = SyncStatus.SYNCED
+            syncStatus = SyncStatus.SYNCED,
+            done_dates = habit.done_dates
         )
     }
 
@@ -38,7 +39,8 @@ class HabitMapper
             dateCreation = habit.dateCreation,
             uid = uid,
             id = habit.id,
-            syncStatus = SyncStatus.SYNCED
+            syncStatus = SyncStatus.SYNCED,
+            done_dates = habit.done_dates
         )
     }
 
@@ -57,7 +59,8 @@ class HabitMapper
             period = HabitRepetitionPeriod.codeByPeriod(entity.period),
             color = entity.color,
             dateCreation = entity.dateCreation,
-            uid = entity.uid
+            uid = entity.uid,
+            done_dates = entity.done_dates
         )
     }
 
@@ -74,7 +77,8 @@ class HabitMapper
             color = habit.color,
             dateCreation = habit.dateCreation,
             uid = habit.uid,
-            syncStatus = SyncStatus.PENDING_DOWNLOAD
+            syncStatus = SyncStatus.PENDING_DOWNLOAD,
+            done_dates = habit.done_dates
         )
     }
 
@@ -89,7 +93,8 @@ class HabitMapper
             color = habit.color,
             dateCreation = habit.dateCreation,
             uid = habit.uid,
-            syncStatus = SyncStatus.PENDING_UPLOAD
+            syncStatus = SyncStatus.PENDING_UPLOAD,
+            done_dates = habit.done_dates
         )
     }
 
@@ -103,7 +108,8 @@ class HabitMapper
             numberExecutions = entity.numberExecutions,
             period = HabitRepetitionPeriod.codeByPeriod(entity.period),
             color = entity.color,
-            dateCreation = entity.dateCreation
+            dateCreation = entity.dateCreation,
+            done_dates = entity.done_dates
         )
     }
     fun habitsEntityToHabits(habitEntities : List<HabitEntity>) : List<Habit>{
@@ -119,7 +125,8 @@ class HabitMapper
                 period = HabitRepetitionPeriod.codeByPeriod(entity.period),
                 color = entity.color,
                 dateCreation = entity.dateCreation,
-                id = entity.id
+                id = entity.id,
+                done_dates = entity.done_dates
             )
             habits.add(habit)
         }

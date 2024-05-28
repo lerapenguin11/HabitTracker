@@ -14,7 +14,8 @@ data class Habit(
     val numberExecutions : Int,
     val period : HabitRepetitionPeriod,
     val color : Int,
-    val dateCreation : Int
+    val dateCreation : Int,
+    val done_dates: List<Int>
 ) : Parcelable{
     companion object{
         const val UNDEFINED_ID = ""
