@@ -1,0 +1,53 @@
+<resources>
+    <string name="database_name">habit_db</string>
+
+    <string name="app_name">Habit Tracker</string>
+    <string name="text_motivational">21 день - период времени, после которого новая привычка закрепиться в сознании и становится полностью осознанной</string>
+    <string name="text_no_habits">Пока нет привычек</string>
+    <string name="text_name_habit">Название привычки</string>
+    <string name="text_desc_habit">Описание привычки</string>
+    <string name="text_priority">Приоритет</string>
+    <string name="text_type_habit">Тип привычки</string>
+    <string name="text_number_executions">Количество выполнений</string>
+    <string name="text_frequency">Периодичность</string>
+    <string name="text_color_card">Цвет карточки</string>
+    <string name="text_save">Сохранить</string>
+    <string name="text_choose_type_habit">Выберите тип привычки</string>
+    <string name="text_choose_period_habit">Выберите период выполнения привычки</string>
+    <string name="text_close">Закрыть</string>
+    <string name="text_gone">Готово</string>
+    <string name="text_choose_color">Выберите цвет карточки</string>
+    <string name="text_create_habit">Создать привычку</string>
+    <string name="text_update_habit">Редактировать привычку</string>
+    <string name="text_tab1">Полезные</string>
+    <string name="text_tab2">Вредные</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="text_habit">Привычки</string>
+    <string name="text_list_habits">Список привычек</string>
+    <string name="text_about_app">О приложении</string>
+    <string name="text_num_exception">раза в день</string>
+    <string name="text_num">раз в день</string>
+    <string name="text_habits">Привычки</string>
+    <string name="text_filter">Фильтры</string>
+    <string name="text_search_name_habit">Поиск по названию привычки</string>
+    <string name="text_search_desc_habit">Поиск по описанию привычки</string>
+    <string name="text_apply">Применить</string>
+    <string name="text_cancel">Сбросить</string>
+
+    <string name="text_high">Высокий</string>
+    <string name="text_medium">Средний</string>
+    <string name="text_low">Низкий</string>
+
+    <string name="text_useful">Полезная</string>
+    <string name="text_harmful">Вредная</string>
+
+    <string name="text_regular">Регулярная</string>
+    <string name="text_on_time">Разовая</string>
+    <string name="text_habit_gone">Выполнить!</string>
+    
+    <string name="text_habit_done">Цель на сегодня достигнута! 🎯</string>
+    <string name="text_remains_execute">Стоит выполнить еще</string>
+    <string name="text_you_breathtaking">You are breathtaking! ✨</string>
+    <string name="text_harmful_habit_done_stop">На сегодня достаточно! 🚬</string>
+</resources>

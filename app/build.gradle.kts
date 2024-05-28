@@ -4,7 +4,7 @@ plugins {
     id(libs.plugins.androidApplication.get().pluginId)
     id(libs.plugins.kotlinAndroid.get().pluginId)
     id(libs.plugins.kotlin.parcelize.get().pluginId)
-    id(libs.plugins.kotlin.kapt.get().pluginId)
+    id("kotlin-kapt")
 }
 
 android {
@@ -59,6 +59,10 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature_habit:habit_presentation"))
+    implementation(project(":feature_habit:habit_domain"))
+    implementation(project(":feature_habit:habit_data"))
+    implementation(project(":core"))
 
     implementation(libs.android.core.ktx)
     implementation(libs.android.appcompat)
@@ -81,6 +85,8 @@ dependencies {
     implementation(libs.logging.interceptor)
     implementation(libs.kotlin.coroutines.adapter)
     implementation(libs.glide)
+    implementation(libs.dagger)
+    kapt(libs.dagger.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)
