@@ -35,6 +35,11 @@ android {
     buildFeatures{
         viewBinding = true
     }
+    testOptions{
+        unitTests.all {
+                test -> test.useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -51,7 +56,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
-    testImplementation(libs.junit)
+    //testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)
 }

@@ -45,8 +45,6 @@ android {
 dependencies {
     implementation(project(":core"))
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.20")
-
     implementation(libs.android.core.ktx)
     implementation(libs.android.appcompat)
     implementation(libs.android.material)
@@ -59,6 +57,6 @@ dependencies {
     testImplementation(libs.junit.jupiter)
     testImplementation(libs.mockito.core)
     testImplementation(libs.mockito.kotlin)
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
-    testImplementation("org.mockito:mockito-junit-jupiter:4.0.0")
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockito.junit.jupiter)
 }

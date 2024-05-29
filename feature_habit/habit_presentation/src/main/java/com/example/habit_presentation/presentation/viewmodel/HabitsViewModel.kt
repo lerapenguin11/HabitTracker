@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.jetbrains.annotations.VisibleForTesting
 import javax.inject.Inject
 
 class HabitsViewModel(
@@ -65,12 +66,6 @@ class HabitsViewModel(
     }
 
     suspend fun habitDone(habit: Habit, status: ConnectivityObserver.Status) : Boolean{
-        viewModelScope.async {
-            performHabitUseCase.performHabit(habit = habit, status = status)
-        }.await()
-        return true
-    }
-    suspend fun test(habit: Habit, status: ConnectivityObserver.Status): Boolean {
         viewModelScope.async {
             performHabitUseCase.performHabit(habit = habit, status = status)
         }.await()
