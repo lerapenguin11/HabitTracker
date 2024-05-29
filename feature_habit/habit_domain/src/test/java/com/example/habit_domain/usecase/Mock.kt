@@ -5,6 +5,9 @@ import com.example.habit_domain.model.HabitPriority
 import com.example.habit_domain.model.HabitRepetitionPeriod
 import com.example.habit_domain.model.HabitType
 
+val uid = "123"
+val habitId = 1L
+
 fun getHabit() : Habit{
     return Habit("jdnjdnvjd-fdfg",
         id = 1,

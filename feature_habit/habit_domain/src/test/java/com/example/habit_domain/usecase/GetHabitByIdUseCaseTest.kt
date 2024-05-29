@@ -26,7 +26,6 @@ class GetHabitByIdUseCaseTest {
 
     @Test
     fun `getHabitById returns habit by id when uid is null or empty`() = runTest {
-        val habitId = 1L
         val habit = getHabit()
         whenever(repository.getHabitItem(habitId)).thenReturn(flowOf(habit))
 
@@ -37,7 +36,6 @@ class GetHabitByIdUseCaseTest {
 
     @Test
     fun `getHabitById returns habit by UID when uid is not null or empty`() = runTest {
-        val uid = "123"
         val habit = getHabit()
         whenever(repository.getHabitItemByUID(uid)).thenReturn(flowOf(habit))
 
