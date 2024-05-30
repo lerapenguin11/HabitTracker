@@ -127,4 +127,5 @@ dependencies {
     debugImplementation("androidx.fragment:fragment-testing:1.7.1")
     androidTestImplementation("com.kaspersky.android-components:kaspresso:1.3.0")
     testImplementation("com.kaspersky.android-components:kaspresso:1.5.3")
+    androidTestImplementation("com.agoda.kakao:kakao:2.1.0-support")
 }

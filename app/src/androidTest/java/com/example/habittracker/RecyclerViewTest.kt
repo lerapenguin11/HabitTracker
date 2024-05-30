@@ -19,12 +19,12 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-
 @RunWith(AndroidJUnit4::class)
 class RecyclerViewTest : TestCase() {
     object HabitsScreen : KScreen<HabitsScreen>() {
         override val layoutId: Int = R.layout.fragment_type_habits_list
         override val viewClass: Class<*> = TypeHabitsListFragment::class.java
+
 
         val rvHabits = KRecyclerView(
             builder = { withId(R.id.rv_habits) },
@@ -33,8 +33,6 @@ class RecyclerViewTest : TestCase() {
             } })
 
         class HabitItemScreen(matcher: Matcher<View>) : KRecyclerItem<HabitItemScreen>(matcher) {
-
-            val habitCard = KView(matcher){ withId(R.id.habit_card) }
             val title = KTextView(matcher){ withId(R.id.tv_title_habit) }
             val desc = KTextView(matcher){ withId(R.id.tv_desc_habit) }
             val line = KView(matcher){ withId(R.id.line) }
@@ -52,19 +50,37 @@ class RecyclerViewTest : TestCase() {
         HabitsScreen {
             rvHabits.isVisible()
             Thread.sleep(2000)
-            //Check elements visibility
-            rvHabits.children<HabitsScreen.HabitItemScreen> {
-                this.habitCard.isVisible()
-                this.title.isVisible()
-                this.desc.isVisible()
-                this.line.isVisible()
-                this.chipGroup.isVisible()
-                this.progress.isVisible()
-                this.btDone.isVisible()
 
-                //Check elements click
-                this.habitCard.isClickable()
-                this.btDone.isClickable()
+            //Check elements visibility
+            rvHabits {
+                //Check elements visible
+                children<HabitsScreen.HabitItemScreen> {
+                    title.isVisible()
+                    desc.isVisible()
+                    line.isVisible()
+                    chipGroup.isVisible()
+                    progress.isVisible()
+                    btDone.isVisible()
+                }
+            }
+            //Check elements click
+            rvHabits{
+                firstChild<HabitsScreen.HabitItemScreen> {
+                    this.isClickable()
+                    this.isFocusable()
+                }
+                children<HabitsScreen.HabitItemScreen>{
+                    btDone.isClickable()
+                }
+            }
+            //Check progress after clicking on the button
+            rvHabits{
+                firstChild<HabitsScreen.HabitItemScreen> {
+                    progress.hasProgress(0)
+                    btDone.click()
+                    Thread.sleep(1000)
+                    progress.hasProgress(1)
+                }
             }
         }
     }

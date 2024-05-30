@@ -231,5 +231,7 @@ class TypeHabitsListFragment
         private const val HABIT_UID = "update_habit"
         private const val HABIT_ID = "id"
         private const val TYPE_HABITS = "type_habits"
+
+        fun getInstance() : TypeHabitsListFragment = TypeHabitsListFragment()
     }
 }

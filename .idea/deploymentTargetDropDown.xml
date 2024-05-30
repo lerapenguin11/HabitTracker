@@ -2,13 +2,13 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="Test">
+      <entry key="RecyclerViewTest">
+        <State />
+      </entry>
+      <entry key="RecyclerViewTest$HabitsScreen$HabitItemScreen">
         <State />
       </entry>
       <entry key="Test$HabitsScreen$HabitItemScreen">
-        <State />
-      </entry>
-      <entry key="ToolbarHabitTest">
         <State />
       </entry>
       <entry key="app">
@@ -43,7 +43,7 @@
           <timeTargetWasSelectedWithDropDown value="2024-05-30T09:01:31.441941900Z" />
         </State>
       </entry>
-      <entry key="testHabitsFragment() (1)">
+      <entry key="test() (1)">
         <State />
       </entry>
     </value>
