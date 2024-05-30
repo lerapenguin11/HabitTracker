@@ -25,4 +25,7 @@ class AboutAppFragment : BaseFragment<FragmentAboutAppBinding>() {
         }
     }
 
+    companion object{
+        fun newInstance(): AboutAppFragment = AboutAppFragment()
+    }
 }

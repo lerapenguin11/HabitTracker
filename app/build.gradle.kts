@@ -47,14 +47,23 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        //jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures{
         viewBinding = true
+    }
+    packaging {
+        resources.excludes.addAll(
+            listOf(
+                "META-INF/LICENSE.md",
+                "META-INF/LICENSE-notice.md"
+            )
+        )
     }
 }
 
@@ -90,4 +99,32 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)
+
+    androidTestImplementation(libs.android.components.kaspresso)
+    androidTestUtil("androidx.test:orchestrator:1.4.2")
+
+    debugImplementation("androidx.fragment:fragment-testing:1.7.1")
+    debugImplementation("androidx.fragment:fragment-ktx:1.7.1")
+    debugImplementation("androidx.test:core:1.5.0")
+    debugImplementation("androidx.test:rules:1.5.0")
+    debugImplementation("androidx.test:runner:1.5.2")
+
+    /*debugImplementation("androidx.fragment:fragment-testing-manifest:1.6.0"){
+        isTransitive = false
+    }*/
+    androidTestImplementation("io.mockk:mockk-android:1.13.11")
+    androidTestImplementation("io.mockk:mockk-agent:1.13.11")
+    api(libs.uiAutomator)
+    api(libs.kakao)
+    api(libs.kakaoExtClicks)
+
+    androidTestImplementation(libs.mockito.core)
+
+    androidTestImplementation("com.linkedin.dexmaker:dexmaker-mockito:2.28.1")
+
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.1")
+
+    debugImplementation("androidx.fragment:fragment-testing:1.7.1")
+    androidTestImplementation("com.kaspersky.android-components:kaspresso:1.3.0")
+    testImplementation("com.kaspersky.android-components:kaspresso:1.5.3")
 }

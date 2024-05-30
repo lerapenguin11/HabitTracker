@@ -21,7 +21,7 @@ data class Habit(
         const val UNDEFINED_ID = ""
     }
 
-    override fun equals(other: Any?): Boolean {
+    /*override fun equals(other: Any?): Boolean {
         if (other == this) {
             return true;
         }
@@ -42,7 +42,7 @@ data class Habit(
         }
         
         return super.equals(other)
-    }
+    }*/
 }
 
 

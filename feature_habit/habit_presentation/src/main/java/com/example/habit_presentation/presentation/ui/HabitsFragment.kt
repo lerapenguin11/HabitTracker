@@ -20,6 +20,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.core.utils.AVATAR_URL
 import com.example.core.utils.ConnectivityObserver
+import com.example.core.utils.NetworkConnectivityObserver
+import com.example.habit_domain.usecase.GetHabitsUseCase
+import com.example.habit_domain.usecase.PerformHabitUseCase
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentHabitsBinding
 import com.example.habit_presentation.di.ArticlesComponentViewModel
@@ -41,6 +44,8 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private val viewModel: HabitsViewModel by activityViewModels {
         viewModelFactory.get()
     }
+
+    private var isForScreenshots = false
 
     override fun onAttach(context: Context) {
         ViewModelProvider(requireActivity())
@@ -183,5 +188,7 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
             fragment.arguments = bundleOf(TYPE_HABITS to tabType)
             return fragment
         }
+
+        fun newInstance(): HabitsFragment = HabitsFragment()
     }
 }

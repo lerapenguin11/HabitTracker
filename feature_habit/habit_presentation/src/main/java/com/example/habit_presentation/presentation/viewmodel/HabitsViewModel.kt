@@ -50,7 +50,7 @@ class HabitsViewModel(
 
     private val habitList = MutableStateFlow<List<Habit>>(emptyList())
 
-    private val _networkStatus = MutableLiveData<ConnectivityObserver.Status>(null)
+    private val _networkStatus = MutableLiveData<ConnectivityObserver.Status>(ConnectivityObserver.Status.AVAILABLE)
     val networkStatus: LiveData<ConnectivityObserver.Status> = _networkStatus
 
     init {

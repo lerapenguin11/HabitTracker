@@ -2,6 +2,15 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="Test">
+        <State />
+      </entry>
+      <entry key="Test$HabitsScreen$HabitItemScreen">
+        <State />
+      </entry>
+      <entry key="ToolbarHabitTest">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -17,6 +26,25 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-05-26T11:11:35.293970400Z" />
         </State>
+      </entry>
+      <entry key="test()">
+        <State>
+          <runningDeviceTargetSelectedWithDropDown>
+            <Target>
+              <type value="RUNNING_DEVICE_TARGET" />
+              <deviceKey>
+                <Key>
+                  <type value="VIRTUAL_DEVICE_PATH" />
+                  <value value="C:\Users\lerap\.android\avd\Pixel_6_API_29_1.avd" />
+                </Key>
+              </deviceKey>
+            </Target>
+          </runningDeviceTargetSelectedWithDropDown>
+          <timeTargetWasSelectedWithDropDown value="2024-05-30T09:01:31.441941900Z" />
+        </State>
+      </entry>
+      <entry key="testHabitsFragment() (1)">
+        <State />
       </entry>
     </value>
   </component>
