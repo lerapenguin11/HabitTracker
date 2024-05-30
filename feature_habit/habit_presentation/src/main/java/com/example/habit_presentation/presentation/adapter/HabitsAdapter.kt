@@ -54,7 +54,7 @@ internal class HabitsAdapter(
 
             binding.linearProgressBar.max = habit.numberExecutions
             binding.linearProgressBar.progress = habit.done_dates.size
-            //binding.habitCard.setCardBackgroundColor(habit.color)
+            binding.habitCard.setCardBackgroundColor(habit.color)
         }
 
         private fun checkingNumberExclusion(numberExecutions: String): String {

@@ -2,6 +2,8 @@ package com.example.habit_presentation.presentation.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -25,9 +29,11 @@ import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentHabitProcessingBinding
 import com.example.habit_presentation.di.HabitsComponentViewModel
 import com.example.base_ui.BaseFragment
+import com.example.habit_presentation.ColorPicker
 import com.example.habit_presentation.presentation.view.dialog.ExecutionPeriodHabitDialog
 import com.example.habit_presentation.presentation.view.dialog.HabitTypeDialog
 import com.example.habit_presentation.presentation.viewmodel.HabitProcessingViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Lazy
 import javax.inject.Inject
 
@@ -46,7 +52,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
         viewModelFactory.get()
     }
 
-    private var color : Int = 0
+    private var color : Int = Color.parseColor("#EBF6EE")
 
     override fun onAttach(context: Context) {
         ViewModelProvider(requireActivity())
@@ -92,6 +98,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
             btClose.setOnClickListener {
                 it.findNavController().navigateUp()
             }
+            binding.tiEtColorCard.setOnClickListener { openColorPickerDialog() }
         }
     }
 
@@ -294,6 +301,33 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
                     itemArrayExecutions = parent.getItemAtPosition(position).toString()
                 }
         }
+
+    private fun openColorPickerDialog() {
+        val viewDialog = LayoutInflater.from(requireActivity()).inflate(R.layout.color_picker_layout, null)
+        val rgb : TextView = viewDialog.findViewById(R.id.tv_rgb)
+        val hsv : TextView = viewDialog.findViewById(R.id.tv_hsv)
+        val colorLayout = viewDialog.findViewById<LinearLayout>(R.id.color_layout)
+        val colorPicker = ColorPicker(
+            widthBtn = 185,
+            heightBtn = 185,
+            margin = 50,
+            context = requireActivity(),
+            colorLayout = colorLayout)
+        colorPicker.createColorCard(rgb, hsv)
+
+        MaterialAlertDialogBuilder(requireActivity(), R.style.ThemeOverlayAppMaterialAlertDialog)
+            .setTitle(resources.getString(R.string.text_choose_color))
+            .setView(viewDialog)
+            .setNegativeButton(resources.getString(R.string.text_close)) { dialog, which ->
+                dialog.cancel()
+            }
+            .setPositiveButton(resources.getString(R.string.text_gone)) { dialog, which ->
+                color = colorPicker.getColorCard()
+                binding.tilColorCard.setEndIconTintList(ColorStateList.valueOf(color))
+                dialog.cancel()
+            }
+            .show()
+    }
 
     companion object {
         private const val MODE_EDIT = "mode_edit"

@@ -6,45 +6,21 @@
     xmlns:toolls="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-
-
-    <LinearLayout
-        android:id="@+id/color_layout"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="25dp"
-        android:overScrollMode="always"
-        android:gravity="center_vertical"
-        android:background="@drawable/gradient_layout"
-        android:orientation="horizontal">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_color_picker"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-
-            toolls:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:itemCount="50"
-            tools:listitem="@layout/item_card"/>
-    </LinearLayout>
-
-   <!-- <ScrollView
+    <HorizontalScrollView
         android:id="@+id/color_scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:overScrollMode="always"
-        android:background="@drawable/gradient_layout">
+        android:layout_height="wrap_content">
 
-
-
-        &lt;!&ndash;&ndash;&gt;
-
-
-    </ScrollView>
--->
-
-
+        <LinearLayout
+            android:id="@+id/color_layout"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginTop="25dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/gradient_layout"
+            android:orientation="horizontal">
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
