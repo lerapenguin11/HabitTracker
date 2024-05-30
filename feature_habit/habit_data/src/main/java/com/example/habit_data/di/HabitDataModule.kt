@@ -2,7 +2,6 @@ package com.example.habit_data.di
 
 import android.content.Context
 import com.example.core.room.HabitDao
-import com.example.core.room.HabitDatabase
 import com.example.core.utils.NetworkConnectivityObserver
 import com.example.habit_data.api.HabitsApi
 import com.example.habit_data.mappers.HabitMapper
@@ -17,8 +16,6 @@ import com.example.habit_domain.usecase.UpdateHabitUseCase
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
-import javax.inject.Singleton
-
 @Module
 object HabitDataModule {
 

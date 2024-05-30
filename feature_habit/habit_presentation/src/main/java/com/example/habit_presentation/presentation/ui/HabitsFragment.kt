@@ -20,13 +20,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.example.core.utils.AVATAR_URL
 import com.example.core.utils.ConnectivityObserver
-import com.example.core.utils.NetworkConnectivityObserver
-import com.example.habit_domain.usecase.GetHabitsUseCase
-import com.example.habit_domain.usecase.PerformHabitUseCase
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentHabitsBinding
-import com.example.habit_presentation.di.ArticlesComponentViewModel
-import com.example.habit_presentation.presentation.BaseFragment
+import com.example.habit_presentation.di.HabitsComponentViewModel
+import com.example.base_ui.BaseFragment
 import com.example.habit_presentation.presentation.adapter.TabAdapter
 import com.example.habit_presentation.presentation.model.TabHabitType
 import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
@@ -45,11 +42,9 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
         viewModelFactory.get()
     }
 
-    private var isForScreenshots = false
-
     override fun onAttach(context: Context) {
         ViewModelProvider(requireActivity())
-            .get<ArticlesComponentViewModel>()
+            .get<HabitsComponentViewModel>()
             .newDetailsComponent
             .injectHabits(this)
         super.onAttach(context)
@@ -173,7 +168,6 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
     private fun openAddHabit() {
         val bundle = Bundle()
         bundle.putString(SCREEN_MODE, MODE_ADD)
-        //view?.findNavController()?.saveState()
         view?.findNavController()?.navigate(
             R.id.action_habitsFragment_to_habitProcessingFragment, bundle)
     }
@@ -188,7 +182,5 @@ class HabitsFragment : BaseFragment<FragmentHabitsBinding>(){
             fragment.arguments = bundleOf(TYPE_HABITS to tabType)
             return fragment
         }
-
-        fun newInstance(): HabitsFragment = HabitsFragment()
     }
 }

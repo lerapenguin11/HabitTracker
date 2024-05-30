@@ -46,6 +46,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":feature_habit:habit_domain"))
     implementation(project(":feature_habit:habit_data"))
+    implementation(project(":base_ui"))
 
     implementation(libs.android.core.ktx)
     implementation(libs.android.appcompat)

@@ -1,7 +1,6 @@
 package com.example.core.utils
 
 import android.content.Context
-import dagger.Component
 import dagger.Module
 import dagger.Provides
 

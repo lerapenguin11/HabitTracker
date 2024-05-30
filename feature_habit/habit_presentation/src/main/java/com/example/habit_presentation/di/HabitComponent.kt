@@ -45,21 +45,21 @@ interface HabitsDeps {
     val performHabitUseCase : PerformHabitUseCase
 }
 
-interface ArticlesDepsProvider {
+interface HabitsDepsProvider {
 
     @get:RestrictTo(RestrictTo.Scope.LIBRARY)
     val deps: HabitsDeps
 
-    companion object : ArticlesDepsProvider by ArticlesDepsStore
+    companion object : HabitsDepsProvider by HabitsDepsStore
 }
 
-object ArticlesDepsStore : ArticlesDepsProvider {
+object HabitsDepsStore : HabitsDepsProvider {
 
     override var deps: HabitsDeps by notNull()
 }
 
-internal class ArticlesComponentViewModel : ViewModel() {
+internal class HabitsComponentViewModel : ViewModel() {
 
     val newDetailsComponent =
-        DaggerHabitComponent.builder().deps(ArticlesDepsProvider.deps).build()
+        DaggerHabitComponent.builder().deps(HabitsDepsProvider.deps).build()
 }

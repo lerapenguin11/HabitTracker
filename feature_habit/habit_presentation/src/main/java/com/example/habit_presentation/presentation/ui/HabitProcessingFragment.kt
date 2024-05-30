@@ -23,8 +23,8 @@ import com.example.habit_domain.model.HabitRepetitionPeriod
 import com.example.habit_domain.model.HabitType
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentHabitProcessingBinding
-import com.example.habit_presentation.di.ArticlesComponentViewModel
-import com.example.habit_presentation.presentation.BaseFragment
+import com.example.habit_presentation.di.HabitsComponentViewModel
+import com.example.base_ui.BaseFragment
 import com.example.habit_presentation.presentation.view.dialog.ExecutionPeriodHabitDialog
 import com.example.habit_presentation.presentation.view.dialog.HabitTypeDialog
 import com.example.habit_presentation.presentation.viewmodel.HabitProcessingViewModel
@@ -50,7 +50,7 @@ class HabitProcessingFragment : BaseFragment<FragmentHabitProcessingBinding>(),
 
     override fun onAttach(context: Context) {
         ViewModelProvider(requireActivity())
-            .get<ArticlesComponentViewModel>()
+            .get<HabitsComponentViewModel>()
             .newDetailsComponent
             .injectHabitProcessingFragment(this)
         super.onAttach(context)

@@ -19,14 +19,11 @@ interface NetworkComponent {
     fun getContext(): Context
     fun getRetrofit(): Retrofit
     fun getPopularDao(): HabitDao
-    //fun getNetworkConnectivityObserver() : NetworkConnectivityObserver
 
     @Component.Builder
     interface Builder {
         @BindsInstance
         fun context(context: Context): Builder
         fun build(): NetworkComponent
-
-        //fun networkConnectivityModule(networkConnectivityModule: NetworkConnectivityModule): Builder
     }
 }
