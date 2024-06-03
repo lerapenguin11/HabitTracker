@@ -50,7 +50,6 @@ class RecyclerViewTest : TestCase() {
         HabitsScreen {
             rvHabits.isVisible()
             Thread.sleep(2000)
-
             //Check elements visibility
             rvHabits {
                 //Check elements visible

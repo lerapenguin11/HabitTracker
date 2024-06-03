@@ -17,9 +17,6 @@ interface AppComponent : HabitsDeps{
         @BindsInstance
         fun context(@HabitContextQualifier application: Application): Builder
 
-        @BindsInstance
-        fun application(application: Application): Builder
-
         fun build(): AppComponent
 
         fun habitDataComponent(yourModule: HabitDataComponent): Builder

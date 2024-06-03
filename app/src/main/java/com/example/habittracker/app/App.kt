@@ -28,7 +28,6 @@ class App : Application() {
             .builder()
             .habitDataComponent(habitDataComponent)
             .context(this)
-            .application(this)
             .build()
     }
 
