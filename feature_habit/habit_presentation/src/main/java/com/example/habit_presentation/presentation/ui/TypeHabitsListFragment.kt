@@ -17,8 +17,8 @@ import com.example.core.utils.ConnectivityObserver
 import com.example.habit_domain.model.Habit
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentTypeHabitsListBinding
-import com.example.habit_presentation.di.ArticlesComponentViewModel
-import com.example.habit_presentation.presentation.BaseFragment
+import com.example.habit_presentation.di.HabitsComponentViewModel
+import com.example.base_ui.BaseFragment
 import com.example.habit_presentation.presentation.adapter.HabitsAdapter
 import com.example.habit_presentation.presentation.model.TabHabitType
 import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
@@ -42,7 +42,7 @@ class TypeHabitsListFragment
 
     override fun onAttach(context: Context) {
         ViewModelProvider(requireActivity())
-            .get<ArticlesComponentViewModel>()
+            .get<HabitsComponentViewModel>()
             .newDetailsComponent
             .injectTypeHabits(this)
 
@@ -156,8 +156,9 @@ class TypeHabitsListFragment
         with(viewModel){
             loading.observe(viewLifecycleOwner) {
                 if (!it) {
-                    filteredUsefulHabits.observe(viewLifecycleOwner) {
-                        setHabitsRecyclerView(it)
+                    filteredUsefulHabits.observe(viewLifecycleOwner) {habits ->
+                        handleEmptyListMessageVisibility(habitList = habits)
+                        setHabitsRecyclerView(habits)
                     }
                 }
             }
@@ -166,8 +167,13 @@ class TypeHabitsListFragment
 
     private fun observeHabitsHarmful(){
         with(viewModel){
-            filteredHarmfulHabits.observe(viewLifecycleOwner) {
-                setHabitsRecyclerView(it)
+            loading.observe(viewLifecycleOwner){
+                if (!it){
+                    filteredHarmfulHabits.observe(viewLifecycleOwner) {habits ->
+                        handleEmptyListMessageVisibility(habitList = habits)
+                        setHabitsRecyclerView(habits)
+                    }
+                }
             }
         }
     }
@@ -191,7 +197,6 @@ class TypeHabitsListFragment
     }
 
     private fun setHabitsRecyclerView(habitList : List<Habit>) = with(binding) {
-        handleEmptyListMessageVisibility(habitList = habitList)
         adapter.submitList(habitList)
         rvHabits.adapter = adapter
     }
@@ -226,5 +231,7 @@ class TypeHabitsListFragment
         private const val HABIT_UID = "update_habit"
         private const val HABIT_ID = "id"
         private const val TYPE_HABITS = "type_habits"
+
+        fun getInstance() : TypeHabitsListFragment = TypeHabitsListFragment()
     }
 }

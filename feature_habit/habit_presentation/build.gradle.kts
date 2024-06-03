@@ -26,14 +26,19 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
     buildFeatures{
         viewBinding = true
+    }
+    testOptions{
+        unitTests.all {
+                test -> test.useJUnitPlatform()
+        }
     }
 }
 
@@ -41,6 +46,7 @@ dependencies {
     implementation(project(":core"))
     implementation(project(":feature_habit:habit_domain"))
     implementation(project(":feature_habit:habit_data"))
+    implementation(project(":base_ui"))
 
     implementation(libs.android.core.ktx)
     implementation(libs.android.appcompat)
@@ -51,7 +57,7 @@ dependencies {
     implementation(libs.glide)
     implementation(libs.dagger)
     kapt(libs.dagger.compiler)
-    testImplementation(libs.junit)
+    //testImplementation(libs.junit)
     androidTestImplementation(libs.android.test.ext.junit)
     androidTestImplementation(libs.android.test.espresso.core)
 }

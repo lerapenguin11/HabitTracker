@@ -19,7 +19,7 @@ import androidx.lifecycle.get
 import com.example.habit_domain.model.HabitRepetitionPeriod
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.LayoutModalBottomSheetBinding
-import com.example.habit_presentation.di.ArticlesComponentViewModel
+import com.example.habit_presentation.di.HabitsComponentViewModel
 import com.example.habit_presentation.presentation.viewmodel.HabitsViewModel
 import com.google.android.material.card.MaterialCardView
 import dagger.Lazy
@@ -39,7 +39,7 @@ class ModalBottomSheet : Fragment()
 
     override fun onAttach(context: Context) {
         ViewModelProvider(requireActivity())
-            .get<ArticlesComponentViewModel>()
+            .get<HabitsComponentViewModel>()
             .newDetailsComponent
             .injectModalBottomSheet(this)
         super.onAttach(context)

@@ -20,7 +20,32 @@ data class Habit(
     companion object{
         const val UNDEFINED_ID = ""
     }
+
+    /*override fun equals(other: Any?): Boolean {
+        if (other == this) {
+            return true;
+        }
+
+        if (other is Habit){
+            return (
+                    (this.uid == other.uid) &&
+                    (this.id == other.id) &&
+                    (this.title == other.title) &&
+                    (this.description == other.description) &&
+                    (this.type == other.type) &&
+                    (this.habitPriority == other.habitPriority) &&
+                    (this.numberExecutions == other.numberExecutions) &&
+                    (this.period == other.period) &&
+                    (this.color == other.color) &&
+                    (this.dateCreation == other.dateCreation)
+                    )
+        }
+        
+        return super.equals(other)
+    }*/
 }
+
+
 
 enum class HabitPriority(val priority : String){
     HIGH("Высокий"),

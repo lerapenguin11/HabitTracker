@@ -1,4 +1,4 @@
-package com.example.habit_presentation.presentation
+package com.example.base_ui
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,7 +20,7 @@ abstract class BaseFragment<VB: ViewBinding>: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+        //_binding = null
     }
 
     abstract fun createBinding(inflater: LayoutInflater, container: ViewGroup?): VB

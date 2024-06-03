@@ -25,6 +25,17 @@ coroutines_adapter = "0.9.2"
 glide = "4.16.0"
 org-jetbrains-kotlin-jvm = "1.9.10"
 daggerVersion = "2.51"
+junit-jupiter = "5.8.2"
+mockito = "4.0.0"
+mockitoInline = "3.11.2"
+kotlinx-coroutines-test = "1.8.1"
+kaspresso = "1.5.3"
+
+espresso = "3.5.1"
+kakao = "3.5.1"
+kakaoExtClicks = "1.0.0"
+androidXTest = "1.5.2"
+testOrchestrator = "1.4.2"
 
 [libraries]
 android-core-ktx = {module = "androidx.core:core-ktx", version.ref = "androidx-core-ktx"}
@@ -55,7 +66,23 @@ kotlin-coroutines-adapter = {module = "com.jakewharton.retrofit:retrofit2-kotlin
 glide = {module = "com.github.bumptech.glide:glide", version.ref = "glide"}
 dagger = {module = "com.google.dagger:dagger", version.ref = "daggerVersion"}
 dagger-compiler = {module= "com.google.dagger:dagger-compiler", version.ref = "daggerVersion"}
+junit-jupiter = {module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter"}
+mockito-core = {module = "org.mockito:mockito-core", version.ref = "mockito"}
+mockito-kotlin = {module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito"}
+mockito-inline = {module = "org.mockito:mockito-inline", version.ref = "mockitoInline"}
+kotlinx-coroutines-test = {module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test"}
+mockito-junit-jupiter = {module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito"}
+android-components-kaspresso = {module = "com.kaspersky.android-components:kaspresso", version.ref = "kaspresso"}
 
+uiAutomator = "androidx.test.uiautomator:uiautomator:2.3.0"
+kakao = { module = "io.github.kakaocup:kakao", version.ref = "kakao" }
+kakaoExtClicks = { module = "io.github.kakaocup:kakao-ext-clicks", version.ref = "kakaoExtClicks" }
+
+androidXTestCore = { module = "androidx.test:core", version.ref = "androidXTest" }
+androidXTestRules = { module = "androidx.test:rules", version.ref = "androidXTest" }
+androidXTestRunner = { module = "androidx.test:runner", version.ref = "androidXTest" }
+androidXTestFragmentTesting = "androidx.fragment:fragment-testing:1.7.1"
+androidXTestOrchestrator = { module = "androidx.test:orchestrator", version.ref = "testOrchestrator" }
 
 [plugins]
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import com.example.habit_presentation.R
 import com.example.habit_presentation.databinding.FragmentAboutAppBinding
-import com.example.habit_presentation.presentation.BaseFragment
+import com.example.base_ui.BaseFragment
 
 class AboutAppFragment : BaseFragment<FragmentAboutAppBinding>() {
 
@@ -25,4 +25,7 @@ class AboutAppFragment : BaseFragment<FragmentAboutAppBinding>() {
         }
     }
 
+    companion object{
+        fun newInstance(): AboutAppFragment = AboutAppFragment()
+    }
 }
